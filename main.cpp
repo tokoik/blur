@@ -2,7 +2,7 @@
 #include <cstring>
 #include <cmath>
 
-#include "gg.h"
+#include "gg/gg.h"
 using namespace gg;
 
 /*

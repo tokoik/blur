@@ -4,7 +4,7 @@
 /*
 ** 簡易トラックボール処理
 */
-#include "gg.h"
+#include "gg/gg.h"
 
 class Trackball {
   int cx, cy;                 // ドラッグ開始位置

@@ -6,7 +6,7 @@
 */
 #include <cstring>
 
-#include "gg.h"
+#include "gg/gg.h"
 
 class Matrix {
   GLfloat array[16];

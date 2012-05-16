@@ -23,7 +23,7 @@ static bool readShaderSource(GLuint shader, const char *name)
   else {
     // ファイルの末尾に移動し現在位置（＝ファイルサイズ）を得る
     file.seekg(0L, std::ios::end);
-    GLsizei length = file.tellg();
+    GLsizei length = static_cast<GLsizei>(file.tellg());
     
     // ファイルサイズのメモリを確保
     char *buffer = new GLchar[length];
