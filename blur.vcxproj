@@ -76,7 +76,7 @@
   <ItemGroup>
     <ClInclude Include="Attribute.h" />
     <ClInclude Include="Circle.h" />
-    <ClInclude Include="gg\gg.h" />
+    <ClInclude Include="gg.h" />
     <ClInclude Include="Matrix.h" />
     <ClInclude Include="Obj.h" />
     <ClInclude Include="Object.h" />
@@ -89,7 +89,7 @@
     <ClInclude Include="Trackball.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="gg\gg.cpp" />
+    <ClCompile Include="gg.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Matrix.cpp" />
     <ClCompile Include="Obj.cpp" />
