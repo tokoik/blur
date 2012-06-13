@@ -4,7 +4,7 @@
 /*
 ** 属性
 */
-#include "gg/gg.h"
+#include "gg.h"
 
 class Attribute {
   int count;        // 参照カウント
