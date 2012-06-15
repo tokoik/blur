@@ -64,7 +64,7 @@ bool Obj::load(const char *name, bool normalize)
 
   // ê≥ãKâª
   GLfloat scale, cx, cy, cz;
-  if (normalize) {
+   if (normalize) {
     float sx = xmax - xmin;
     float sy = ymax - ymin;
     float sz = zmax - zmin;
@@ -91,9 +91,9 @@ bool Obj::load(const char *name, bool normalize)
     if (buf[0] == 'v' && buf[1] == ' ') {
       float x, y, z;
       sscanf(buf, "%*s %f %f %f", &x, &y, &z);
-      vert[nv][0] = x * scale - cx;
-      vert[nv][1] = y * scale - cy;
-      vert[nv][2] = z * scale - cz;
+      vert[nv][0] = (x - cx) * scale;
+      vert[nv][1] = (y - cy) * scale;
+      vert[nv][2] = (z - cz) * scale;
       ++nv;
     }
     else if (buf[0] == 'f' && buf[1] == ' ') {
