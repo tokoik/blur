@@ -8,63 +8,42 @@
 
 /* Begin PBXBuildFile section */
 		7D48B1911563EBCA00B6F38A /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7D48B1901563EBCA00B6F38A /* main.cpp */; };
-		7D48B19C1563EBDE00B6F38A /* Matrix.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7D48B1921563EBDE00B6F38A /* Matrix.cpp */; };
-		7D48B19D1563EBDE00B6F38A /* Obj.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7D48B1931563EBDE00B6F38A /* Obj.cpp */; };
-		7D48B19E1563EBDE00B6F38A /* Object.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7D48B1941563EBDE00B6F38A /* Object.cpp */; };
-		7D48B19F1563EBDE00B6F38A /* Shader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7D48B1951563EBDE00B6F38A /* Shader.cpp */; };
-		7D48B1A01563EBDE00B6F38A /* Shape.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7D48B1961563EBDE00B6F38A /* Shape.cpp */; };
-		7D48B1A11563EBDE00B6F38A /* SimpleShader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7D48B1971563EBDE00B6F38A /* SimpleShader.cpp */; };
-		7D48B1A21563EBDE00B6F38A /* Square.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7D48B1981563EBDE00B6F38A /* Square.cpp */; };
-		7D48B1A31563EBDE00B6F38A /* Texture.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7D48B1991563EBDE00B6F38A /* Texture.cpp */; };
-		7D48B1A41563EBDE00B6F38A /* TileShader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7D48B19A1563EBDE00B6F38A /* TileShader.cpp */; };
-		7D48B1A51563EBDE00B6F38A /* Trackball.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7D48B19B1563EBDE00B6F38A /* Trackball.cpp */; };
-		7D48B1BB1563ED2200B6F38A /* Circle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7D48B1BA1563ED2200B6F38A /* Circle.cpp */; };
-		7D48B1BD1563ED5200B6F38A /* Attribute.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7D48B1BC1563ED5200B6F38A /* Attribute.cpp */; };
+		7D48B1A11563EBDE00B6F38A /* GgSimpleShader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7D48B1971563EBDE00B6F38A /* GgSimpleShader.cpp */; };
+		7D48B1A41563EBDE00B6F38A /* GgTileShader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7D48B19A1563EBDE00B6F38A /* GgTileShader.cpp */; };
 		7D48B1C51563ED8A00B6F38A /* simple.frag in Resources */ = {isa = PBXBuildFile; fileRef = 7D48B1C11563ED8600B6F38A /* simple.frag */; };
 		7D48B1C61563ED8A00B6F38A /* tile.frag in Resources */ = {isa = PBXBuildFile; fileRef = 7D48B1C21563ED8600B6F38A /* tile.frag */; };
 		7D48B1C71563ED8A00B6F38A /* simple.vert in Resources */ = {isa = PBXBuildFile; fileRef = 7D48B1C31563ED8600B6F38A /* simple.vert */; };
 		7D48B1C81563ED8A00B6F38A /* tile.vert in Resources */ = {isa = PBXBuildFile; fileRef = 7D48B1C41563ED8600B6F38A /* tile.vert */; };
+		7D64180515DE6EC3009D7F5D /* model.dat in Resources */ = {isa = PBXBuildFile; fileRef = 7D64180415DE6EBC009D7F5D /* model.dat */; };
+		7D64182015DE6FAB009D7F5D /* sphere.vert in Resources */ = {isa = PBXBuildFile; fileRef = 7D64181515DE6EFD009D7F5D /* sphere.vert */; };
+		7D64182115DE6FAB009D7F5D /* sphere.geom in Resources */ = {isa = PBXBuildFile; fileRef = 7D64181415DE6EFD009D7F5D /* sphere.geom */; };
+		7D64182215DE6FAB009D7F5D /* sphere.frag in Resources */ = {isa = PBXBuildFile; fileRef = 7D64181315DE6EFD009D7F5D /* sphere.frag */; };
+		7D64182515DE6FD4009D7F5D /* GgPointShader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7D64182415DE6FD4009D7F5D /* GgPointShader.cpp */; };
 		7D7AF85F1222C8CC003A0434 /* opengl.icns in Resources */ = {isa = PBXBuildFile; fileRef = 7D7AF85E1222C8CC003A0434 /* opengl.icns */; };
 		7DD1A6CC15A9E439003B72C1 /* gg.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7DD1A6CA15A9E439003B72C1 /* gg.cpp */; };
-		7DD1A6DD15A9E469003B72C1 /* scoutwalker.obj in Resources */ = {isa = PBXBuildFile; fileRef = 7DD1A6DC15A9E45F003B72C1 /* scoutwalker.obj */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		7D1E90EE1123E36C005E6C75 /* blur.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = blur.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7D1E90F11123E36C005E6C75 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		7D48B1841563EBAD00B6F38A /* Attribute.h */ = {isa = PBXFileReference; fileEncoding = 8; lastKnownFileType = sourcecode.c.h; path = Attribute.h; sourceTree = "<group>"; };
-		7D48B1861563EBBE00B6F38A /* Matrix.h */ = {isa = PBXFileReference; fileEncoding = 8; lastKnownFileType = sourcecode.c.h; path = Matrix.h; sourceTree = "<group>"; };
-		7D48B1871563EBBE00B6F38A /* Obj.h */ = {isa = PBXFileReference; fileEncoding = 8; lastKnownFileType = sourcecode.c.h; path = Obj.h; sourceTree = "<group>"; };
-		7D48B1881563EBBE00B6F38A /* Object.h */ = {isa = PBXFileReference; fileEncoding = 8; lastKnownFileType = sourcecode.c.h; path = Object.h; sourceTree = "<group>"; };
-		7D48B1891563EBBE00B6F38A /* Shader.h */ = {isa = PBXFileReference; fileEncoding = 8; lastKnownFileType = sourcecode.c.h; path = Shader.h; sourceTree = "<group>"; };
-		7D48B18A1563EBBE00B6F38A /* Shape.h */ = {isa = PBXFileReference; fileEncoding = 8; lastKnownFileType = sourcecode.c.h; path = Shape.h; sourceTree = "<group>"; };
-		7D48B18B1563EBBE00B6F38A /* SimpleShader.h */ = {isa = PBXFileReference; fileEncoding = 8; lastKnownFileType = sourcecode.c.h; path = SimpleShader.h; sourceTree = "<group>"; };
-		7D48B18C1563EBBE00B6F38A /* Square.h */ = {isa = PBXFileReference; fileEncoding = 8; lastKnownFileType = sourcecode.c.h; path = Square.h; sourceTree = "<group>"; };
-		7D48B18D1563EBBE00B6F38A /* Texture.h */ = {isa = PBXFileReference; fileEncoding = 8; lastKnownFileType = sourcecode.c.h; path = Texture.h; sourceTree = "<group>"; };
-		7D48B18E1563EBBE00B6F38A /* TileShader.h */ = {isa = PBXFileReference; fileEncoding = 8; lastKnownFileType = sourcecode.c.h; path = TileShader.h; sourceTree = "<group>"; };
-		7D48B18F1563EBBE00B6F38A /* Trackball.h */ = {isa = PBXFileReference; fileEncoding = 8; lastKnownFileType = sourcecode.c.h; path = Trackball.h; sourceTree = "<group>"; };
+		7D48B18B1563EBBE00B6F38A /* GgSimpleShader.h */ = {isa = PBXFileReference; fileEncoding = 8; lastKnownFileType = sourcecode.c.h; path = GgSimpleShader.h; sourceTree = "<group>"; };
+		7D48B18E1563EBBE00B6F38A /* GgTileShader.h */ = {isa = PBXFileReference; fileEncoding = 8; lastKnownFileType = sourcecode.c.h; path = GgTileShader.h; sourceTree = "<group>"; };
 		7D48B1901563EBCA00B6F38A /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 8; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
-		7D48B1921563EBDE00B6F38A /* Matrix.cpp */ = {isa = PBXFileReference; fileEncoding = 8; lastKnownFileType = sourcecode.cpp.cpp; path = Matrix.cpp; sourceTree = "<group>"; };
-		7D48B1931563EBDE00B6F38A /* Obj.cpp */ = {isa = PBXFileReference; fileEncoding = 8; lastKnownFileType = sourcecode.cpp.cpp; path = Obj.cpp; sourceTree = "<group>"; };
-		7D48B1941563EBDE00B6F38A /* Object.cpp */ = {isa = PBXFileReference; fileEncoding = 8; lastKnownFileType = sourcecode.cpp.cpp; path = Object.cpp; sourceTree = "<group>"; };
-		7D48B1951563EBDE00B6F38A /* Shader.cpp */ = {isa = PBXFileReference; fileEncoding = 8; lastKnownFileType = sourcecode.cpp.cpp; path = Shader.cpp; sourceTree = "<group>"; };
-		7D48B1961563EBDE00B6F38A /* Shape.cpp */ = {isa = PBXFileReference; fileEncoding = 8; lastKnownFileType = sourcecode.cpp.cpp; path = Shape.cpp; sourceTree = "<group>"; };
-		7D48B1971563EBDE00B6F38A /* SimpleShader.cpp */ = {isa = PBXFileReference; fileEncoding = 8; lastKnownFileType = sourcecode.cpp.cpp; path = SimpleShader.cpp; sourceTree = "<group>"; };
-		7D48B1981563EBDE00B6F38A /* Square.cpp */ = {isa = PBXFileReference; fileEncoding = 8; lastKnownFileType = sourcecode.cpp.cpp; path = Square.cpp; sourceTree = "<group>"; };
-		7D48B1991563EBDE00B6F38A /* Texture.cpp */ = {isa = PBXFileReference; fileEncoding = 8; lastKnownFileType = sourcecode.cpp.cpp; path = Texture.cpp; sourceTree = "<group>"; };
-		7D48B19A1563EBDE00B6F38A /* TileShader.cpp */ = {isa = PBXFileReference; fileEncoding = 8; lastKnownFileType = sourcecode.cpp.cpp; path = TileShader.cpp; sourceTree = "<group>"; };
-		7D48B19B1563EBDE00B6F38A /* Trackball.cpp */ = {isa = PBXFileReference; fileEncoding = 8; lastKnownFileType = sourcecode.cpp.cpp; path = Trackball.cpp; sourceTree = "<group>"; };
-		7D48B1B61563EC6100B6F38A /* Circle.h */ = {isa = PBXFileReference; fileEncoding = 8; lastKnownFileType = sourcecode.c.h; path = Circle.h; sourceTree = "<group>"; };
-		7D48B1BA1563ED2200B6F38A /* Circle.cpp */ = {isa = PBXFileReference; fileEncoding = 8; lastKnownFileType = sourcecode.cpp.cpp; path = Circle.cpp; sourceTree = "<group>"; };
-		7D48B1BC1563ED5200B6F38A /* Attribute.cpp */ = {isa = PBXFileReference; fileEncoding = 8; lastKnownFileType = sourcecode.cpp.cpp; path = Attribute.cpp; sourceTree = "<group>"; };
+		7D48B1971563EBDE00B6F38A /* GgSimpleShader.cpp */ = {isa = PBXFileReference; fileEncoding = 8; lastKnownFileType = sourcecode.cpp.cpp; path = GgSimpleShader.cpp; sourceTree = "<group>"; };
+		7D48B19A1563EBDE00B6F38A /* GgTileShader.cpp */ = {isa = PBXFileReference; fileEncoding = 8; lastKnownFileType = sourcecode.cpp.cpp; path = GgTileShader.cpp; sourceTree = "<group>"; };
 		7D48B1C11563ED8600B6F38A /* simple.frag */ = {isa = PBXFileReference; fileEncoding = 8; lastKnownFileType = sourcecode.glsl; path = simple.frag; sourceTree = "<group>"; };
 		7D48B1C21563ED8600B6F38A /* tile.frag */ = {isa = PBXFileReference; fileEncoding = 8; lastKnownFileType = sourcecode.glsl; path = tile.frag; sourceTree = "<group>"; };
 		7D48B1C31563ED8600B6F38A /* simple.vert */ = {isa = PBXFileReference; fileEncoding = 8; lastKnownFileType = sourcecode.glsl; path = simple.vert; sourceTree = "<group>"; };
 		7D48B1C41563ED8600B6F38A /* tile.vert */ = {isa = PBXFileReference; fileEncoding = 8; lastKnownFileType = sourcecode.glsl; path = tile.vert; sourceTree = "<group>"; };
+		7D64180415DE6EBC009D7F5D /* model.dat */ = {isa = PBXFileReference; fileEncoding = 8; lastKnownFileType = text; path = model.dat; sourceTree = "<group>"; };
+		7D64181315DE6EFD009D7F5D /* sphere.frag */ = {isa = PBXFileReference; fileEncoding = 8; lastKnownFileType = sourcecode.glsl; path = sphere.frag; sourceTree = "<group>"; };
+		7D64181415DE6EFD009D7F5D /* sphere.geom */ = {isa = PBXFileReference; fileEncoding = 8; lastKnownFileType = text; path = sphere.geom; sourceTree = "<group>"; };
+		7D64181515DE6EFD009D7F5D /* sphere.vert */ = {isa = PBXFileReference; fileEncoding = 8; lastKnownFileType = sourcecode.glsl; path = sphere.vert; sourceTree = "<group>"; };
+		7D64182315DE6FCF009D7F5D /* GgPointShader.h */ = {isa = PBXFileReference; fileEncoding = 8; lastKnownFileType = sourcecode.c.h; path = GgPointShader.h; sourceTree = "<group>"; };
+		7D64182415DE6FD4009D7F5D /* GgPointShader.cpp */ = {isa = PBXFileReference; fileEncoding = 8; lastKnownFileType = sourcecode.cpp.cpp; path = GgPointShader.cpp; sourceTree = "<group>"; };
 		7D7AF85E1222C8CC003A0434 /* opengl.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = opengl.icns; sourceTree = "<group>"; };
 		7DD1A6CA15A9E439003B72C1 /* gg.cpp */ = {isa = PBXFileReference; fileEncoding = 8; lastKnownFileType = sourcecode.cpp.cpp; path = gg.cpp; sourceTree = "<group>"; };
 		7DD1A6CB15A9E439003B72C1 /* gg.h */ = {isa = PBXFileReference; fileEncoding = 8; lastKnownFileType = sourcecode.c.h; path = gg.h; sourceTree = "<group>"; };
-		7DD1A6DC15A9E45F003B72C1 /* scoutwalker.obj */ = {isa = PBXFileReference; fileEncoding = 8; lastKnownFileType = text; path = scoutwalker.obj; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -84,35 +63,20 @@
 				7D48B1901563EBCA00B6F38A /* main.cpp */,
 				7DD1A6CB15A9E439003B72C1 /* gg.h */,
 				7DD1A6CA15A9E439003B72C1 /* gg.cpp */,
-				7D48B1861563EBBE00B6F38A /* Matrix.h */,
-				7D48B1921563EBDE00B6F38A /* Matrix.cpp */,
-				7D48B18F1563EBBE00B6F38A /* Trackball.h */,
-				7D48B19B1563EBDE00B6F38A /* Trackball.cpp */,
-				7D48B1841563EBAD00B6F38A /* Attribute.h */,
-				7D48B1BC1563ED5200B6F38A /* Attribute.cpp */,
-				7D48B18D1563EBBE00B6F38A /* Texture.h */,
-				7D48B1991563EBDE00B6F38A /* Texture.cpp */,
-				7D48B1891563EBBE00B6F38A /* Shader.h */,
-				7D48B1951563EBDE00B6F38A /* Shader.cpp */,
-				7D48B18B1563EBBE00B6F38A /* SimpleShader.h */,
-				7D48B1971563EBDE00B6F38A /* SimpleShader.cpp */,
-				7D48B18E1563EBBE00B6F38A /* TileShader.h */,
-				7D48B19A1563EBDE00B6F38A /* TileShader.cpp */,
-				7D48B1881563EBBE00B6F38A /* Object.h */,
-				7D48B1941563EBDE00B6F38A /* Object.cpp */,
-				7D48B18A1563EBBE00B6F38A /* Shape.h */,
-				7D48B1961563EBDE00B6F38A /* Shape.cpp */,
-				7D48B18C1563EBBE00B6F38A /* Square.h */,
-				7D48B1981563EBDE00B6F38A /* Square.cpp */,
-				7D48B1B61563EC6100B6F38A /* Circle.h */,
-				7D48B1BA1563ED2200B6F38A /* Circle.cpp */,
-				7D48B1871563EBBE00B6F38A /* Obj.h */,
-				7D48B1931563EBDE00B6F38A /* Obj.cpp */,
-				7D48B1C11563ED8600B6F38A /* simple.frag */,
-				7D48B1C21563ED8600B6F38A /* tile.frag */,
+				7D64182315DE6FCF009D7F5D /* GgPointShader.h */,
+				7D64182415DE6FD4009D7F5D /* GgPointShader.cpp */,
+				7D48B18B1563EBBE00B6F38A /* GgSimpleShader.h */,
+				7D48B1971563EBDE00B6F38A /* GgSimpleShader.cpp */,
+				7D48B18E1563EBBE00B6F38A /* GgTileShader.h */,
+				7D48B19A1563EBDE00B6F38A /* GgTileShader.cpp */,
 				7D48B1C31563ED8600B6F38A /* simple.vert */,
+				7D48B1C11563ED8600B6F38A /* simple.frag */,
 				7D48B1C41563ED8600B6F38A /* tile.vert */,
-				7DD1A6DC15A9E45F003B72C1 /* scoutwalker.obj */,
+				7D48B1C21563ED8600B6F38A /* tile.frag */,
+				7D64181515DE6EFD009D7F5D /* sphere.vert */,
+				7D64181415DE6EFD009D7F5D /* sphere.geom */,
+				7D64181315DE6EFD009D7F5D /* sphere.frag */,
+				7D64180415DE6EBC009D7F5D /* model.dat */,
 				7D1E90EF1123E36C005E6C75 /* Products */,
 				7D1E90F11123E36C005E6C75 /* Info.plist */,
 				7D7AF85E1222C8CC003A0434 /* opengl.icns */,
@@ -180,11 +144,14 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				7D48B1C51563ED8A00B6F38A /* simple.frag in Resources */,
-				7D48B1C61563ED8A00B6F38A /* tile.frag in Resources */,
 				7D48B1C71563ED8A00B6F38A /* simple.vert in Resources */,
+				7D48B1C51563ED8A00B6F38A /* simple.frag in Resources */,
 				7D48B1C81563ED8A00B6F38A /* tile.vert in Resources */,
-				7DD1A6DD15A9E469003B72C1 /* scoutwalker.obj in Resources */,
+				7D48B1C61563ED8A00B6F38A /* tile.frag in Resources */,
+				7D64182015DE6FAB009D7F5D /* sphere.vert in Resources */,
+				7D64182115DE6FAB009D7F5D /* sphere.geom in Resources */,
+				7D64182215DE6FAB009D7F5D /* sphere.frag in Resources */,
+				7D64180515DE6EC3009D7F5D /* model.dat in Resources */,
 				7D7AF85F1222C8CC003A0434 /* opengl.icns in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -197,19 +164,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				7D48B1911563EBCA00B6F38A /* main.cpp in Sources */,
-				7D48B19C1563EBDE00B6F38A /* Matrix.cpp in Sources */,
-				7D48B19D1563EBDE00B6F38A /* Obj.cpp in Sources */,
-				7D48B19E1563EBDE00B6F38A /* Object.cpp in Sources */,
-				7D48B19F1563EBDE00B6F38A /* Shader.cpp in Sources */,
-				7D48B1A01563EBDE00B6F38A /* Shape.cpp in Sources */,
-				7D48B1A11563EBDE00B6F38A /* SimpleShader.cpp in Sources */,
-				7D48B1A21563EBDE00B6F38A /* Square.cpp in Sources */,
-				7D48B1A31563EBDE00B6F38A /* Texture.cpp in Sources */,
-				7D48B1A41563EBDE00B6F38A /* TileShader.cpp in Sources */,
-				7D48B1A51563EBDE00B6F38A /* Trackball.cpp in Sources */,
-				7D48B1BB1563ED2200B6F38A /* Circle.cpp in Sources */,
-				7D48B1BD1563ED5200B6F38A /* Attribute.cpp in Sources */,
+				7D48B1A11563EBDE00B6F38A /* GgSimpleShader.cpp in Sources */,
+				7D48B1A41563EBDE00B6F38A /* GgTileShader.cpp in Sources */,
 				7DD1A6CC15A9E439003B72C1 /* gg.cpp in Sources */,
+				7D64182515DE6FD4009D7F5D /* GgPointShader.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

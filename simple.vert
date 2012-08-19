@@ -30,13 +30,13 @@ void main(void)
 {
   vec4 p = mw * pv;
   vec3 v = normalize(p.xyz / p.w);
-  vec3 n = normalize(mg * nv).xyz;
-  vec3 l = normalize(lpos - p).xyz;
+  vec3 l = normalize((lpos * p.w - p * lpos.w).xyz);
+  vec3 n = normalize((mg * nv).xyz);
   vec3 h = normalize(l - v);
 
   iamb = kamb * lamb;
   idiff = max(dot(n, l), 0.0) * kdiff * ldiff;
-  ispec = pow(max(dot(n, h), 0), kshi) * kspec * lspec;
+  ispec = pow(max(dot(n, h), 0.0), kshi) * kspec * lspec;
   
   gl_Position = mc * pv;
 }
