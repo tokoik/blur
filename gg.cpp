@@ -1376,7 +1376,7 @@ gg::GgPoints *gg::ggPointSphere(GLuint nv, GLfloat cx, GLfloat cy, GLfloat cz, G
   GLfloat (*vert)[3] = new GLfloat[nv][3];
   
   // ì_ÇÃê∂ê¨
-  for (int v = 0; v < nv; ++v)
+  for (GLuint v = 0; v < nv; ++v)
   {
     float r = radius * (float)rand() / (float)RAND_MAX;
     float t = 6.2831853f * (float)rand() / ((float)RAND_MAX + 1.0f);
@@ -1455,7 +1455,7 @@ gg::GgPolygon *gg::ggEllipse(GLfloat width, GLfloat height, GLuint slices)
     throw e;
   }
   
-  for (int v = 0; v < slices; ++v)
+  for (GLuint v = 0; v < slices; ++v)
   {
     float t = 6.2831853f * (float)v / (float)slices;
     

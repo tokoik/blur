@@ -39,6 +39,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #elif defined(X11)
 #  define GL_GLEXT_PROTOTYPES
 #  define GLX_GLXEXT_PROTOTYPES
+#  include <GL/glx.h>
 #  include <GL/glut.h>
 #elif defined(__APPLE__)
 #  include <OpenGL/OpenGL.h>
