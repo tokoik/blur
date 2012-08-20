@@ -1,1 +1,7 @@
+GgPointShader.o: GgPointShader.cpp GgPointShader.h gg.h
+GgSimpleShader.o: GgSimpleShader.cpp GgSimpleShader.h GgPointShader.h \
+ gg.h
+GgTileShader.o: GgTileShader.cpp GgTileShader.h GgSimpleShader.h \
+ GgPointShader.h gg.h
 gg.o: gg.cpp gg.h
+main.o: main.cpp gg.h GgSimpleShader.h GgPointShader.h
