@@ -753,22 +753,9 @@ namespace gg
   : public Gg
   {
     // 参照カウント
-    int count;
+    unsigned int count;
     
   protected:
-    
-    // 属性の結合
-    template<class T> void attach(T *&target, T *instance)
-    {
-      target = instance;
-      if (target) target->inc();
-    }
-    
-    // 属性の解放
-    template<class T> void detach(T *&target)
-    {
-      if (target && target->dec() <= 0) delete target;
-    }
     
     // デストラクタ
     ~GgAttribute(void) {}
