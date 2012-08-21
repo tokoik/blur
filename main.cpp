@@ -27,18 +27,9 @@ static GgObject *model = 0;
 static GgPoints *points = 0;
 
 /*
-** 光源
-*/
-static const GLfloat lpos[] = { 3.0f, 4.0f, 5.0f, 1.0f };
-static const GLfloat lamb[] = { 0.2f, 0.2f, 0.2f, 1.0f };
-static const GLfloat ldiff[] = { 1.0f, 1.0f, 1.0f, 1.0f };
-static const GLfloat lspec[] = { 1.0f, 1.0f, 1.0f, 1.0f };
-
-/*
 ** シェーダ
 */
 #include "GgSimpleShader.h"
-#include "GgPointShader.h"
 
 static void display(void)
 {
@@ -52,7 +43,7 @@ static void display(void)
   
   // 点の描画
   GgPointShader *sphere = dynamic_cast<GgPointShader *>(points->getShader());
-  if (sphere) sphere->loadMatrix(*mp, *mv * tb->get());
+  if (sphere) sphere->loadModelViewProjectionMatrix(*mp * *mv * tb->get());
   points->draw();
   
   // ダブルバッファリング
@@ -156,10 +147,10 @@ static void init(void)
   GgPointShader *sphere = new GgPointShader("sphere.vert", "sphere.frag", "sphere.geom", GL_POINTS, GL_TRIANGLE_STRIP, 3);
 
   // 光源
-  simple->setLightPosition(lpos);
-  simple->setLightAmbient(lamb);
-  simple->setLightDiffuse(ldiff);
-  simple->setLightSpecular(lspec);
+  simple->setLightPosition(3.0f, 4.0f, 5.0f);
+  simple->setLightAmbient(0.2f, 0.2f, 0.2f);
+  simple->setLightDiffuse(1.0f, 1.0f, 1.0f);
+  simple->setLightSpecular(1.0f, 1.0f, 1.0f);
 
   // 材質
   simple->setMaterialAmbient(0.8f, 0.6f, 0.6f);
@@ -172,14 +163,6 @@ static void init(void)
   model->attachShader(simple);
   
   // 点
-  sphere->setLightPosition(3.0f, 4.0f, 5.0f);
-  sphere->setLightAmbient(0.2f, 0.2f, 0.2f);
-  sphere->setLightDiffuse(1.0f, 1.0f, 1.0f);
-  sphere->setLightSpecular(1.0f, 1.0f, 1.0f);
-  sphere->setMaterialAmbient(0.8f, 0.8f, 0.6f);
-  sphere->setMaterialDiffuse(0.8f, 0.8f, 0.6f);
-  sphere->setMaterialSpecular(0.2f, 0.2f, 0.2f);
-  sphere->setMaterialShininess(50.0f);
   points = ggPointSphere(100, 0.0f, 0.0f, 0.0f, 1.0f);
   points->attachShader(sphere);
   
