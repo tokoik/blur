@@ -45,7 +45,6 @@ void gg::ggInit(void)
 
   // Swap Interval ÇÃê›íË
 #if defined(X11)
-#  if !defined(__APPLE__)
   Display *dpy = glXGetCurrentDisplay();
   GLXDrawable drawable = glXGetCurrentDrawable();
   if (drawable)
@@ -53,7 +52,6 @@ void gg::ggInit(void)
     glXSwapIntervalEXT(dpy, drawable, 1);
     return;
   }
-#  endif
 #elif defined(__APPLE__)
   int swap_interval = 1;
   CGLContextObj cgl_context = CGLGetCurrentContext();
