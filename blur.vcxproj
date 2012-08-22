@@ -74,39 +74,19 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="Attribute.h" />
-    <ClInclude Include="Circle.h" />
     <ClInclude Include="gg.h" />
-    <ClInclude Include="Matrix.h" />
-    <ClInclude Include="Obj.h" />
-    <ClInclude Include="Object.h" />
-    <ClInclude Include="Shader.h" />
-    <ClInclude Include="Shape.h" />
-    <ClInclude Include="SimpleShader.h" />
-    <ClInclude Include="Square.h" />
-    <ClInclude Include="Texture.h" />
-    <ClInclude Include="TileShader.h" />
-    <ClInclude Include="Trackball.h" />
+    <ClInclude Include="GgPointShader.h" />
+    <ClInclude Include="GgSimpleShader.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="gg.cpp" />
+    <ClCompile Include="GgPointShader.cpp" />
+    <ClCompile Include="GgSimpleShader.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="Matrix.cpp" />
-    <ClCompile Include="Obj.cpp" />
-    <ClCompile Include="Object.cpp" />
-    <ClCompile Include="Shader.cpp" />
-    <ClCompile Include="Shape.cpp" />
-    <ClCompile Include="SimpleShader.cpp" />
-    <ClCompile Include="Square.cpp" />
-    <ClCompile Include="Texture.cpp" />
-    <ClCompile Include="TileShader.cpp" />
-    <ClCompile Include="Trackball.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="simple.frag" />
     <None Include="simple.vert" />
-    <None Include="tile.frag" />
-    <None Include="tile.vert" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

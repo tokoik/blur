@@ -8,23 +8,18 @@ using namespace gg;
 /*
 ** トラックボール処理
 */
-static GgTrackball *tb = 0;
+static GgTrackball tb;
 
 /*
 ** 変換行列
 */
-static GgMatrix *mv = 0;  // 視野変換行列
-static GgMatrix *mp = 0;  // 投影変換行列
+static GgMatrix mv;   // 視野変換行列
+static GgMatrix mp;   // 投影変換行列
 
 /*
 ** OBJ ファイル
 */
 static GgObject *model = 0;
-
-/*
-** 点データ
-*/
-static GgPoints *points = 0;
 
 /*
 ** シェーダ
@@ -38,13 +33,8 @@ static void display(void)
   
   // 図形の描画
   GgSimpleShader *simple = dynamic_cast<GgSimpleShader *>(model->getShader());
-  if (simple) simple->loadMatrix(*mp, *mv);
+  if (simple) simple->loadMatrix(mp, mv * tb.get());
   model->draw();
-  
-  // 点の描画
-  GgPointShader *sphere = dynamic_cast<GgPointShader *>(points->getShader());
-  if (sphere) sphere->loadModelViewProjectionMatrix(*mp * *mv * tb->get());
-  points->draw();
   
   // ダブルバッファリング
   glutSwapBuffers();
@@ -56,10 +46,10 @@ static void resize(int w, int h)
   glViewport(0, 0, w, h);
   
   // 投影変換行列
-  mp->loadPerspective(0.6f, (GLfloat)w / (GLfloat)h, 1.0f, 10.0f);
+  mp.loadPerspective(0.6f, (GLfloat)w / (GLfloat)h, 1.0f, 10.0f);
 
   // トラックボールする範囲
-  tb->region(w, h);
+  tb.region(w, h);
 }
 
 static void idle(void)
@@ -76,19 +66,19 @@ static void mouse(int button, int state, int x, int y)
   switch (press = button)
   {
   case GLUT_LEFT_BUTTON:
+    break;
+  case GLUT_RIGHT_BUTTON:
     if (state == GLUT_DOWN)
     {
       // トラックボール開始
-      tb->start(x, y);
+      tb.start(x, y);
       glutIdleFunc(idle);
     }
     else {
       // トラックボール停止
-      tb->stop(x, y);
+      tb.stop(x, y);
       glutIdleFunc(0);
     }
-    break;
-  case GLUT_RIGHT_BUTTON:
     break;
   default:
     break;
@@ -100,10 +90,10 @@ static void motion(int x, int y)
   switch (press)
   {
   case GLUT_LEFT_BUTTON:
-    // トラックボール移動
-    tb->motion(x, y);
     break;
   case GLUT_RIGHT_BUTTON:
+    // トラックボール回転
+    tb.motion(x, y);
     break;
   default:
     break;
@@ -127,10 +117,6 @@ static void keyboard(unsigned char key, int kx, int ky)
 static void leave(void)
 {
   delete model;
-  delete points;
-  delete mv;
-  delete mp;
-  delete tb;
 
   // オブジェクトにアタッチしたシェーダは
   // オブジェクトの削除時に削除されるので
@@ -144,7 +130,6 @@ static void init(void)
   
   // シェーダプログラムの読み込み
   GgSimpleShader *simple = new GgSimpleShader("simple.vert", "simple.frag");
-  GgPointShader *sphere = new GgPointShader("sphere.vert", "sphere.frag", "sphere.geom", GL_POINTS, GL_TRIANGLE_STRIP, 3);
 
   // 光源
   simple->setLightPosition(3.0f, 4.0f, 5.0f);
@@ -162,20 +147,9 @@ static void init(void)
   model = ggObj("model.dat");
   model->attachShader(simple);
   
-  // 点
-  points = ggPointSphere(100, 0.0f, 0.0f, 0.0f, 1.0f);
-  points->attachShader(sphere);
-  
   // 視野変換行列
-  mv = new GgMatrix;
-  mv->loadLookat(0.0f, 0.0f, 3.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f);
+  mv.loadLookat(0.0f, 0.0f, 3.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f);
   
-  // 投影変換行列
-  mp = new GgMatrix;
-  
-  // トラックボール処理
-  tb = new GgTrackball;
-
   // 初期設定
   glClearColor(0.0f, 0.2f, 0.4f, 1.0f);
   glEnable(GL_DEPTH_TEST);
