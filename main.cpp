@@ -1,6 +1,7 @@
 #include <cmath>
 #include <cstdlib>
 #include <cstring>
+#include <cstdio>
 
 #include "gg.h"
 using namespace gg;
@@ -13,8 +14,9 @@ static GgTrackball tb;
 /*
 ** 変換行列
 */
-static GgMatrix mv;   // 視野変換行列
-static GgMatrix mp;   // 投影変換行列
+static GgMatrix mv, imv;   // 視野変換行列
+static GgMatrix mp, imp;   // 投影変換行列
+static GgMatrix mt;        // 平行移動
 
 /*
 ** OBJ ファイル
@@ -26,6 +28,11 @@ static GgObject *model = 0;
 */
 #include "GgSimpleShader.h"
 
+/*
+** ウィンドウの高さ
+*/
+static int height;
+
 static void display(void)
 {
   // 画面クリア
@@ -33,7 +40,7 @@ static void display(void)
   
   // 図形の描画
   GgSimpleShader *simple = dynamic_cast<GgSimpleShader *>(model->getShader());
-  if (simple) simple->loadMatrix(mp, mv * tb.get());
+  if (simple) simple->loadMatrix(mp, mv * mt * tb.get());
   model->draw();
   
   // ダブルバッファリング
@@ -43,10 +50,11 @@ static void display(void)
 static void resize(int w, int h)
 {
   // ウィンドウ全体に表示
-  glViewport(0, 0, w, h);
+  glViewport(0, 0, w, height = h);
   
   // 投影変換行列
   mp.loadPerspective(0.6f, (GLfloat)w / (GLfloat)h, 1.0f, 10.0f);
+  imp.loadInvert(mp);
 
   // トラックボールする範囲
   tb.region(w, h);
@@ -58,6 +66,28 @@ static void idle(void)
   glutPostRedisplay();
 }
 
+static void pick(GLfloat *pw, int x, int y, GLfloat z, const GgMatrix &m)
+{
+  // ビューポートの取り出し
+  GLint vp[4];
+  glGetIntegerv(GL_VIEWPORT, vp);
+  
+  // クリッピング空間中の座標値
+  GLfloat pc[] =
+  {
+    (GLfloat)(x - vp[0]) * 2.0f / (GLfloat)vp[2] - 1.0f,
+    (GLfloat)(y - vp[1]) * 2.0f / (GLfloat)vp[3] - 1.0f,
+    z * 2.0f - 1.0f,
+    1.0f,
+  };
+  
+  // ワールド空間中の座標値
+  m.projection(pw, pc);
+}
+
+static GLfloat p0[4], p1[4], z0;
+static GgMatrix mt0, mt1;
+
 // 押されているボタン
 static int press = 0;
 
@@ -66,6 +96,27 @@ static void mouse(int button, int state, int x, int y)
   switch (press = button)
   {
   case GLUT_LEFT_BUTTON:
+    if (state == GLUT_DOWN)
+    {
+      GLfloat a;
+      glReadPixels(x, height - y, 1, 1, GL_ALPHA, GL_FLOAT, &a);
+      
+      if (a > 0.0f)
+      {
+        // 平行移動開始
+        glReadPixels(x, height - y, 1, 1, GL_DEPTH_COMPONENT, GL_FLOAT, &z0);
+        pick(p0, x, height - y, z0, imv * imp);
+        mt0 = mt;
+        glutIdleFunc(idle);
+      }
+      else {
+        press = 0;
+      }
+    }
+    else {
+      // 平行移動停止
+      glutIdleFunc(0);
+    }
     break;
   case GLUT_RIGHT_BUTTON:
     if (state == GLUT_DOWN)
@@ -90,6 +141,10 @@ static void motion(int x, int y)
   switch (press)
   {
   case GLUT_LEFT_BUTTON:
+    // クリック位置の奥行きを平行移動
+    pick(p1, x, height - y, z0, imv * imp);
+    mt1.loadTranslate(p1[0] / p1[3] - p0[0] / p0[3], p1[1] / p1[3] - p0[1] / p0[3], 0.0f, 1.0f);
+    mt = mt0 * mt1;
     break;
   case GLUT_RIGHT_BUTTON:
     // トラックボール回転
@@ -149,9 +204,13 @@ static void init(void)
   
   // 視野変換行列
   mv.loadLookat(0.0f, 0.0f, 3.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f);
+  imv.loadInvert(mv);
+  
+  // 平行移動
+  mt.loadIdentity();
   
   // 初期設定
-  glClearColor(0.0f, 0.2f, 0.4f, 1.0f);
+  glClearColor(0.0f, 0.2f, 0.4f, 0.0f);
   glEnable(GL_DEPTH_TEST);
   glEnable(GL_CULL_FACE);
   

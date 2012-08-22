@@ -9,15 +9,9 @@
 /* Begin PBXBuildFile section */
 		7D48B1911563EBCA00B6F38A /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7D48B1901563EBCA00B6F38A /* main.cpp */; };
 		7D48B1A11563EBDE00B6F38A /* GgSimpleShader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7D48B1971563EBDE00B6F38A /* GgSimpleShader.cpp */; };
-		7D48B1A41563EBDE00B6F38A /* GgTileShader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7D48B19A1563EBDE00B6F38A /* GgTileShader.cpp */; };
 		7D48B1C51563ED8A00B6F38A /* simple.frag in Resources */ = {isa = PBXBuildFile; fileRef = 7D48B1C11563ED8600B6F38A /* simple.frag */; };
-		7D48B1C61563ED8A00B6F38A /* tile.frag in Resources */ = {isa = PBXBuildFile; fileRef = 7D48B1C21563ED8600B6F38A /* tile.frag */; };
 		7D48B1C71563ED8A00B6F38A /* simple.vert in Resources */ = {isa = PBXBuildFile; fileRef = 7D48B1C31563ED8600B6F38A /* simple.vert */; };
-		7D48B1C81563ED8A00B6F38A /* tile.vert in Resources */ = {isa = PBXBuildFile; fileRef = 7D48B1C41563ED8600B6F38A /* tile.vert */; };
 		7D64180515DE6EC3009D7F5D /* model.dat in Resources */ = {isa = PBXBuildFile; fileRef = 7D64180415DE6EBC009D7F5D /* model.dat */; };
-		7D64182015DE6FAB009D7F5D /* sphere.vert in Resources */ = {isa = PBXBuildFile; fileRef = 7D64181515DE6EFD009D7F5D /* sphere.vert */; };
-		7D64182115DE6FAB009D7F5D /* sphere.geom in Resources */ = {isa = PBXBuildFile; fileRef = 7D64181415DE6EFD009D7F5D /* sphere.geom */; };
-		7D64182215DE6FAB009D7F5D /* sphere.frag in Resources */ = {isa = PBXBuildFile; fileRef = 7D64181315DE6EFD009D7F5D /* sphere.frag */; };
 		7D64182515DE6FD4009D7F5D /* GgPointShader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7D64182415DE6FD4009D7F5D /* GgPointShader.cpp */; };
 		7D7AF85F1222C8CC003A0434 /* opengl.icns in Resources */ = {isa = PBXBuildFile; fileRef = 7D7AF85E1222C8CC003A0434 /* opengl.icns */; };
 		7DD1A6CC15A9E439003B72C1 /* gg.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7DD1A6CA15A9E439003B72C1 /* gg.cpp */; };
@@ -27,18 +21,11 @@
 		7D1E90EE1123E36C005E6C75 /* blur.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = blur.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7D1E90F11123E36C005E6C75 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		7D48B18B1563EBBE00B6F38A /* GgSimpleShader.h */ = {isa = PBXFileReference; fileEncoding = 8; lastKnownFileType = sourcecode.c.h; path = GgSimpleShader.h; sourceTree = "<group>"; };
-		7D48B18E1563EBBE00B6F38A /* GgTileShader.h */ = {isa = PBXFileReference; fileEncoding = 8; lastKnownFileType = sourcecode.c.h; path = GgTileShader.h; sourceTree = "<group>"; };
 		7D48B1901563EBCA00B6F38A /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 8; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		7D48B1971563EBDE00B6F38A /* GgSimpleShader.cpp */ = {isa = PBXFileReference; fileEncoding = 8; lastKnownFileType = sourcecode.cpp.cpp; path = GgSimpleShader.cpp; sourceTree = "<group>"; };
-		7D48B19A1563EBDE00B6F38A /* GgTileShader.cpp */ = {isa = PBXFileReference; fileEncoding = 8; lastKnownFileType = sourcecode.cpp.cpp; path = GgTileShader.cpp; sourceTree = "<group>"; };
 		7D48B1C11563ED8600B6F38A /* simple.frag */ = {isa = PBXFileReference; fileEncoding = 8; lastKnownFileType = sourcecode.glsl; path = simple.frag; sourceTree = "<group>"; };
-		7D48B1C21563ED8600B6F38A /* tile.frag */ = {isa = PBXFileReference; fileEncoding = 8; lastKnownFileType = sourcecode.glsl; path = tile.frag; sourceTree = "<group>"; };
 		7D48B1C31563ED8600B6F38A /* simple.vert */ = {isa = PBXFileReference; fileEncoding = 8; lastKnownFileType = sourcecode.glsl; path = simple.vert; sourceTree = "<group>"; };
-		7D48B1C41563ED8600B6F38A /* tile.vert */ = {isa = PBXFileReference; fileEncoding = 8; lastKnownFileType = sourcecode.glsl; path = tile.vert; sourceTree = "<group>"; };
 		7D64180415DE6EBC009D7F5D /* model.dat */ = {isa = PBXFileReference; fileEncoding = 8; lastKnownFileType = text; path = model.dat; sourceTree = "<group>"; };
-		7D64181315DE6EFD009D7F5D /* sphere.frag */ = {isa = PBXFileReference; fileEncoding = 8; lastKnownFileType = sourcecode.glsl; path = sphere.frag; sourceTree = "<group>"; };
-		7D64181415DE6EFD009D7F5D /* sphere.geom */ = {isa = PBXFileReference; fileEncoding = 8; lastKnownFileType = text; path = sphere.geom; sourceTree = "<group>"; };
-		7D64181515DE6EFD009D7F5D /* sphere.vert */ = {isa = PBXFileReference; fileEncoding = 8; lastKnownFileType = sourcecode.glsl; path = sphere.vert; sourceTree = "<group>"; };
 		7D64182315DE6FCF009D7F5D /* GgPointShader.h */ = {isa = PBXFileReference; fileEncoding = 8; lastKnownFileType = sourcecode.c.h; path = GgPointShader.h; sourceTree = "<group>"; };
 		7D64182415DE6FD4009D7F5D /* GgPointShader.cpp */ = {isa = PBXFileReference; fileEncoding = 8; lastKnownFileType = sourcecode.cpp.cpp; path = GgPointShader.cpp; sourceTree = "<group>"; };
 		7D7AF85E1222C8CC003A0434 /* opengl.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = opengl.icns; sourceTree = "<group>"; };
@@ -67,15 +54,8 @@
 				7D64182415DE6FD4009D7F5D /* GgPointShader.cpp */,
 				7D48B18B1563EBBE00B6F38A /* GgSimpleShader.h */,
 				7D48B1971563EBDE00B6F38A /* GgSimpleShader.cpp */,
-				7D48B18E1563EBBE00B6F38A /* GgTileShader.h */,
-				7D48B19A1563EBDE00B6F38A /* GgTileShader.cpp */,
 				7D48B1C31563ED8600B6F38A /* simple.vert */,
 				7D48B1C11563ED8600B6F38A /* simple.frag */,
-				7D48B1C41563ED8600B6F38A /* tile.vert */,
-				7D48B1C21563ED8600B6F38A /* tile.frag */,
-				7D64181515DE6EFD009D7F5D /* sphere.vert */,
-				7D64181415DE6EFD009D7F5D /* sphere.geom */,
-				7D64181315DE6EFD009D7F5D /* sphere.frag */,
 				7D64180415DE6EBC009D7F5D /* model.dat */,
 				7D1E90EF1123E36C005E6C75 /* Products */,
 				7D1E90F11123E36C005E6C75 /* Info.plist */,
@@ -146,11 +126,6 @@
 			files = (
 				7D48B1C71563ED8A00B6F38A /* simple.vert in Resources */,
 				7D48B1C51563ED8A00B6F38A /* simple.frag in Resources */,
-				7D48B1C81563ED8A00B6F38A /* tile.vert in Resources */,
-				7D48B1C61563ED8A00B6F38A /* tile.frag in Resources */,
-				7D64182015DE6FAB009D7F5D /* sphere.vert in Resources */,
-				7D64182115DE6FAB009D7F5D /* sphere.geom in Resources */,
-				7D64182215DE6FAB009D7F5D /* sphere.frag in Resources */,
 				7D64180515DE6EC3009D7F5D /* model.dat in Resources */,
 				7D7AF85F1222C8CC003A0434 /* opengl.icns in Resources */,
 			);
@@ -165,7 +140,6 @@
 			files = (
 				7D48B1911563EBCA00B6F38A /* main.cpp in Sources */,
 				7D48B1A11563EBDE00B6F38A /* GgSimpleShader.cpp in Sources */,
-				7D48B1A41563EBDE00B6F38A /* GgTileShader.cpp in Sources */,
 				7DD1A6CC15A9E439003B72C1 /* gg.cpp in Sources */,
 				7D64182515DE6FD4009D7F5D /* GgPointShader.cpp in Sources */,
 			);
