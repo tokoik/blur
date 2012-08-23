@@ -89,7 +89,7 @@ static GLfloat p0[4], p1[4], z0;
 static GgMatrix mt0, mt1;
 
 // 押されているボタン
-static int press = 0;
+static int press = -1;
 
 static void mouse(int button, int state, int x, int y)
 {
@@ -98,19 +98,16 @@ static void mouse(int button, int state, int x, int y)
   case GLUT_LEFT_BUTTON:
     if (state == GLUT_DOWN)
     {
-      GLfloat a;
-      glReadPixels(x, height - y, 1, 1, GL_ALPHA, GL_FLOAT, &a);
-      
-      if (a > 0.0f)
+      glReadPixels(x, height - y, 1, 1, GL_DEPTH_COMPONENT, GL_FLOAT, &z0);
+      if (z0 < 1.0f)
       {
         // 平行移動開始
-        glReadPixels(x, height - y, 1, 1, GL_DEPTH_COMPONENT, GL_FLOAT, &z0);
         pick(p0, x, height - y, z0, imv * imp);
         mt0 = mt;
         glutIdleFunc(idle);
       }
       else {
-        press = 0;
+        press = -1;
       }
     }
     else {
@@ -143,7 +140,7 @@ static void motion(int x, int y)
   case GLUT_LEFT_BUTTON:
     // クリック位置の奥行きを平行移動
     pick(p1, x, height - y, z0, imv * imp);
-    mt1.loadTranslate(p1[0] / p1[3] - p0[0] / p0[3], p1[1] / p1[3] - p0[1] / p0[3], 0.0f, 1.0f);
+    mt1.loadTranslate(p1[0] / p1[3] - p0[0] / p0[3], p1[1] / p1[3] - p0[1] / p0[3], 0.0f);
     mt = mt0 * mt1;
     break;
   case GLUT_RIGHT_BUTTON:
