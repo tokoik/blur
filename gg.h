@@ -3,23 +3,23 @@
 **
 
 Copyright (c) 2011, 2012 Kohe Tokoi. All Rights Reserved.
- 
+
 Permission is hereby granted, free of charge,  to any person obtaining a copy 
 of this software and associated documentation files (the "Software"), to deal 
 in the Software without restriction,  including without limitation the rights 
 to use, copy,  modify, merge,  publish, distribute,  sublicense,  and/or sell 
 copies or substantial portions of the Software.
- 
+
 The above  copyright notice  and this permission notice  shall be included in 
 all copies or substantial portions of the Software.
- 
+
 THE SOFTWARE  IS PROVIDED "AS IS",  WITHOUT WARRANTY OF ANY KIND,  EXPRESS OR 
 IMPLIED,  INCLUDING  BUT  NOT LIMITED  TO THE WARRANTIES  OF MERCHANTABILITY, 
 FITNESS  FOR  A PARTICULAR PURPOSE  AND NONINFRINGEMENT.  IN  NO EVENT  SHALL 
 KOHE TOKOI  BE LIABLE FOR ANY CLAIM,  DAMAGES OR OTHER LIABILITY,  WHETHER IN 
 AN ACTION  OF CONTRACT,  TORT  OR  OTHERWISE,  ARISING  FROM,  OUT OF  OR  IN 
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
- 
+
 **
 */
 
@@ -97,10 +97,10 @@ namespace gg
   /*
   ** ゲームグラフィックス特論の都合にもとづく初期化
   **
-  **     OpenGL のレンダリングコンテキストを作成後に実行する
+  **     OpenGL のレンダリングコンテキスト作成後に実行する
   */
   extern void ggInit(void);
-  
+
   /*
   ** OpenGL のエラーチェック
   **
@@ -108,7 +108,7 @@ namespace gg
   **     msg はメッセージに乗じる文字列
   */
   extern void ggError(const char *msg = 0);
-  
+
   /*
   ** FBO のエラーチェック
   **
@@ -116,7 +116,7 @@ namespace gg
   **     msg はメッセージに乗じる文字列
   */
   extern void ggFBOError(const char *msg = 0);
-  
+
   /*
   ** シェーダーソースファイルの読み込み
   */
@@ -129,54 +129,54 @@ namespace gg
     int vertices = 0,                   // ジオメトリシェーダの出力頂点数
     int nvarying = 0,                   // フィードバックする varying 変数の数（0 なら不使用）
     const char **varyings = 0           // フィードバックする varying 変数のリスト
-  );
-  
+    );
+
   /*
   ** テクスチャマッピング用の RAW 画像ファイルの読み込み
   */
   extern void loadImage(const char *name, int width, int height, GLenum format);
-  
+
   /*
   ** 高さマップ用の RAW 画像ファイルの読み込んで法線マップを作成する
   */
   extern void loadHeight(const char *name, int width, int height, float nz);
-  
+
   /*
   ** 基底クラス
   */
   class Gg
   {
   protected:
-    
+
     // デストラクタ
     ~Gg(void) {}
-    
+
   public:
-    
+
     // コンストラクタ
     Gg(void) {}
   };
-  
+
   /*
   ** 変換行列
   */
   class GgMatrix
-  : public Gg
+    : public Gg
   {
     // 変換行列の要素
     GLfloat array[16];
-    
+
     // 行列 a とベクトル b の積をベクトル c に代入する
     void projection(GLfloat *c, const GLfloat *a, const GLfloat *b) const;
-    
+
     // 行列 a と行列 b の積を行列 c に代入する
     void multiply(GLfloat *c, const GLfloat *a, const GLfloat *b) const;
-    
+
   public:
-    
+
     // デストラクタ
     virtual ~GgMatrix(void) {}
-    
+
     // コンストラクタ
     GgMatrix(void) {}
     GgMatrix(const GLfloat *a)
@@ -187,7 +187,7 @@ namespace gg
     {
       load(m);
     }
-    
+
     // 演算子
     GgMatrix &multiply(const GgMatrix &m, const GgMatrix &n)
     {
@@ -236,7 +236,7 @@ namespace gg
     {
       return multiply(m);
     }
-    
+
     // 変換行列の読み込み
     GgMatrix &load(const GLfloat *a)
     {
@@ -247,24 +247,24 @@ namespace gg
     {
       return load(m.array);
     }
-    
+
     // 単位行列を設定する
     GgMatrix &loadIdentity(void);
-    
+
     // 平行移動の変換行列を設定する
     GgMatrix &loadTranslate(GLfloat x, GLfloat y, GLfloat z, GLfloat w = 1.0f);
     GgMatrix &loadTranslate(const GLfloat *t)
     {
       return loadTranslate(t[0], t[1], t[2], t[3]);
     }
-    
+
     // 拡大縮小の変換行列を設定する
     GgMatrix &loadScale(GLfloat x, GLfloat y, GLfloat z, GLfloat w = 1.0f);
     GgMatrix &loadScale(const GLfloat *s)
     {
       return loadScale(s[0], s[1], s[2], s[3]);
     }
-    
+
     // 回転の変換行列を設定する
     GgMatrix &loadRotateX(GLfloat a);
     GgMatrix &loadRotateY(GLfloat a);
@@ -274,32 +274,32 @@ namespace gg
     {
       return loadRotate(r[0], r[1], r[2], r[3]);
     }
-    
+
     // 視野変換行列を設定する
     GgMatrix &loadLookat(GLfloat ex, GLfloat ey, GLfloat ez, GLfloat tx, GLfloat ty, GLfloat tz, GLfloat ux, GLfloat uy, GLfloat uz);
     GgMatrix &loadLookat(const GLfloat *e, const GLfloat *t, const GLfloat *u)
     {
       return loadLookat(e[0], e[1], e[2], t[0], t[1], t[2], u[0], u[1], u[2]);
     }
-    
+
     // 直交投影変換行列を設定する
     GgMatrix &loadOrthogonal(GLfloat left, GLfloat right, GLfloat bottom, GLfloat top, GLfloat zNear, GLfloat zFar);
-    
+
     // 透視透視投影変換行列を設定する
     GgMatrix &loadFrustum(GLfloat left, GLfloat right, GLfloat bottom, GLfloat top, GLfloat zNear, GLfloat zFar);
-    
+
     // 画角を指定して透視投影変換行列を設定する
     GgMatrix &loadPerspective(GLfloat fovy, GLfloat aspect, GLfloat zNear, GLfloat zFar);
-    
+
     // 転置行列を設定する
     GgMatrix &loadTranspose(const GgMatrix &m);
-    
+
     // 逆行列を設定する
     GgMatrix &loadInvert(const GgMatrix &m);
-    
+
     // 法線変換行列を設定する
     GgMatrix &loadNormal(const GgMatrix &m);
-    
+
     // 平行移動変換を乗じる
     GgMatrix &translate(GLfloat x, GLfloat y, GLfloat z, GLfloat w = 1.0f)
     {
@@ -310,7 +310,7 @@ namespace gg
     {
       return translate(t[0], t[1], t[2], t[3]);
     }
-    
+
     // 拡大縮小変換を乗じる
     GgMatrix &scale(GLfloat x, GLfloat y, GLfloat z, GLfloat w = 1.0f)
     {
@@ -323,7 +323,7 @@ namespace gg
     {
       return scale(s[0], s[1], s[2], s[3]);
     }
-    
+
     // 回転変換を乗じる
     GgMatrix &rotateX(GLfloat a)
     {
@@ -357,89 +357,89 @@ namespace gg
     {
       return rotate(r[0], r[1], r[2], r[3]);
     }
-    
+
     // 視野変換を乗じる
     GgMatrix &lookat(GLfloat ex, GLfloat ey, GLfloat ez, GLfloat tx, GLfloat ty, GLfloat tz, GLfloat ux, GLfloat uy, GLfloat uz);
     GgMatrix &lookat(const GLfloat *e, const GLfloat *t, const GLfloat *u)
     {
       return lookat(e[0], e[1], e[2], t[0], t[1], t[2], u[0], u[1], u[2]);
     }
-    
+
     // 直交投影変換を乗じる
     GgMatrix &orthogonal(GLfloat left, GLfloat right, GLfloat bottom, GLfloat top, GLfloat zNear, GLfloat zFar);
-    
+
     // 透視投影変換を乗じる
     GgMatrix &frustum(GLfloat left, GLfloat right, GLfloat bottom, GLfloat top, GLfloat zNear, GLfloat zFar);
-    
+
     // 画角を指定して透視投影変換を乗じる
     GgMatrix &perspective(GLfloat fovy, GLfloat aspect, GLfloat zNear, GLfloat zFar);
-    
+
     // 転置行列を得る
     GgMatrix transpose(void) const
     {
       GgMatrix t;
       return t.loadTranspose(*this);
     }
-    
+
     // 逆行列を得る
     GgMatrix invert(void) const
     {
       GgMatrix t;
       return t.loadInvert(*this);
     }
-    
+
     // 法線変換行列を得る
     GgMatrix normal(void) const
     {
       GgMatrix t;
       return t.loadNormal(*this);
     }
-    
+
     // ベクトルに対して投影変換を行う
     void projection(GLfloat *c, const GLfloat *v) const
     {
       projection(c, array, v);
     }
-    
+
     // 変換行列を取り出す
     const GLfloat *get(void) const
     {
       return array;
     }
   };
-  
+
   /*
   ** 四元数
   */
   class GgQuaternion
-  : public Gg
+    : public Gg
   {
     // 四元数の要素
     GLfloat array[4];
-    
+
     // 四元数 p と四元数 q の和を四元数 r に求める
     void add(GLfloat *r, const GLfloat *p, const GLfloat *q) const;
-    
+
     // 四元数 p と四元数 q の差を四元数 r に求める
     void subtract(GLfloat *r, const GLfloat *p, const GLfloat *q) const;
-    
+
     // 四元数 p と四元数 q の積を四元数 r に求める
     void multiply(GLfloat *r, const GLfloat *p, const GLfloat *q) const;
-    
+
     // 四元数 q が表す回転の変換行列を m に求める
     void toMatrix(GLfloat *m, const GLfloat *q) const;
-    
+
     // 回転の変換行列 m が表す四元数を q に求める
     void toQuaternion(GLfloat *q, const GLfloat *m) const;
-    
+
     // 球面線形補間 q と r を t で補間した四元数を p に求める
     void slerp(GLfloat *p, const GLfloat *q, const GLfloat *r, GLfloat t) const;
-    
+
   public:
-    
+
     // デストラクタ
     virtual ~GgQuaternion(void) {}
-    
+
     // コンストラクタ
     GgQuaternion(void) {}
     GgQuaternion(GLfloat x, GLfloat y, GLfloat z, GLfloat w)
@@ -454,7 +454,7 @@ namespace gg
     {
       load(q);
     }
-    
+
     // 演算子
     GgQuaternion &operator=(const GLfloat *a)
     {
@@ -524,7 +524,7 @@ namespace gg
     {
       return multiply(q);
     }
-    
+
     // 四元数を設定する
     GgQuaternion &load(GLfloat x, GLfloat y, GLfloat z, GLfloat w)
     {
@@ -542,33 +542,33 @@ namespace gg
     {
       return load(q.array);
     }
-    
+
     // 回転の変換行列 m を表す四元数を設定する
     GgQuaternion &loadMatrix(const GLfloat *m)
     {
       toQuaternion(array, m); return *this;
     }
-    
+
     // 単位元を設定する
     GgQuaternion &loadIdentity(void)
     {
       return load(0.0f, 0.0f, 0.0f, 1.0f);
     }
-    
+
     // (x, y, z) を軸として角度 a 回転する資源数を設定する
     GgQuaternion &loadRotate(GLfloat x, GLfloat y, GLfloat z, GLfloat a);
     GgQuaternion &loadRotate(const GLfloat *v, GLfloat a)
     {
       return loadRotate(v[0], v[1], v[2], a);
     }
-    
+
     // オイラー角 (h, p, r) で与えられた回転を表す四元数を設定する
     GgQuaternion &loadEuler(GLfloat h, GLfloat p, GLfloat r);
     GgQuaternion &loadEuler(const GLfloat *e)
     {
       return loadEuler(e[0], e[1], e[2]);
     }
-    
+
     // 四元数の和を求める
     GgQuaternion &add(const GgQuaternion &p, const GgQuaternion &q)
     {
@@ -590,7 +590,7 @@ namespace gg
     {
       return add(q.array);
     }
-    
+
     // 四元数の差を求める
     GgQuaternion &subtract(const GgQuaternion &p, const GgQuaternion &q)
     {
@@ -612,7 +612,7 @@ namespace gg
     {
       return subtract(q.array);
     }
-    
+
     // 四元数の積を求める
     GgQuaternion &multiply(const GgQuaternion &p, const GgQuaternion &q)
     {
@@ -633,7 +633,7 @@ namespace gg
     {
       return multiply(q.array);
     }
-    
+
     // 球面線形補間
     GgQuaternion &slerp(const GgQuaternion &q, const GgQuaternion &r, GLfloat t)
     {
@@ -665,19 +665,19 @@ namespace gg
       slerp(array, array, b, t);
       return *this;
     }
-    
+
     // 四元数のノルムを求める
     GLfloat norm(void) const;
-    
+
     // 共役四元数を求める
     GgQuaternion conjugate(void) const;
-    
+
     // 四元数の逆を求める
     GgQuaternion invert(void) const;
-    
+
     // 四元数を正規化する
     GgQuaternion normalize(void) const;
-    
+
     // 四元数を取り出す
     const GLfloat *get(void) const
     {
@@ -690,19 +690,19 @@ namespace gg
       a[2] = array[2];
       a[3] = array[3];
     }
-    
+
     // 四元数が表す回転の行列を m に求める
     void getMatrix(GLfloat *m) const
     {
       toMatrix(m, array);
     }
   };
-  
+
   /*
   ** 簡易トラックボール処理
   */
   class GgTrackball
-  : public Gg
+    : public Gg
   {
     int cx, cy;       // ドラッグ開始位置
     bool drag;        // ドラッグ中か否か
@@ -710,31 +710,31 @@ namespace gg
     GgQuaternion cq;  // 回転の初期値 (四元数)
     GgQuaternion tq;  // ドラッグ中の回転 (四元数)
     GLfloat rt[16];   // 回転の変換行列
-    
+
   public:
-    
+
     // デストラクタ
     virtual ~GgTrackball(void) {}
-    
+
     // コンストラクタ
     GgTrackball(void);
-    
+
     // トラックボール処理の範囲指定
     //    ウィンドウのリサイズ時に呼び出す
     void region(int w, int h);
-    
+
     // トラックボール処理の開始
     //    マウスのドラッグ開始時（マウスボタンを押したとき）に呼び出す
     void start(int x, int y);
-    
+
     // 回転の変換行列の計算
     //    マウスのドラッグ中に呼び出す
     void motion(int x, int y);
-    
+
     // トラックボール処理の停止
     //    マウスのドラッグ終了時（マウスボタンを離したとき）に呼び出す
     void stop(int x, int y);
-    
+
     // 現在の回転の変換行列を取り出す
     const GLfloat *get(void) const
     {
@@ -750,62 +750,62 @@ namespace gg
   **     そのためこのクラスでは参照カウントを管理する
   */
   class GgAttribute
-  : public Gg
+    : public Gg
   {
     // 参照カウント
     unsigned int count;
-    
+
   protected:
-    
+
     // デストラクタ
     ~GgAttribute(void) {}
-    
+
   public:
-    
+
     // コンストラクタ
     GgAttribute(void)
     {
       count = 0;
     }
-    
+
     // 参照カウンタの増減
-    int inc(void)
+    unsigned int inc(void)
     {
       return ++count;
     }
-    int dec(void)
+    unsigned int dec(void)
     {
       return --count;
     }
   };
-  
+
   /*
   ** テクスチャ
   **
   **     拡散反射色テクスチャを読み込んでテクスチャオブジェクトを作成する
   */
   class GgTexture
-  : public GgAttribute
+    : public GgAttribute
   {
     // テクスチャ名
     GLuint texture;
-    
+
     // コピーコンストラクタ禁止
     GgTexture(const GgTexture &o);
 
-    // 代入演算子禁止
+    // 代入禁止
     GgTexture &operator=(const GgTexture &o);
-    
+
   protected:
-    
+
     // テクスチャオブジェクトを取り出す
     GLuint get(void) const
     {
       return texture;
     }
-    
+
   public:
-    
+
     // デストラクタ
     virtual ~GgTexture(void)
     {
@@ -815,7 +815,7 @@ namespace gg
         glDeleteTextures(1, &texture);
       }
     }
-    
+
     // コンストラクタ
     GgTexture(void)
     {
@@ -825,28 +825,28 @@ namespace gg
       const char *name,                   // 画像ファイル名（3/4 チャネルの RAW 画像）
       int width, int height,              // 画像の幅と高さ（2^n 画素）
       GLenum format = GL_RGB              // 読み込む画像の書式 (GL_RGB/GL_RGBA)
-    )
+      )
     {
       GgTexture();
       load(name, width, height, format);
     }
-    
+
     // 拡散反射色テクスチャを読み込む
     //     name: ファイル名, width, height: 幅と高さ (2^n), format: GL_RGB か GL_RGBA
     void load(const char *name, int width, int height, GLenum format = GL_RGB) const
     {
       loadImage(name, width, height, format);
     }
-    
+
     // テクスチャオブジェクトを結合する
     //     このテクスチャを使用する際に呼び出す
     //     unit: 使用するテクスチャユニット番号（0～）
-    void use(unsigned int unit = 0) const
+    void use(GLuint unit = 0) const
     {
       glActiveTexture(GL_TEXTURE0 + unit);
       glBindTexture(GL_TEXTURE_2D, texture);
     }
-    
+
     // テクスチャオブジェクトを解放する
     //    このテクスチャを使用しなくなったら呼び出す
     void unuse(void) const
@@ -855,38 +855,38 @@ namespace gg
       glActiveTexture(GL_TEXTURE0);
     }
   };
-  
+
   /*
   ** 法線マップ
   **
   **     高さマップ（グレイスケール画像）を読み込んで法線マップを作成する
   */
   class GgNormalTexture
-  : public GgTexture
+    : public GgTexture
   {
     // コピーコンストラクタ禁止
     GgNormalTexture(const GgNormalTexture &o);
-    
-    // 代入演算子禁止
+
+    // 代入禁止
     GgNormalTexture &operator=(const GgNormalTexture &o);
-    
+
   public:
-    
+
     // デストラクタ
     virtual ~GgNormalTexture(void) {}
-    
+
     // コンストラクタ
     GgNormalTexture(void) {}
     GgNormalTexture(
       const char *name,                   // 画像ファイル名（1 チャネルの RAW 画像）
       int width, int height,              // 画像の幅と高さ（2^n 画素）
       float nz = 1.0f                     // 法線マップの z 成分の値
-    )
-    : GgTexture()
+      )
+      : GgTexture()
     {
       load(name, width, height, nz);
     }
-    
+
     // 高さマップを読み込んで法線マップを作成する
     //    name: ファイル名, width, height: 幅と高さ (2^n), nz: 法線マップの z 成分の値
     void load(const char *name, int width, int height, float nz = 1.0f) const
@@ -894,24 +894,18 @@ namespace gg
       loadHeight(name, width, height, nz);
     }
   };
-  
+
   /*
   ** シェーダ
   **
   **     シェーダの基底クラス
   */
   class GgShader
-  : public GgAttribute
+    : public GgAttribute
   {
     // プログラム名
     GLuint program;
 
-    // コピーコンストラクタ禁止
-    GgShader(const GgShader &o);
-    
-    // 代入演算子禁止
-    GgShader &operator=(const GgShader &o);
-    
   public:
 
     // デストラクタ
@@ -923,7 +917,7 @@ namespace gg
         glDeleteProgram(program);
       }
     }
-    
+
     // コンストラクタ
     GgShader(void)
     {
@@ -938,11 +932,15 @@ namespace gg
       int vertices = 0,                   // ジオメトリシェーダの出力頂点数
       int nvarying = 0,                   // フィードバックする varying 変数の数（0 なら不使用）
       const char **varyings = 0           // フィードバックする varying 変数のリスト
-    )
+      )
     {
       load(vert, frag, geom, input, output, vertices, nvarying, varyings);
     }
-    
+    GgShader(const GgShader &o)
+    {
+      program = o.program;
+    }
+
     // シェーダのソースプログラムの読み込みとコンパイル・リンク
     void load(
       const char *vert,                   // バーテックスシェーダのソースファイル名
@@ -953,30 +951,105 @@ namespace gg
       int vertices = 0,                   // ジオメトリシェーダの出力頂点数
       int nvarying = 0,                   // フィードバックする varying 変数の数（0 なら不使用）
       const char **varyings = 0           // フィードバックする varying 変数のリスト
-    )
+      )
     {
       program = loadShader(vert, frag, geom, input, output, vertices, nvarying, varyings);
     }
-    
-    // シェーダプログラムの使用開始
-    virtual void use(const GLfloat (*vert)[3], ...) const
+
+    // 代入
+    GgShader &operator=(const GgShader &o)
+    {
+      if (&o != this)
+      {
+      }
+    }
+
+    // シェーダプログラムの使用を開始する
+    virtual void use(GLuint vert, ...) const
     {
       glUseProgram(program);
     }
-    
-    // シェーダプログラムの使用終了
-    void unuse(void) const
+
+    // シェーダプログラムの使用を終了する
+    virtual void unuse(void) const
     {
+      glBindBuffer(GL_ARRAY_BUFFER, 0);
       glUseProgram(0);
     }
-    
+
+    // 変換行列を設定する
+    virtual void loadMatrix(const GgMatrix &mp, const GgMatrix &mw) = 0;
+    virtual void loadMatrix(const GLfloat *mp, const GLfloat *mw) = 0;
+
     // シェーダプログラム名を取り出す
     GLuint get(void) const
     {
       return program;
     }
   };
-  
+
+  /*
+  ** バッファオブジェクト
+  **
+  **    頂点／インデックスバッファオブジェクトの基底クラス
+  */
+  template <typename T>
+  class GgBuffer
+    : public Gg
+  {
+    // バッファオブジェクト
+    GLuint buffer;
+
+    // データ数
+    GLuint number;
+
+    // コピーコンストラクタ禁止
+    GgBuffer<T>(const GgBuffer<T> &o);
+
+    // 代入禁止
+    GgBuffer<T> &operator=(const GgBuffer<T> &o);
+
+  public:
+
+    // デストラクタ
+    virtual ~GgBuffer<T>(void)
+    {
+      glDeleteBuffers(1, &buffer);
+    }
+
+    // コンストラクタ
+    GgBuffer<T>(void)
+      : number(0)
+    {
+      glGenBuffers(1, &buffer);
+    }
+    GgBuffer<T>(GLenum target, GLuint n, const T *data, GLenum usage = GL_STATIC_DRAW)
+    {
+      glGenBuffers(1, &buffer);
+      load(target, n, data, usage);
+    }
+
+    // データを取り出す
+    void load(GLenum target, GLuint n, const T *data, GLenum usage = GL_STATIC_DRAW)
+    {
+      number = n;
+      glBindBuffer(target, buffer);
+      glBufferData(target, sizeof (T) * n, data, usage);
+    }
+
+    // バッファオブジェクト名を取り出す
+    GLuint buf(void) const
+    {
+      return buffer;
+    }
+
+    // データの数を取り出す
+    GLuint num(void) const
+    {
+      return number;
+    }
+  };
+
   /*
   ** 形状データ
   **
@@ -986,32 +1059,32 @@ namespace gg
   **    シェーダのインスタンスの結合を解除したら参照カウントをデクリメントし，0 になったらシェーダを削除する
   */
   class GgShape
-  : public Gg
+    : public Gg
   {
     // シェーダー
     GgShader *shader;
-    
+
     // シェーダを結合する
     void bind(GgShader *s)
     {
       shader = s;
       if (shader) shader->inc();
     }
-    
+
     // シェーダを解放する
     void unbind(void)
     {
       if (shader && shader->dec() == 0) delete shader;
     }
-    
+
   public:
-    
+
     // デストラクタ
     virtual ~GgShape(void)
     {
       unbind();
     }
-    
+
     // コンストラクタ
     GgShape(void)
     {
@@ -1021,14 +1094,14 @@ namespace gg
     {
       bind(o.shader);
     }
-    
+
     // 代入演算子
     GgShape &operator=(const GgShape &o)
     {
       if (this != &o) attachShader(o.shader);
       return *this;
     }
-    
+
     // 形状データにシェーダのインスタンス s を結合する
     //    それまで結合されていたシェーダの参照カウントをデクリメントして 0 になったらそのシェーダを破棄する
     //    新しいシェーダ s を結合して s の参照カウントをインクリメントする
@@ -1037,246 +1110,195 @@ namespace gg
       unbind();
       bind(s);
     }
-    
-    // この形状データで使用しているシェーダを得る
+
+    // この形状データで使用しているシェーダを取り出す
     GgShader *getShader(void) const
     {
       return shader;
     }
-    
+
     // この形状を描画する手続きをオーバーライドする
-    virtual void draw(void) const = 0;
+    virtual void draw(GLenum mode = GL_POINTS) const = 0;
   };
-  
+
   /*
-  ** 点群
+  ** ポイント
   */
   class GgPoints
-  : public GgShape
+    : public GgShape
   {
-    // 頂点の数
-    GLuint nv;
-    
-    // 頂点の位置
-    const GLfloat (*vert)[3];
-    
-    // コピー
-    void copy(const GgPoints &o);
-    
+    // 頂点バッファオブジェクト
+    GgBuffer<GLfloat[3]> position;
+
+    // コピーコンストラクタ禁止
+    GgPoints(const GgPoints &o);
+
+    // 代入禁止
+    GgPoints &operator=(const GgPoints &o);
+
   protected:
-    
-    // データを登録する
-    void entry(GLuint nv, const GLfloat (*vert)[3])
+
+    // バッファオブジェクト名を取り出す
+    GLuint pbuf(void) const
     {
-      this->nv = nv;
-      this->vert = vert;
+      return position.buf();
     }
-    
-    // 頂点の数を取り出す
-    GLuint getNv(void) const
+
+    // データの数を取り出す
+    GLuint pnum(void) const
     {
-      return nv;
+      return position.num();
     }
-    
-    // 頂点データを取り出す
-    const GLfloat (*getVert(void) const)[3]
-    {
-      return vert;
-    }
-    
+
   public:
-    
+
     // デストラクタ
-    virtual ~GgPoints(void)
-    {
-      delete[] vert;
-    }
-    
+    virtual ~GgPoints(void) {}
+
     // コンストラクタ
-    GgPoints(void)
+    GgPoints(void) {}
+    GgPoints(int n, const GLfloat (*pos)[3], GLenum usage = GL_STATIC_DRAW)
     {
-      entry(0, 0);
+      load(n, pos, usage);
     }
-    GgPoints(GLuint nv, const GLfloat (*vert)[3])
+
+    // バッファオブジェクトを確保して頂点を格納する
+    //    n: 頂点数, pos: 頂点の位置
+    void load(int n, const GLfloat (*pos)[3], GLenum usage = GL_STATIC_DRAW)
     {
-      entry(nv, vert);
+      position.load(GL_ARRAY_BUFFER, n, pos, usage);
     }
-    GgPoints(const GgPoints &o)
-    : GgShape(o) 
-    {
-      copy(o);
-    }
-    
-    // 代入演算子
-    GgPoints &operator=(const GgPoints &o)
-    {
-      if (this != &o)
-      {
-        GgShape::operator=(o);
-        copy(o);
-      }
-      return *this;
-    }
-    
-    // 点群の描画
-    virtual void draw(void) const;
+
+    // ポイントの描画
+    virtual void draw(GLenum mode = GL_POINTS) const;
   };
-  
+
   /*
-  ** メッシュ
+  ** ポリゴン
   */
   class GgPolygon
-  : public GgPoints
+    : public GgPoints
   {
     // 頂点の法線ベクトル
-    const GLfloat (*norm)[3];
-    
-    // コピー
-    void copy(const GgPolygon &o);
-    
+    GgBuffer<GLfloat[3]> normal;
+
+    // コピーコンストラクタ禁止
+    GgPolygon(const GgPolygon &o);
+
+    // 代入禁止
+    GgPolygon &operator=(const GgPolygon &o);
+
   protected:
-    
-    // データを登録する
-    void entry(const GLfloat (*norm)[3])
+
+    // バッファオブジェクト名を取り出す
+    GLuint nbuf(void) const
     {
-      this->norm = norm;
+      return normal.buf();
     }
-    
-    // 法線ベクトルを取り出す
-    const GLfloat (*getNorm(void) const)[3]
+
+    // データの数を取り出す
+    GLuint nnum(void) const
     {
-      return norm;
+      return normal.num();
     }
-    
+
   public:
-    
+
     // デストラクタ
-    virtual ~GgPolygon(void)
-    {
-      delete[] norm;
-    }
-    
+    virtual ~GgPolygon(void) {}
+
     // コンストラクタ
-    GgPolygon(void)
+    GgPolygon(void) {}
+    GgPolygon(int n, const GLfloat (*pos)[3], const GLfloat (*norm)[3], GLenum usage = GL_STATIC_DRAW)
+      : GgPoints(n, pos, usage)
     {
-      entry(0);
+      normal.load(GL_ARRAY_BUFFER, n, norm, usage);
     }
-    GgPolygon(GLuint nv, const GLfloat (*vert)[3], const GLfloat (*norm)[3])
-    : GgPoints(nv, vert)
+
+    // バッファオブジェクトを確保して位置と法線を格納する
+    //    n: 頂点数, pos: 頂点の位置, norm: 頂点の法線
+    void load(GLuint n, const GLfloat (*pos)[3], const GLfloat (*norm)[3], GLenum usage = GL_STATIC_DRAW)
     {
-      entry(norm);
+      GgPoints::load(n, pos, usage);
+      normal.load(GL_ARRAY_BUFFER, n, norm, usage);
     }
-    GgPolygon(const GgPolygon &o)
-    : GgPoints(o)
-    {
-      copy(o);
-    }
-    
-    // 代入演算子
-    GgPolygon &operator=(const GgPolygon &o)
-    {
-      if (this != &o)
-      {
-        GgPoints::operator=(o);
-        copy(o);
-      }
-      return *this;
-    }
-    
-    // オブジェクトの描画
-    virtual void draw(void) const;
+
+    // 三角形群を描画する手続き
+    virtual void draw(GLenum mode = GL_TRIANGLE_FAN) const;
   };
 
   /*
   ** 三角形の形状データ
   */
   class GgObject
-  : public GgPolygon
+    : public GgPolygon
   {
-    // 面の数
-    GLuint nf;
-    
-    // 面データ（頂点のインデックス）
-    const GLuint (*face)[3];
-    
-    // コピー
-    void copy(const GgObject &o);
-    
+    // インデックスバッファオブジェクト
+    GgBuffer<GLuint[3]> index;
+
+    // コピーコンストラクタ禁止
+    GgObject(const GgObject &o);
+
+    // 代入禁止
+    GgObject &operator=(const GgObject &o);
+
   protected:
-    
-    // データを登録する
-    void entry(GLuint nf, const GLuint (*face)[3])
+
+    // バッファオブジェクト名を取り出す
+    GLuint fbuf(void) const
     {
-      this->nf = nf;
-      this->face = face;
+      return index.buf();
     }
-    
-    // 面の数を取り出す
-    GLuint getNf(void) const
+
+    // データの数を取り出す
+    GLuint fnum(void) const
     {
-      return nf;
+      return index.num();
     }
-    
-    // 面データを取り出す
-    const GLuint (*getFace(void) const)[3]
-    {
-      return face;
-    }
-    
+
   public:
-    
+
     // デストラクタ
-    virtual ~GgObject(void)
-    {
-      delete[] face;
-    }
-    
+    virtual ~GgObject(void) {}
+
     // コンストラクタ
-    GgObject(void)
+    GgObject(void) {}
+    GgObject(GLuint n, const GLfloat (*pos)[3], const GLfloat (*norm)[3],
+      GLuint f, const GLuint (*face)[3], GLenum usage = GL_STATIC_DRAW)
+      : GgPolygon(n, pos, norm, usage)
     {
-      entry(0, 0);
+      index.load(GL_ELEMENT_ARRAY_BUFFER, f, face);
     }
-    GgObject(GLuint nv, const GLfloat (*vert)[3], const GLfloat (*norm)[3], GLuint nf, const GLuint (*face)[3])
-    : GgPolygon(nv, vert, norm)
+
+    // バッファオブジェクトを確保して位置と法線とインデックスを格納する
+    //    n: 頂点数, pos: 頂点の位置, norm:頂点の法線
+    //    f: 面数, face: 頂点のインデックスデータ
+    void load(GLuint n, const GLfloat (*pos)[3], const GLfloat (*norm)[3],
+      GLuint f, const GLuint (*face)[3], GLenum usage = GL_STATIC_DRAW)
     {
-      entry(nf, face);
+      GgPolygon::load(n, pos, norm, usage);
+      index.load(GL_ELEMENT_ARRAY_BUFFER, f, face);
     }
-    GgObject(const GgObject &o)
-    : GgPolygon(o)
-    {
-      copy(o);
-    }
-    
-    // 代入演算子
-    GgObject &operator=(const GgObject &o)
-    {
-      if (this != &o)
-      {
-        GgPolygon::operator=(o);
-        copy(o);
-      }
-      return *this;
-    }
-    
-    // メッシュの描画
-    virtual void draw(void) const;
+
+    // 三角形ポリゴンを描画する手続き
+    virtual void draw(GLenum mode = GL_TRIANGLES) const;
   };
 
   /*
-  ** 球状の点群
+  ** 球状のポイント
   */
   extern GgPoints *ggPointSphere(GLuint nv, GLfloat cx = 0.0f, GLfloat cy = 0.0f, GLfloat cz = 0.0f, GLfloat radius = 0.5f);
-  
+
   /*
   ** 矩形
   */
   extern GgPolygon *ggRectangle(GLfloat width = 1.0f, GLfloat height = 1.0f);
-  
+
   /*
   ** 楕円
   */
   extern GgPolygon *ggEllipse(GLfloat width = 1.0f, GLfloat height = 1.0f, GLuint slices = 16);
-  
+
   /*
   ** 三角形分割された Alias OBJ ファイル
   */

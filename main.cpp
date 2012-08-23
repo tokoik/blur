@@ -39,8 +39,7 @@ static void display(void)
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
   
   // 図形の描画
-  GgSimpleShader *simple = dynamic_cast<GgSimpleShader *>(model->getShader());
-  if (simple) simple->loadMatrix(mp, mv * mt * tb.get());
+  model->getShader()->loadMatrix(mp, mv * mt * tb.get());
   model->draw();
   
   // ダブルバッファリング

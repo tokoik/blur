@@ -170,7 +170,7 @@ void gg::ggFBOError(const char *msg)
 static bool readShaderSource(GLuint shader, const char *name)
 {
   bool ret = true; // 終了ステータス（true ならエラー）
-  
+
   // ソースファイルを開く
   std::ifstream file(name, std::ios::binary);
 
@@ -184,10 +184,10 @@ static bool readShaderSource(GLuint shader, const char *name)
     // ファイルの末尾に移動し現在位置（＝ファイルサイズ）を得る
     file.seekg(0L, std::ios::end);
     GLsizei length = static_cast<GLsizei>(file.tellg());
-    
+
     // ファイルサイズのメモリを確保
     char *buffer = new GLchar[length];
-    
+
     // ファイルを先頭から読み込む
     file.seekg(0L, std::ios::beg);
     file.read(buffer, length);
@@ -204,11 +204,11 @@ static bool readShaderSource(GLuint shader, const char *name)
       ret = false;
     }
     file.close();
-    
+
     // 読み込みに使ったメモリを開放する
     delete[] buffer;
   }
-  
+
   return ret;
 }
 
@@ -220,7 +220,7 @@ static void printShaderInfoLog(GLuint shader)
   // シェーダのコンパイル時のログの長さを取得する
   GLsizei bufSize;
   glGetShaderiv(shader, GL_INFO_LOG_LENGTH , &bufSize);
-  
+
   if (bufSize > 1)
   {
     // シェーダのコンパイル時のログの内容を取得する
@@ -240,7 +240,7 @@ static void printProgramInfoLog(GLuint program)
   // シェーダのリンク時のログの長さを取得する
   GLsizei bufSize;
   glGetProgramiv(program, GL_INFO_LOG_LENGTH , &bufSize);
-  
+
   if (bufSize > 1)
   {
     // シェーダのリンク時のログの内容を取得する
@@ -275,7 +275,7 @@ GLuint gg::loadShader(
 
     // バーテックスシェーダの作成
     GLuint vertShader = glCreateShader(GL_VERTEX_SHADER);
-    
+
     // バーテックスシェーダのソースプログラムの読み込み
     if (readShaderSource(vertShader, vert))
     {
@@ -283,7 +283,7 @@ GLuint gg::loadShader(
       glDeleteProgram(program);
       return 0;
     }
-    
+
     // バーテックスシェーダのコンパイル
     glCompileShader(vertShader);
     glGetShaderiv(vertShader, GL_COMPILE_STATUS, &compiled);
@@ -295,7 +295,7 @@ GLuint gg::loadShader(
       glDeleteProgram(program);
       return 0;
     }
-    
+
     // バーテックスシェーダシェーダプログラムへの組み込み
     glAttachShader(program, vertShader);
     glDeleteShader(vertShader);
@@ -304,7 +304,7 @@ GLuint gg::loadShader(
     {
       // フラグメントシェーダの作成
       GLuint fragShader = glCreateShader(GL_FRAGMENT_SHADER);
-      
+
       // フラグメントシェーダのソースプログラムの読み込み
       if (readShaderSource(fragShader, frag))
       {
@@ -312,7 +312,7 @@ GLuint gg::loadShader(
         glDeleteProgram(program);
         return 0;
       }
-      
+
       // フラグメントシェーダのコンパイル
       glCompileShader(fragShader);
       glGetShaderiv(fragShader, GL_COMPILE_STATUS, &compiled);
@@ -324,7 +324,7 @@ GLuint gg::loadShader(
         glDeleteProgram(program);
         return 0;
       }
-      
+
       // フラグメントシェーダシェーダプログラムへの組み込み
       glAttachShader(program, fragShader);
       glDeleteShader(fragShader);
@@ -334,7 +334,7 @@ GLuint gg::loadShader(
     {
       // ジオメトリシェーダの作成
       GLuint geomShader = glCreateShader(GL_GEOMETRY_SHADER_EXT);
-      
+
       // ジオメトリシェーダのソースプログラムの読み込み
       if (readShaderSource(geomShader, geom))
       {
@@ -342,7 +342,7 @@ GLuint gg::loadShader(
         glDeleteProgram(program);
         return 0;
       }
-      
+
       // ジオメトリシェーダのコンパイル
       glCompileShader(geomShader);
       glGetShaderiv(geomShader, GL_COMPILE_STATUS, &compiled);
@@ -354,14 +354,14 @@ GLuint gg::loadShader(
         glDeleteProgram(program);
         return 0;
       }
-      
+
       // ジオメトリシェーダのシェーダプログラムへの組み込み
       glAttachShader(program, geomShader);
       glDeleteShader(geomShader);
 
       // ジオメトリシェーダに入力する基本図形の指定
       glProgramParameteriEXT(program, GL_GEOMETRY_INPUT_TYPE_EXT, input);
-      
+
       // ジオメトリシェーダから出力する基本図形の指定
       glProgramParameteriEXT(program, GL_GEOMETRY_OUTPUT_TYPE_EXT, output);
 
@@ -394,7 +394,7 @@ void gg::loadImage(const char *name, int width, int height, GLenum format)
 {
   // テクスチャの読み込み先
   char *image = 0;
-  
+
   // テクスチャファイルを開く
   std::ifstream file(name, std::ios::binary);
 
@@ -423,20 +423,20 @@ void gg::loadImage(const char *name, int width, int height, GLenum format)
       std::cerr << "Warning: Could not read texture file: " << name << std::endl;
     }
     file.close();
- }
-  
+  }
+
   // format が RGBA なら 4 バイト境界に設定
   glPixelStorei(GL_UNPACK_ALIGNMENT, (format == GL_RGBA) ? 4 : 1);
-  
+
   // テクスチャを割り当てる
   glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, image);
-  
+
   // バイリニア（ミップマップなし），エッジでクランプ
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-  
+
   // 読み込みに使ったメモリを開放する
   delete[] image;
 }
@@ -448,10 +448,10 @@ void gg::loadHeight(const char *name, int width, int height, float nz)
 {
   // 作成する法線マップ
   GLfloat (*nmap)[4] = 0;
-  
+
   // テクスチャファイルを開く
   std::ifstream file(name, std::ios::binary);
-  
+
   if (file.fail())
   {
     // 開けなかった
@@ -462,7 +462,7 @@ void gg::loadHeight(const char *name, int width, int height, float nz)
     // ファイルの末尾に移動し現在位置（＝ファイルサイズ）を得る
     file.seekg(0L, std::ios::end);
     GLsizei size = static_cast<GLsizei>(file.tellg());
-    
+
     // メモリを確保する
     GLsizei maxsize = width * height;
     GLubyte *hmap = 0;
@@ -475,30 +475,30 @@ void gg::loadHeight(const char *name, int width, int height, float nz)
       delete[] nmap;
       throw e;
     }
-    
+
     // ファイルを先頭から読み込む
     file.seekg(0L, std::ios::beg);
     file.read(reinterpret_cast<char *>(hmap), (size < maxsize) ? size : maxsize);
-    
+
     if (file.bad())
     {
       // うまく読み込めなかった
       std::cerr << "Warning: Could not read texture file: " << name << std::endl;
     }
     file.close();
-    
+
     // 法線マップの作成
     for (int i = 0; i < maxsize; ++i)
     {
       int x = i % width, y = i - x;
-      
+
       // 隣接する画素との値の差を法線ベクトルの成分に用いる
       float nx = static_cast<float>(hmap[y + (x + 1) % width] - hmap[i]);
       float ny = static_cast<float>(hmap[(y + width) % maxsize + x] - hmap[i]);
-      
+
       // 法線ベクトルの長さを求めておく
       float nl = sqrt(nx * nx + ny * ny + nz * nz);
-      
+
       // 法線ベクトルを求める
       nmap[i][0] = nx * 0.5f / nl + 0.5f;
       nmap[i][1] = ny * 0.5f / nl + 0.5f;
@@ -509,19 +509,19 @@ void gg::loadHeight(const char *name, int width, int height, float nz)
     // 高さマップの読み込みに使ったメモリを開放する
     delete[] hmap;
   }
-  
+
   // nmap が GLfloat なので 4 バイト境界に設定
   glPixelStorei(GL_UNPACK_ALIGNMENT, 4);
-  
+
   // テクスチャを割り当てる
   glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_FLOAT, nmap);
-  
+
   // バイリニア（ミップマップなし），エッジでクランプ
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_MIRRORED_REPEAT);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_MIRRORED_REPEAT);
-  
+
   // 法線マップの作成に使ったメモリを解放する
   delete[] nmap;
 }
@@ -545,7 +545,7 @@ void gg::GgMatrix::multiply(GLfloat *c, const GLfloat *a, const GLfloat *b) cons
   for (int i = 0; i < 16; ++i)
   {
     int j = i & 3, k = i & ~3;
-    
+
     c[i] = a[0 + j] * b[k + 0] + a[4 + j] * b[k + 1] + a[8 + j] * b[k + 2] + a[12 + j] * b[k + 3];
   }
 }
@@ -556,10 +556,10 @@ void gg::GgMatrix::multiply(GLfloat *c, const GLfloat *a, const GLfloat *b) cons
 gg::GgMatrix &gg::GgMatrix::loadIdentity(void)
 {
   array[ 1] = array[ 2] = array[ 3] = array[ 4] =
-  array[ 6] = array[ 7] = array[ 8] = array[ 9] =
-  array[11] = array[12] = array[13] = array[14] = 0.0f;
+    array[ 6] = array[ 7] = array[ 8] = array[ 9] =
+    array[11] = array[12] = array[13] = array[14] = 0.0f;
   array[ 0] = array[ 5] = array[10] = array[15] = 1.0f;
-  
+
   return *this;
 }
 
@@ -573,9 +573,9 @@ gg::GgMatrix &gg::GgMatrix::loadTranslate(GLfloat x, GLfloat y, GLfloat z, GLflo
   array[14] = z;
   array[ 0] = array[ 5] = array[10] = array[15] = w;
   array[ 1] = array[ 2] = array[ 3] = array[ 4] =
-  array[ 6] = array[ 7] = array[ 8] = array[ 9] =
-  array[11] = 0.0f;
-  
+    array[ 6] = array[ 7] = array[ 8] = array[ 9] =
+    array[11] = 0.0f;
+
   return *this;
 }
 
@@ -589,9 +589,9 @@ gg::GgMatrix &gg::GgMatrix::loadScale(GLfloat x, GLfloat y, GLfloat z, GLfloat w
   array[10] = z;
   array[15] = w;
   array[ 1] = array[ 2] = array[ 3] = array[ 4] =
-  array[ 6] = array[ 7] = array[ 8] = array[ 9] =
-  array[11] = array[12] = array[13] = array[14] = 0.0f;
-  
+    array[ 6] = array[ 7] = array[ 8] = array[ 9] =
+    array[11] = array[12] = array[13] = array[14] = 0.0f;
+
   return *this;
 }
 
@@ -602,12 +602,12 @@ gg::GgMatrix &gg::GgMatrix::loadRotateX(GLfloat a)
 {
   GLfloat c = cos(a);
   GLfloat s = sin(a);
-  
+
   array[ 0] = 1.0f; array[ 1] = 0.0f; array[ 2] = 0.0f; array[ 3] = 0.0f;
   array[ 4] = 0.0f; array[ 5] = c;    array[ 6] = s;    array[ 7] = 0.0f;
   array[ 8] = 0.0f; array[ 9] = -s;   array[10] = c;    array[11] = 0.0f;
   array[12] = 0.0f; array[13] = 0.0f; array[14] = 0.0f; array[15] = 1.0f;
-  
+
   return *this;
 }
 
@@ -618,12 +618,12 @@ gg::GgMatrix &gg::GgMatrix::loadRotateY(GLfloat a)
 {
   GLfloat c = cos(a);
   GLfloat s = sin(a);
-  
+
   array[ 0] = c;    array[ 1] = 0.0f; array[ 2] = -s;   array[ 3] = 0.0f;
   array[ 4] = 0.0f; array[ 5] = 1.0f; array[ 6] = 0.0f; array[ 7] = 0.0f;
   array[ 8] = s;    array[ 9] = 0.0f; array[10] = c;    array[11] = 0.0f;
   array[12] = 0.0f; array[13] = 0.0f; array[14] = 0.0f; array[15] = 1.0f;
-  
+
   return *this;
 }
 
@@ -634,12 +634,12 @@ gg::GgMatrix &gg::GgMatrix::loadRotateZ(GLfloat a)
 {
   GLfloat c = cos(a);
   GLfloat s = sin(a);
-  
+
   array[ 0] = c;    array[ 1] = s;    array[ 2] = 0.0f; array[ 3] = 0.0f;
   array[ 4] = -s;   array[ 5] = c;    array[ 6] = 0.0f; array[ 7] = 0.0f;
   array[ 8] = 0.0f; array[ 9] = 0.0f; array[10] = 1.0f; array[11] = 0.0f;
   array[12] = 0.0f; array[13] = 0.0f; array[14] = 0.0f; array[15] = 1.0f;
-  
+
   return *this;
 }
 
@@ -649,7 +649,7 @@ gg::GgMatrix &gg::GgMatrix::loadRotateZ(GLfloat a)
 gg::GgMatrix &gg::GgMatrix::loadRotate(GLfloat x, GLfloat y, GLfloat z, GLfloat a)
 {
   GLfloat d = sqrt(x * x + y * y + z * z);
-  
+
   if (d > 0.0f)
   {
     GLfloat l  = x / d, m  = y / d, n  = z / d;
@@ -657,28 +657,28 @@ gg::GgMatrix &gg::GgMatrix::loadRotate(GLfloat x, GLfloat y, GLfloat z, GLfloat 
     GLfloat lm = l * m, mn = m * n, nl = n * l;
     GLfloat c = cos(a), c1 = 1.0f - c;
     GLfloat s = sin(a);
-    
+
     array[ 0] = (1.0f - l2) * c + l2;
     array[ 1] = lm * c1 + n * s;
     array[ 2] = nl * c1 - m * s;
     array[ 3] = 0.0f;
-    
+
     array[ 4] = lm * c1 - n * s;
     array[ 5] = (1.0f - m2) * c + m2;
     array[ 6] = mn * c1 + l * s;
     array[ 7] = 0.0f;
-    
+
     array[ 8] = nl * c1 + m * s;
     array[ 9] = mn * c1 - l * s;
     array[10] = (1.0f - n2) * c + n2;
     array[11] = 0.0f;
-    
+
     array[12] = 0.0f;
     array[13] = 0.0f;
     array[14] = 0.0f;
     array[15] = 1.0f;
   }
-  
+
   return *this;
 }
 
@@ -703,7 +703,7 @@ gg::GgMatrix &gg::GgMatrix::loadTranspose(const GgMatrix &m)
   array[13] = m.array[ 7];
   array[14] = m.array[11];
   array[15] = m.array[15];
-  
+
   return *this;
 }
 
@@ -714,12 +714,12 @@ gg::GgMatrix &gg::GgMatrix::loadInvert(const GgMatrix &m)
 {
   GLfloat lu[20], *plu[4];
   const GLfloat *marray = m.array;
-  
+
   // j 行の要素の値の絶対値の最大値を plu[j][4] に求める
   for (int j = 0; j < 4; ++j)
   {
     GLfloat max = fabs(*(plu[j] = lu + 5 * j) = *(marray++));
-    
+
     for (int i = 0; ++i < 4;)
     {
       GLfloat a = fabs(plu[j][i] = *(marray++));
@@ -728,13 +728,13 @@ gg::GgMatrix &gg::GgMatrix::loadInvert(const GgMatrix &m)
     if (max == 0.0f) return *this;
     plu[j][4] = 1.0f / max;
   }
-  
+
   // ピボットを考慮した LU 分解
   for (int j = 0; j < 4; ++j)
   {
     GLfloat max = fabs(plu[j][j] * plu[j][4]);
     int i = j;
-    
+
     for (int k = j; ++k < 4;)
     {
       GLfloat a = fabs(plu[k][j] * plu[k][4]);
@@ -760,7 +760,7 @@ gg::GgMatrix &gg::GgMatrix::loadInvert(const GgMatrix &m)
       }
     }
   }
-  
+
   // LU 分解から逆行列を求める
   for (int k = 0; k < 4; ++k)
   {
@@ -786,7 +786,7 @@ gg::GgMatrix &gg::GgMatrix::loadInvert(const GgMatrix &m)
       array[i * 4 + k] /= plu[i][i];
     }
   }
-  
+
   return *this;
 }
 
@@ -806,7 +806,7 @@ gg::GgMatrix &gg::GgMatrix::loadNormal(const GgMatrix &m)
   array[10] = m.array[ 0] * m.array[ 5] - m.array[ 1] * m.array[ 4];
   array[ 3] = array[ 7] = array[11] = array[12] = array[13] = array[14] = 0.0f;
   array[15] = 1.0f;
-  
+
   return *this;
 }
 
@@ -816,7 +816,7 @@ gg::GgMatrix &gg::GgMatrix::loadNormal(const GgMatrix &m)
 gg::GgMatrix &gg::GgMatrix::loadLookat(GLfloat ex, GLfloat ey, GLfloat ez, GLfloat tx, GLfloat ty, GLfloat tz, GLfloat ux, GLfloat uy, GLfloat uz)
 {
   GLfloat l;
-  
+
   // z 軸 = e - t
   tx = ex - tx;
   ty = ey - ty;
@@ -826,31 +826,31 @@ gg::GgMatrix &gg::GgMatrix::loadLookat(GLfloat ex, GLfloat ey, GLfloat ez, GLflo
   array[ 2] = tx / l;
   array[ 6] = ty / l;
   array[10] = tz / l;
-  
+
   // x 軸 = u x z 軸
   tx = uy * array[10] - uz * array[ 6];
   ty = uz * array[ 2] - ux * array[10];
   tz = ux * array[ 6] - uy * array[ 2];
-	l = sqrt(tx * tx + ty * ty + tz * tz);
+  l = sqrt(tx * tx + ty * ty + tz * tz);
   if (l == 0.0f) return *this;
   array[ 0] = tx / l;
   array[ 4] = ty / l;
   array[ 8] = tz / l;
-  
+
   // y 軸 = z 軸 x x 軸
   array[ 1] = array[ 6] * array[ 8] - array[10] * array[ 4];
   array[ 5] = array[10] * array[ 0] - array[ 2] * array[ 8];
   array[ 9] = array[ 2] * array[ 4] - array[ 6] * array[ 0];
-  
+
   // 平行移動
   array[12] = -(ex * array[ 0] + ey * array[ 4] + ez * array[ 8]);
   array[13] = -(ex * array[ 1] + ey * array[ 5] + ez * array[ 9]);
   array[14] = -(ex * array[ 2] + ey * array[ 6] + ez * array[10]);
-  
+
   // 残り
   array[ 3] = array[ 7] = array[11] = 0.0f;
   array[15] = 1.0f;
-  
+
   return *this;
 }
 
@@ -862,7 +862,7 @@ gg::GgMatrix &gg::GgMatrix::loadOrthogonal(GLfloat left, GLfloat right, GLfloat 
   GLfloat dx = right - left;
   GLfloat dy = top - bottom;
   GLfloat dz = zFar - zNear;
-  
+
   if (dx != 0.0f && dy != 0.0f && dz != 0.0f)
   {
     array[ 0] =  2.0f / dx;
@@ -873,9 +873,9 @@ gg::GgMatrix &gg::GgMatrix::loadOrthogonal(GLfloat left, GLfloat right, GLfloat 
     array[14] = -(zFar + zNear) / dz;
     array[15] =  1.0f;
     array[ 1] = array[ 2] = array[ 3] = array[ 4] =
-    array[ 6] = array[ 7] = array[ 8] = array[ 9] = array[11] = 0.0f;
+      array[ 6] = array[ 7] = array[ 8] = array[ 9] = array[11] = 0.0f;
   }
-  
+
   return *this;
 }
 
@@ -887,7 +887,7 @@ gg::GgMatrix &gg::GgMatrix::loadFrustum(GLfloat left, GLfloat right, GLfloat bot
   GLfloat dx = right - left;
   GLfloat dy = top - bottom;
   GLfloat dz = zFar - zNear;
-  
+
   if (dx != 0.0f && dy != 0.0f && dz != 0.0f)
   {
     array[ 0] =  2.0f * zNear / dx;
@@ -898,9 +898,9 @@ gg::GgMatrix &gg::GgMatrix::loadFrustum(GLfloat left, GLfloat right, GLfloat bot
     array[11] = -1.0f;
     array[14] = -2.0f * zFar * zNear / dz;
     array[ 1] = array[ 2] = array[ 3] = array[ 4] =
-    array[ 6] = array[ 7] = array[12] = array[13] = array[15] = 0.0f;
+      array[ 6] = array[ 7] = array[12] = array[13] = array[15] = 0.0f;
   }
-  
+
   return *this;
 }
 
@@ -910,21 +910,21 @@ gg::GgMatrix &gg::GgMatrix::loadFrustum(GLfloat left, GLfloat right, GLfloat bot
 gg::GgMatrix &gg::GgMatrix::loadPerspective(GLfloat fovy, GLfloat aspect, GLfloat zNear, GLfloat zFar)
 {
   GLfloat dz = zFar - zNear;
-  
+
   if (dz != 0.0f)
   {
     GLfloat f = 1.0f / tan(fovy * 0.5f);
-    
+
     array[ 0] = f / aspect;
     array[ 5] = f;
     array[10] = -(zFar + zNear) / dz;
     array[11] = -1.0f;
     array[14] = -2.0f * zFar * zNear / dz;
     array[ 1] = array[ 2] = array[ 3] = array[ 4] =
-    array[ 6] = array[ 7] = array[ 8] = array[ 9] =
-    array[12] = array[13] = array[15] = 0.0f;
+      array[ 6] = array[ 7] = array[ 8] = array[ 9] =
+      array[12] = array[13] = array[15] = 0.0f;
   }
-  
+
   return *this;
 }
 
@@ -934,10 +934,10 @@ gg::GgMatrix &gg::GgMatrix::loadPerspective(GLfloat fovy, GLfloat aspect, GLfloa
 gg::GgMatrix &gg::GgMatrix::lookat(GLfloat ex, GLfloat ey, GLfloat ez, GLfloat tx, GLfloat ty, GLfloat tz, GLfloat ux, GLfloat uy, GLfloat uz)
 {
   GgMatrix m;
-  
+
   m.loadLookat(ex, ey, ez, tx, ty, tz, ux, uy, uz);
   multiply(m);
-  
+
   return *this;
 }
 
@@ -947,10 +947,10 @@ gg::GgMatrix &gg::GgMatrix::lookat(GLfloat ex, GLfloat ey, GLfloat ez, GLfloat t
 gg::GgMatrix &gg::GgMatrix::orthogonal(GLfloat left, GLfloat right, GLfloat bottom, GLfloat top, GLfloat zNear, GLfloat zFar)
 {
   GgMatrix m;
-  
+
   m.loadOrthogonal(left, right, bottom, top, zNear, zFar);
   multiply(m);
-  
+
   return *this;
 }
 
@@ -960,10 +960,10 @@ gg::GgMatrix &gg::GgMatrix::orthogonal(GLfloat left, GLfloat right, GLfloat bott
 gg::GgMatrix &gg::GgMatrix::frustum(GLfloat left, GLfloat right, GLfloat bottom, GLfloat top, GLfloat zNear, GLfloat zFar)
 {
   GgMatrix m;
-  
+
   m.loadFrustum(left, right, bottom, top, zNear, zFar);
   multiply(m);
-  
+
   return *this;
 }
 
@@ -973,10 +973,10 @@ gg::GgMatrix &gg::GgMatrix::frustum(GLfloat left, GLfloat right, GLfloat bottom,
 gg::GgMatrix &gg::GgMatrix::perspective(GLfloat fovy, GLfloat aspect, GLfloat zNear, GLfloat zFar)
 {
   GgMatrix m;
-  
+
   m.loadPerspective(fovy, aspect, zNear, zFar);
   multiply(m);
-  
+
   return *this;
 }
 
@@ -1027,7 +1027,7 @@ void gg::GgQuaternion::toMatrix(GLfloat *m, const GLfloat *q) const
   GLfloat xw = q[0] * q[3] * 2.0f;
   GLfloat yw = q[1] * q[3] * 2.0f;
   GLfloat zw = q[2] * q[3] * 2.0f;
-  
+
   m[ 0] = 1.0f - yy - zz;
   m[ 1] = xy + zw;
   m[ 2] = zx - yw;
@@ -1047,7 +1047,7 @@ void gg::GgQuaternion::toMatrix(GLfloat *m, const GLfloat *q) const
 void gg::GgQuaternion::toQuaternion(GLfloat *q, const GLfloat *m) const
 {
   GLfloat tr = m[0] + m[5] + m[10] + m[15];
-  
+
   if (tr > 0.0f)
   {
     q[3] = sqrt(tr) * 0.5f;
@@ -1064,7 +1064,7 @@ void gg::GgQuaternion::slerp(GLfloat *p, const GLfloat *q, const GLfloat *r, GLf
 {
   GLfloat qr = q[0] * r[0] + q[1] * r[1] + q[2] * r[2] + q[3] * r[3];
   GLfloat ss = 1.0f - qr * qr;
-  
+
   if (ss == 0.0f)
   {
     if (p != q)
@@ -1082,7 +1082,7 @@ void gg::GgQuaternion::slerp(GLfloat *p, const GLfloat *q, const GLfloat *r, GLf
     GLfloat pt = ph * t;
     GLfloat t1 = sin(pt) / sp;
     GLfloat t0 = sin(ph - pt) / sp;
-    
+
     p[0] = q[0] * t0 + r[0] * t1;
     p[1] = q[1] * t0 + r[1] * t1;
     p[2] = q[2] * t0 + r[2] * t1;
@@ -1096,11 +1096,11 @@ void gg::GgQuaternion::slerp(GLfloat *p, const GLfloat *q, const GLfloat *r, GLf
 gg::GgQuaternion &gg::GgQuaternion::loadRotate(GLfloat x, GLfloat y, GLfloat z, GLfloat a)
 {
   GLfloat l = x * x + y * y + z * z;
-  
+
   if (l != 0.0)
   {
     GLfloat s = sin(a *= 0.5f) / sqrt(l);
-    
+
     array[0] = x * s;
     array[1] = y * s;
     array[2] = z * s;
@@ -1110,7 +1110,7 @@ gg::GgQuaternion &gg::GgQuaternion::loadRotate(GLfloat x, GLfloat y, GLfloat z, 
     array[0] = array[1] = array[2] = 0.0f;
   }
   array[3] = cos(a);
-  
+
   return *this;
 }
 
@@ -1136,7 +1136,7 @@ GLfloat gg::GgQuaternion::norm(void) const
 gg::GgQuaternion gg::GgQuaternion::conjugate(void) const
 {
   GgQuaternion t(-this->array[0], -this->array[1], -this->array[2], this->array[3]);
-  
+
   return t;
 }
 
@@ -1148,7 +1148,7 @@ gg::GgQuaternion gg::GgQuaternion::invert(void) const
   GgQuaternion t = this->conjugate();
   GLfloat l = this->array[0] * this->array[0] + this->array[1] * this->array[1]
   + this->array[2] * this->array[2] + this->array[3] * this->array[3];
-  
+
   if (l > 0.0f)
   {
     t.array[0] /= l;
@@ -1156,7 +1156,7 @@ gg::GgQuaternion gg::GgQuaternion::invert(void) const
     t.array[2] /= l;
     t.array[3] /= l;
   }
-  
+
   return t;
 }
 
@@ -1167,7 +1167,7 @@ gg::GgQuaternion gg::GgQuaternion::normalize(void) const
 {
   GgQuaternion t = *this;
   GLfloat l = this->norm();
-  
+
   if (l > 0.0f)
   {
     t.array[0] /= l;
@@ -1175,7 +1175,7 @@ gg::GgQuaternion gg::GgQuaternion::normalize(void) const
     t.array[2] /= l;
     t.array[3] /= l;
   }
-  
+
   return t;
 }
 
@@ -1186,10 +1186,10 @@ gg::GgTrackball::GgTrackball(void)
 {
   // ドラッグ中ではない
   drag = false;
-  
+
   // 単位クォーターニオン
   cq.loadIdentity();
-  
+
   // 回転行列の初期化
   cq.getMatrix(rt);
 }
@@ -1217,7 +1217,7 @@ void gg::GgTrackball::start(int x, int y)
 {
   // ドラッグ開始
   drag = true;
-  
+
   // ドラッグ開始点を記録する
   cx = x;
   cy = y;
@@ -1234,23 +1234,23 @@ void gg::GgTrackball::motion(int x, int y)
   if (drag)
   {
     float dx, dy, a;
-    
+
     // マウスポインタの位置のドラッグ開始位置からの変位
     dx = (x - cx) * sx;
     dy = (y - cy) * sy;
-    
+
     // マウスポインタの位置のドラッグ開始位置からの距離
     a = sqrt(dx * dx + dy * dy);
-    
+
     if (a != 0.0)
     {
       // 回転軸と回転角から四元数を作る
       GgQuaternion dq;
       dq.loadRotate(dy, dx, 0.0f, a * 6.283185f);
-      
+
       // 現在の回転の四元数に作った四元数を掛けて合成する
       tq = dq * cq;
-      
+
       // 合成した四元数から回転の変換行列を求める
       tq.getMatrix(rt);
     }
@@ -1267,112 +1267,73 @@ void gg::GgTrackball::stop(int x, int y)
 {
   // ドラッグ終了点における回転を求める
   motion(x, y);
-  
+
   // 現在の回転を表す四元数を正規化して保存する
   cq = tq.normalize();
-  
+
   // ドラッグ終了
   drag = false;
 }
 
 /*
-** 点群：コピー
+** ポイント：描画
 */
-void gg::GgPoints::copy(const GgPoints &o)
+void gg::GgPoints::draw(GLenum mode) const
 {
-  if (o.nv > 0)
-  {
-    // メモリの確保
-    GLfloat (*vert)[3] = new GLfloat[o.nv][3];
-    
-    // データのコピー
-    memcpy(vert, o.vert, sizeof (GLfloat[3]) * o.nv);
-    
-    // データの登録
-    entry(o.nv, vert);
-  }
+  // シェーダプログラムの使用を開始する
+  getShader()->use(pbuf());
+
+  // 図形を描画する
+  glDrawArrays(mode, 0, pnum());
+
+  // シェーダプログラムの使用を終了する
+  getShader()->unuse();
 }
 
 /*
-** 点群：描画
+** ポリゴン：描画
 */
-void gg::GgPoints::draw(void) const
+void gg::GgPolygon::draw(GLenum mode) const
 {
-  // シェーダーの選択
-  getShader()->use(vert);
-  
-  // 頂点配列で図形を描画する
-  glDrawArrays(GL_POINTS, 0, nv);
-}
+  // シェーダプログラムの使用を開始する
+  getShader()->use(pbuf(), nbuf());
 
-/*
-** メッシュ：コピー
-*/
-void gg::GgPolygon::copy(const GgPolygon &o)
-{
-  if (o.getNv() > 0)
-  {
-    // メモリの確保
-    GLfloat (*norm)[3] = new GLfloat[o.getNv()][3];
-    
-    // データのコピー
-    memcpy(norm, o.norm, sizeof (GLfloat[3]) * o.getNv());
-    
-    // データの登録
-    entry(norm);
-  }
-}
+  // 図形を描画する
+  glDrawArrays(mode, 0, pnum());
 
-/*
-** メッシュ：描画
-*/
-void gg::GgPolygon::draw(void) const
-{
-  // シェーダーの選択
-  getShader()->use(getVert(), norm);
-  
-  // 頂点配列で図形を描画する
-  glDrawArrays(GL_TRIANGLE_FAN, 0, getNv());
-}
-
-/*
-** オブジェクト：コピー
-*/
-void gg::GgObject::copy(const GgObject &o)
-{
-  if (o.nf > 0)
-  {
-    // メモリの確保
-    GLuint (*face)[3] = new GLuint[o.nf][3];
-    
-    // データのコピー
-    memcpy(face, o.face, sizeof (GLuint[3]) * o.nf);
-    
-    // データの登録
-    entry(o.nf, face);
-  }
+  // シェーダプログラムの使用を終了する
+  getShader()->unuse();
 }
 
 /*
 ** オブジェクト：描画
 */
-void gg::GgObject::draw(void) const
+void gg::GgObject::draw(GLenum mode) const
 {
-  // シェーダプログラムの選択
-  getShader()->use(getVert(), getNorm());
-  
-  // 頂点のインデックスの場所を指定して図形を描画する
-  glDrawElements(GL_TRIANGLES, getNf() * 3, GL_UNSIGNED_INT, getFace());
+  // シェーダプログラムの使用を開始する
+  getShader()->use(pbuf(), nbuf());
+
+  // インデックスにバッファオブジェクトを指定する
+  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, fbuf());
+
+  // 図形を描画する
+  glDrawElements(GL_TRIANGLES, fnum() * 3, GL_UNSIGNED_INT, 0);
+
+  // バッファオブジェクトの指定を解除する
+  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+
+  // シェーダプログラムの使用を終了する
+  getShader()->unuse();
 }
 
 /*
-** 球状の点群
+** 球状のポイント
 */
 gg::GgPoints *gg::ggPointSphere(GLuint nv, GLfloat cx, GLfloat cy, GLfloat cz, GLfloat radius)
 {
   // メモリの確保
   GLfloat (*vert)[3] = new GLfloat[nv][3];
-  
+
   // 点の生成
   for (GLuint v = 0; v < nv; ++v)
   {
@@ -1381,12 +1342,12 @@ gg::GgPoints *gg::ggPointSphere(GLuint nv, GLfloat cx, GLfloat cy, GLfloat cz, G
     float cp = 2.0f * (float)rand() / (float)RAND_MAX - 1.0f;
     float sp = sqrt(1.0f - cp * cp);
     float ct = cos(t), st = sin(t);
-    
+
     vert[v][0] = r * sp * ct + cx;
     vert[v][1] = r * sp * st + cy;
     vert[v][2] = r * cp + cz;
   }
-  
+
   return new gg::GgPoints(nv, vert);
 }
 
@@ -1403,7 +1364,7 @@ gg::GgPolygon *gg::ggRectangle(GLfloat width, GLfloat height)
     {  0.5f,  0.5f },
     { -0.5f,  0.5f },
   };
-  
+
   // メモリの確保
   GLfloat (*vert)[3] = 0;
   GLfloat (*norm)[3] = 0;
@@ -1424,12 +1385,12 @@ gg::GgPolygon *gg::ggRectangle(GLfloat width, GLfloat height)
     vert[v][0] = p[v][0] * width;
     vert[v][1] = p[v][1] * height;
     vert[v][2] = 0.0f;
-    
+
     norm[v][0] = 0.0f;
     norm[v][1] = 0.0f;
     norm[v][2] = 1.0f;
   }
-  
+
   return new gg::GgPolygon(4, vert, norm);
 }
 
@@ -1452,20 +1413,20 @@ gg::GgPolygon *gg::ggEllipse(GLfloat width, GLfloat height, GLuint slices)
     delete[] norm;
     throw e;
   }
-  
+
   for (GLuint v = 0; v < slices; ++v)
   {
     float t = 6.2831853f * (float)v / (float)slices;
-    
+
     vert[v][0] = cos(t) * width * 0.5f;
     vert[v][1] = sin(t) * height * 0.5f;
     vert[v][2] = 0.0f;
-    
+
     norm[v][0] = 0.0f;
     norm[v][1] = 0.0f;
     norm[v][2] = 1.0f;
   }
-  
+
   return new gg::GgPolygon(slices, vert, norm);
 }
 
@@ -1481,7 +1442,7 @@ gg::GgObject *gg::ggObj(const char *name, bool normalize)
     std::cerr << "Can't open file: " << name << std::endl;
     return 0;
   }
-  
+
   // データの数と座標値の最小値・最大値を調べる
   char buf[1024];
   int nv, nf;
@@ -1507,7 +1468,7 @@ gg::GgObject *gg::ggObj(const char *name, bool normalize)
       ++nf;
     }
   }
-  
+
   // メモリの確保
   GLfloat (*vert)[3] = 0;
   GLfloat (*norm)[3] = 0;
@@ -1528,7 +1489,7 @@ gg::GgObject *gg::ggObj(const char *name, bool normalize)
     delete[] face;
     throw e;
   }
-  
+
   // 正規化
   GLfloat scale, cx, cy, cz;
   if (normalize)
@@ -1548,11 +1509,11 @@ gg::GgObject *gg::ggObj(const char *name, bool normalize)
     scale = 1.0f;
     cx = cy = cz = 0.0f;
   }
-  
+
   // ファイルの巻き戻し
   file.clear();
   file.seekg(0L, std::ios::beg);
-  
+
   // データの読み込み
   nv = nf = 0;
   while (file.getline(buf, sizeof buf))
@@ -1577,7 +1538,7 @@ gg::GgObject *gg::ggObj(const char *name, bool normalize)
       ++nf;
     }
   }
-  
+
   // 面法線ベクトルの算出
   for (int f = 0; f < nf; ++f)
   {
@@ -1587,40 +1548,40 @@ gg::GgObject *gg::ggObj(const char *name, bool normalize)
     GLfloat dx2 = vert[face[f][2]][0] - vert[face[f][0]][0];
     GLfloat dy2 = vert[face[f][2]][1] - vert[face[f][0]][1];
     GLfloat dz2 = vert[face[f][2]][2] - vert[face[f][0]][2];
-    
+
     // 外積
     fnorm[f][0] = dy1 * dz2 - dz1 * dy2;
     fnorm[f][1] = dz1 * dx2 - dx1 * dz2;
     fnorm[f][2] = dx1 * dy2 - dy1 * dx2;
   }
-  
+
   // 頂点の法線ベクトルの値を 0 にしておく
   for (int v = 0; v < nv; ++v)
     norm[v][0] = norm[v][1] = norm[v][2] = 0.0f;
-  
+
   // 面の法線ベクトルを頂点の法線ベクトルに積算する
   for (int f = 0; f < nf; ++f)
   {
     norm[face[f][0]][0] += fnorm[f][0];
     norm[face[f][0]][1] += fnorm[f][1];
     norm[face[f][0]][2] += fnorm[f][2];
-    
+
     norm[face[f][1]][0] += fnorm[f][0];
     norm[face[f][1]][1] += fnorm[f][1];
     norm[face[f][1]][2] += fnorm[f][2];
-    
+
     norm[face[f][2]][0] += fnorm[f][0];
     norm[face[f][2]][1] += fnorm[f][1];
     norm[face[f][2]][2] += fnorm[f][2];
   }
-  
+
   // 頂点の法線ベクトルを正規化する
   for (int v = 0; v < nv; ++v)
   {
     GLfloat a = sqrt(norm[v][0] * norm[v][0]
-                   + norm[v][1] * norm[v][1]
-                   + norm[v][2] * norm[v][2]);
-    
+    + norm[v][1] * norm[v][1]
+    + norm[v][2] * norm[v][2]);
+
     if (a != 0.0)
     {
       norm[v][0] /= a;
@@ -1628,9 +1589,9 @@ gg::GgObject *gg::ggObj(const char *name, bool normalize)
       norm[v][2] /= a;
     }
   }
-  
+
   // 面の法線ベクトルは頂点の法線ベクトルの算出にしか使わないので解放
   delete[] fnorm;
-  
+
   return new gg::GgObject(nv, vert, norm, nf, face);
 }
