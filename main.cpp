@@ -85,8 +85,8 @@ static void pick(GLfloat *pw, int x, int y, GLfloat z, const GgMatrix &m)
   m.projection(pw, pc);
 }
 
-static GLfloat p0[4], p1[4], z0;
-static GgMatrix mt0, mt1;
+static GLfloat p0[4], z0;
+static GgMatrix mt0;
 
 // ‰Ÿ‚³‚ê‚Ä‚¢‚éƒ{ƒ^ƒ“
 static int press = -1;
@@ -135,6 +135,9 @@ static void mouse(int button, int state, int x, int y)
 
 static void motion(int x, int y)
 {
+  GgMatrix mt1;
+  GLfloat p1[4];
+
   switch (press)
   {
   case GLUT_LEFT_BUTTON:
