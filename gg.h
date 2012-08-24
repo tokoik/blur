@@ -743,6 +743,27 @@ namespace gg
   };
 
   /*
+  ** 参照カウンタ
+  **
+  **     複数の属性データ間で共有されるリソースの確保と解放を管理する
+  */
+  class GgCounter
+    : public Gg
+  {
+    friend class GgAttribute;
+    
+    // 参照カウント
+    unsigned int count;
+
+    // デストラクタ
+    ~GgCounter(void) {}
+
+    // コンストラクタ
+    GgCounter(void)
+      : count(0) {}
+  };
+
+  /*
   ** 属性データ
   **
   **     テクスチャとシェーダの基底クラス
@@ -752,49 +773,65 @@ namespace gg
   class GgAttribute
     : public Gg
   {
-    // 参照カウント
-    unsigned int count;
+    // 参照カウンタ
+    GgCounter *ref;
+
+    // 参照カウントの増加
+    void inc(void)
+    {
+      ++ref->count;
+    }
 
   protected:
 
-    // デストラクタ
-    ~GgAttribute(void) {}
+    // 参照カウントの減少
+    unsigned int dec(void)
+    {
+      return --ref->count;
+    }
 
   public:
 
-    // コンストラクタ
-    GgAttribute(void)
+    // デストラクタ
+    virtual ~GgAttribute(void)
     {
-      count = 0;
+      if (ref->count == 0) delete ref;
     }
 
-    // 参照カウンタの増減
-    unsigned int inc(void)
+    // コンストラクタ
+    GgAttribute(void)
+      : ref(new GgCounter)
     {
-      return ++count;
+      inc();
     }
-    unsigned int dec(void)
+    GgAttribute(const GgAttribute &o)
+      : ref(o.ref)
     {
-      return --count;
+      inc();
+    }
+    
+    // 代入
+    GgAttribute &operator=(const GgAttribute &o)
+    {
+      if (&o != this)
+      {
+        ref = o.ref;
+        inc();
+      }
+      return *this;
     }
   };
 
   /*
   ** テクスチャ
   **
-  **     拡散反射色テクスチャを読み込んでテクスチャオブジェクトを作成する
+  **     カラー画像を読み込んでテクスチャマップを作成する
   */
   class GgTexture
     : public GgAttribute
   {
     // テクスチャ名
     GLuint texture;
-
-    // コピーコンストラクタ禁止
-    GgTexture(const GgTexture &o);
-
-    // 代入禁止
-    GgTexture &operator=(const GgTexture &o);
 
   protected:
 
@@ -809,11 +846,7 @@ namespace gg
     // デストラクタ
     virtual ~GgTexture(void)
     {
-      if (texture != 0)
-      {
-        glBindTexture(GL_TEXTURE_2D, 0);
-        glDeleteTextures(1, &texture);
-      }
+      if (dec() == 0) glDeleteTextures(1, &texture);
     }
 
     // コンストラクタ
@@ -821,14 +854,18 @@ namespace gg
     {
       glGenTextures(1, &texture);
     }
-    GgTexture(
-      const char *name,                   // 画像ファイル名（3/4 チャネルの RAW 画像）
-      int width, int height,              // 画像の幅と高さ（2^n 画素）
-      GLenum format = GL_RGB              // 読み込む画像の書式 (GL_RGB/GL_RGBA)
-      )
+    GgTexture(const GgTexture &o)
+      : GgAttribute(o), texture(o.texture) {}
+
+    // 代入
+    GgTexture &operator=(const GgTexture &o)
     {
-      GgTexture();
-      load(name, width, height, format);
+      if (&o != this)
+      {
+        GgAttribute::operator=(o);
+        texture = o.texture;
+      }
+      return *this;
     }
 
     // 拡散反射色テクスチャを読み込む
@@ -855,7 +892,7 @@ namespace gg
       glActiveTexture(GL_TEXTURE0);
     }
   };
-
+  
   /*
   ** 法線マップ
   **
@@ -864,12 +901,6 @@ namespace gg
   class GgNormalTexture
     : public GgTexture
   {
-    // コピーコンストラクタ禁止
-    GgNormalTexture(const GgNormalTexture &o);
-
-    // 代入禁止
-    GgNormalTexture &operator=(const GgNormalTexture &o);
-
   public:
 
     // デストラクタ
@@ -885,6 +916,15 @@ namespace gg
       : GgTexture()
     {
       load(name, width, height, nz);
+    }
+    GgNormalTexture(const GgNormalTexture &o)
+      : GgTexture(o) {}
+
+    // 代入
+    GgNormalTexture &operator=(const GgNormalTexture &o)
+    {
+      GgTexture::operator=(o);
+      return *this;
     }
 
     // 高さマップを読み込んで法線マップを作成する
@@ -911,18 +951,12 @@ namespace gg
     // デストラクタ
     virtual ~GgShader(void)
     {
-      if (program != 0)
-      {
-        glUseProgram(0);
-        glDeleteProgram(program);
-      }
+      if (dec() == 0 && program != 0) glDeleteProgram(program);
     }
 
     // コンストラクタ
     GgShader(void)
-    {
-      program = 0;
-    }
+      : program(0) {}
     GgShader(
       const char *vert,                   // バーテックスシェーダのソースファイル名
       const char *frag = 0,               // フラグメントシェーダのソースファイル名（0 なら不使用）
@@ -933,12 +967,19 @@ namespace gg
       int nvarying = 0,                   // フィードバックする varying 変数の数（0 なら不使用）
       const char **varyings = 0           // フィードバックする varying 変数のリスト
       )
-    {
-      load(vert, frag, geom, input, output, vertices, nvarying, varyings);
-    }
+      : program(loadShader(vert, frag, geom, input, output, vertices, nvarying, varyings)) {}
     GgShader(const GgShader &o)
+      : GgAttribute(o), program(o.program) {}
+    
+    // 代入
+    GgShader &operator=(const GgShader &o)
     {
-      program = o.program;
+      if (&o != this)
+      {
+        GgAttribute::operator=(o);
+        program = o.program;
+      }
+      return *this;
     }
 
     // シェーダのソースプログラムの読み込みとコンパイル・リンク
@@ -953,15 +994,8 @@ namespace gg
       const char **varyings = 0           // フィードバックする varying 変数のリスト
       )
     {
+      if (program != 0) glDeleteProgram(program);
       program = loadShader(vert, frag, geom, input, output, vertices, nvarying, varyings);
-    }
-
-    // 代入
-    GgShader &operator=(const GgShader &o)
-    {
-      if (&o != this)
-      {
-      }
     }
 
     // シェーダプログラムの使用を開始する
@@ -995,7 +1029,7 @@ namespace gg
   */
   template <typename T>
   class GgBuffer
-    : public Gg
+    : public GgAttribute
   {
     // バッファオブジェクト
     GLuint buffer;
@@ -1003,18 +1037,12 @@ namespace gg
     // データ数
     GLuint number;
 
-    // コピーコンストラクタ禁止
-    GgBuffer<T>(const GgBuffer<T> &o);
-
-    // 代入禁止
-    GgBuffer<T> &operator=(const GgBuffer<T> &o);
-
   public:
 
     // デストラクタ
     virtual ~GgBuffer<T>(void)
     {
-      glDeleteBuffers(1, &buffer);
+      if (dec() == 0) glDeleteBuffers(1, &buffer);
     }
 
     // コンストラクタ
@@ -1028,8 +1056,22 @@ namespace gg
       glGenBuffers(1, &buffer);
       load(target, n, data, usage);
     }
+    GgBuffer<T>(const GgBuffer<T> &o)
+      : GgAttribute(o), buffer(o.buffer), number(o.number) {}
 
-    // データを取り出す
+    // 代入
+    GgBuffer<T> &operator=(const GgBuffer<T> &o)
+    {
+      if (&o != this)
+      {
+        GgAttribute::operator=(o);
+        buffer = o.buffer;
+        number = o.number;
+      }
+      return *this;
+    }
+
+    // データを格納する
     void load(GLenum target, GLuint n, const T *data, GLenum usage = GL_STATIC_DRAW)
     {
       number = n;
@@ -1064,36 +1106,16 @@ namespace gg
     // シェーダー
     GgShader *shader;
 
-    // シェーダを結合する
-    void bind(GgShader *s)
-    {
-      shader = s;
-      if (shader) shader->inc();
-    }
-
-    // シェーダを解放する
-    void unbind(void)
-    {
-      if (shader && shader->dec() == 0) delete shader;
-    }
-
   public:
 
     // デストラクタ
-    virtual ~GgShape(void)
-    {
-      unbind();
-    }
+    virtual ~GgShape(void) {}
 
     // コンストラクタ
     GgShape(void)
-    {
-      shader = 0;
-    }
+      : shader(0) {}
     GgShape(const GgShape &o)
-    {
-      bind(o.shader);
-    }
+      : shader(o.shader) {}
 
     // 代入演算子
     GgShape &operator=(const GgShape &o)
@@ -1107,8 +1129,11 @@ namespace gg
     //    新しいシェーダ s を結合して s の参照カウントをインクリメントする
     void attachShader(GgShader *s)
     {
-      unbind();
-      bind(s);
+      shader = s;
+    }
+    void attachShader(GgShader &s)
+    {
+      shader = &s;
     }
 
     // この形状データで使用しているシェーダを取り出す
@@ -1129,12 +1154,6 @@ namespace gg
   {
     // 頂点バッファオブジェクト
     GgBuffer<GLfloat[3]> position;
-
-    // コピーコンストラクタ禁止
-    GgPoints(const GgPoints &o);
-
-    // 代入禁止
-    GgPoints &operator=(const GgPoints &o);
 
   protected:
 
@@ -1161,6 +1180,19 @@ namespace gg
     {
       load(n, pos, usage);
     }
+    GgPoints(const GgPoints &o)
+      : GgShape(o), position(o.position) {}
+
+    // 代入
+    GgPoints &operator=(const GgPoints &o)
+    {
+      if (&o != this)
+      {
+        GgShape::operator=(o);
+        position = o.position;
+      }
+      return *this;
+    }
 
     // バッファオブジェクトを確保して頂点を格納する
     //    n: 頂点数, pos: 頂点の位置
@@ -1181,12 +1213,6 @@ namespace gg
   {
     // 頂点の法線ベクトル
     GgBuffer<GLfloat[3]> normal;
-
-    // コピーコンストラクタ禁止
-    GgPolygon(const GgPolygon &o);
-
-    // 代入禁止
-    GgPolygon &operator=(const GgPolygon &o);
 
   protected:
 
@@ -1214,6 +1240,19 @@ namespace gg
     {
       normal.load(GL_ARRAY_BUFFER, n, norm, usage);
     }
+    GgPolygon(const GgPolygon &o)
+      : GgPoints(o), normal(o.normal) {}
+
+    // 代入
+    GgPolygon &operator=(const GgPolygon &o)
+    {
+      if (&o != this)
+      {
+        GgPoints::operator=(o);
+        normal = o.normal;
+      }
+      return *this;
+    }
 
     // バッファオブジェクトを確保して位置と法線を格納する
     //    n: 頂点数, pos: 頂点の位置, norm: 頂点の法線
@@ -1235,12 +1274,6 @@ namespace gg
   {
     // インデックスバッファオブジェクト
     GgBuffer<GLuint[3]> index;
-
-    // コピーコンストラクタ禁止
-    GgObject(const GgObject &o);
-
-    // 代入禁止
-    GgObject &operator=(const GgObject &o);
 
   protected:
 
@@ -1268,6 +1301,19 @@ namespace gg
       : GgPolygon(n, pos, norm, usage)
     {
       index.load(GL_ELEMENT_ARRAY_BUFFER, f, face);
+    }
+    GgObject(const GgObject &o)
+      : GgPolygon(o), index(o.index) {}
+    
+    // 代入
+    GgObject &operator=(const GgObject &o)
+    {
+      if (&o != this)
+      {
+        GgPolygon::operator=(o);
+        index = o.index;
+      }
+      return *this;
     }
 
     // バッファオブジェクトを確保して位置と法線とインデックスを格納する

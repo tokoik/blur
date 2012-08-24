@@ -14,22 +14,22 @@ gg::GgSimpleShader::GgSimpleShader(const char *vert, const char *frag,
   GLuint program = get();
 
   // 法線の attribute 変数の場所
-  nvLoc = glGetAttribLocation(program, "nv");
+  loc.nv = glGetAttribLocation(program, "nv");
 
   // 光源のパラメータの uniform 変数の場所
-  lposLoc = glGetUniformLocation(program, "lpos");
-  lambLoc = glGetUniformLocation(program, "lamb");
-  ldiffLoc = glGetUniformLocation(program, "ldiff");
-  lspecLoc = glGetUniformLocation(program, "lspec");
+  loc.lpos = glGetUniformLocation(program, "lpos");
+  loc.lamb = glGetUniformLocation(program, "lamb");
+  loc.ldiff = glGetUniformLocation(program, "ldiff");
+  loc.lspec = glGetUniformLocation(program, "lspec");
 
   // 材質のパラメータの uniform 変数の場所
-  kambLoc = glGetUniformLocation(program, "kamb");
-  kdiffLoc = glGetUniformLocation(program, "kdiff");
-  kspecLoc = glGetUniformLocation(program, "kspec");
-  kshiLoc = glGetUniformLocation(program, "kshi");
+  loc.kamb = glGetUniformLocation(program, "kamb");
+  loc.kdiff = glGetUniformLocation(program, "kdiff");
+  loc.kspec = glGetUniformLocation(program, "kspec");
+  loc.kshi = glGetUniformLocation(program, "kshi");
 
   // 変換行列の uniform 変数の場所
-  mgLoc = glGetUniformLocation(program, "mg");
+  loc.mg = glGetUniformLocation(program, "mg");
 }
 
 void gg::GgSimpleShader::use(GLuint vert, ...) const
@@ -46,31 +46,31 @@ void gg::GgSimpleShader::use(GLuint vert, ...) const
   glBindBuffer(GL_ARRAY_BUFFER, norm);
 
   // attribute 変数 nv を配列変数から得ることを有効にする
-  glEnableVertexAttribArray(nvLoc);
+  glEnableVertexAttribArray(loc.nv);
 
   // attribute 変数 nv と配列変数 norm を結びつける
-  glVertexAttribPointer(nvLoc, 3, GL_FLOAT, GL_FALSE, 0, 0);
+  glVertexAttribPointer(loc.nv, 3, GL_FLOAT, GL_FALSE, 0, 0);
 
   // 光源
-  glUniform4fv(lposLoc, 1, lpos);
-  glUniform4fv(lambLoc, 1, lamb);
-  glUniform4fv(ldiffLoc, 1, ldiff);
-  glUniform4fv(lspecLoc, 1, lspec);
+  glUniform4fv(loc.lpos, 1, l.pos);
+  glUniform4fv(loc.lamb, 1, l.amb);
+  glUniform4fv(loc.ldiff, 1, l.diff);
+  glUniform4fv(loc.lspec, 1, l.spec);
 
   // 材質
-  glUniform4fv(kambLoc, 1, kamb);
-  glUniform4fv(kdiffLoc, 1, kdiff);
-  glUniform4fv(kspecLoc, 1, kspec);
-  glUniform1f(kshiLoc, kshi);
+  glUniform4fv(loc.kamb, 1, k.amb);
+  glUniform4fv(loc.kdiff, 1, k.diff);
+  glUniform4fv(loc.kspec, 1, k.spec);
+  glUniform1f(loc.kshi, k.shi);
 
   // 変換
-  glUniformMatrix4fv(mgLoc, 1, GL_FALSE, mg);
+  glUniformMatrix4fv(loc.mg, 1, GL_FALSE, m.g);
 }
 
 void gg::GgSimpleShader::unuse(void) const
 {
   // attribute 変数 pv をバッファオブジェクトから得ることを無効にする
-  glDisableVertexAttribArray(nvLoc);
+  glDisableVertexAttribArray(loc.nv);
 
   // 基底クラスのシェーダの設定を呼び出す
   GgShader::unuse();
@@ -79,7 +79,7 @@ void gg::GgSimpleShader::unuse(void) const
 void gg::GgSimpleShader::loadMatrix(const GgMatrix &mp, const GgMatrix &mw)
 {
   GgPointShader::loadMatrix(mp, mw);
-  loadNormalMatrix(mw.normal());
+  m.loadNormalMatrix(mw.normal());
 }
 
 void gg::GgSimpleShader::loadMatrix(const GLfloat *mp, const GLfloat *mw)

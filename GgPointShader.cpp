@@ -12,11 +12,11 @@ gg::GgPointShader::GgPointShader(const char *vert, const char *frag,
   GLuint program = get();
 
   // 位置の attribute 変数の場所
-  pvLoc = glGetAttribLocation(program, "pv");
+  loc.pv = glGetAttribLocation(program, "pv");
 
   // 変換行列の uniform 変数の場所
-  mcLoc = glGetUniformLocation(program, "mc");
-  mwLoc = glGetUniformLocation(program, "mw");
+  loc.mc = glGetUniformLocation(program, "mc");
+  loc.mw = glGetUniformLocation(program, "mw");
 }
 
 void gg::GgPointShader::use(GLuint vert, ...) const
@@ -25,23 +25,23 @@ void gg::GgPointShader::use(GLuint vert, ...) const
   GgShader::use(0);
 
   // 変換
-  glUniformMatrix4fv(mcLoc, 1, GL_FALSE, mc);
-  glUniformMatrix4fv(mwLoc, 1, GL_FALSE, mw);
+  glUniformMatrix4fv(loc.mc, 1, GL_FALSE, m.c);
+  glUniformMatrix4fv(loc.mw, 1, GL_FALSE, m.w);
 
   // 頂点属性にバッファオブジェクトを指定する
   glBindBuffer(GL_ARRAY_BUFFER, vert);
 
   // attribute 変数 pv をバッファオブジェクトから得ることを有効にする
-  glEnableVertexAttribArray(pvLoc);
+  glEnableVertexAttribArray(loc.pv);
 
   // attribute 変数 pv と配列変数 vert を結びつける
-  glVertexAttribPointer(pvLoc, 3, GL_FLOAT, GL_FALSE, 0, 0);
+  glVertexAttribPointer(loc.pv, 3, GL_FLOAT, GL_FALSE, 0, 0);
 }
 
 void gg::GgPointShader::unuse(void) const
 {
   // attribute 変数 pv をバッファオブジェクトから得ることを無効にする
-  glDisableVertexAttribArray(pvLoc);
+  glDisableVertexAttribArray(loc.pv);
 
   // 基底クラスのシェーダの設定を呼び出す
   GgShader::unuse();
@@ -49,8 +49,8 @@ void gg::GgPointShader::unuse(void) const
 
 void gg::GgPointShader::loadMatrix(const GgMatrix &mp, const GgMatrix &mw)
 {
-  loadModelViewProjectionMatrix(mp * mw);
-  loadModelViewMatrix(mw);
+  m.loadModelViewProjectionMatrix(mp * mw);
+  m.loadModelViewMatrix(mw);
 }
 
 void gg::GgPointShader::loadMatrix(const GLfloat *mp, const GLfloat *mw)
