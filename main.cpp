@@ -1,7 +1,6 @@
 #include <cmath>
 #include <cstdlib>
 #include <cstring>
-#include <cstdio>
 
 #include "gg.h"
 using namespace gg;
@@ -170,11 +169,8 @@ static void keyboard(unsigned char key, int kx, int ky)
 
 static void leave(void)
 {
+  delete model->getShader();
   delete model;
-
-  // オブジェクトにアタッチしたシェーダは
-  // オブジェクトの削除時に削除されるので
-  // ここでは delete しない
 }
 
 static void init(void)
