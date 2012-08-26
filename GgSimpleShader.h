@@ -36,7 +36,7 @@ namespace gg
       void loadNormalMatrix(const GgMatrix &m) { memcpy(g, m.get(), sizeof g); }
     } m;
 
-    // 位置
+    // 場所
     struct
     {
       GLint nv;         // 法線の attribute 変数の場所
@@ -59,8 +59,8 @@ namespace gg
     // コンストラクタ
     GgSimpleShader(void) {}
     GgSimpleShader(const char *vert, const char *frag = 0,
-      const char *geom = 0, GLenum input = GL_TRIANGLES, GLenum output = GL_TRIANGLE_STRIP, int vertices = 0,
-      int nvarying = 0, const char **varyings = 0);
+      const char *geom = 0, GLenum input = GL_TRIANGLES, GLenum output = GL_TRIANGLE_STRIP, GLint vertices = 0,
+      GLint nvarying = 0, const char **varyings = 0);
     GgSimpleShader(const GgSimpleShader &o)
       : GgPointShader(o), l(o.l), k(o.k), m(o.m), loc(o.loc) {}
 

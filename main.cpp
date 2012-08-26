@@ -25,7 +25,7 @@ static GgObject *model = 0;
 /*
 ** シェーダ
 */
-#include "GgSimpleShader.h"
+#include "GgBlurShader.h"
 
 /*
 ** ウィンドウの高さ
@@ -38,8 +38,14 @@ static void display(void)
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
   
   // 図形の描画
-  model->getShader()->loadMatrix(mp, mv * mt * tb.get());
-  model->draw();
+  GgBlurShader *blur = dynamic_cast<GgBlurShader *>(model->getShader());
+  if (blur != 0)
+  {
+    blur->loadMatrix(mp, mv * mt * tb.get());
+    model->draw();
+    ggError("draw");
+    blur->swapBuffers();
+  }
   
   // ダブルバッファリング
   glutSwapBuffers();
@@ -91,43 +97,56 @@ static int press = -1;
 
 static void mouse(int button, int state, int x, int y)
 {
-  switch (press = button)
+  press = button;
+  
+  if (state == GLUT_DOWN)
   {
-  case GLUT_LEFT_BUTTON:
-    if (state == GLUT_DOWN)
+    // クリックしたところの深度値を読む
+    glReadPixels(x, height - y, 1, 1, GL_DEPTH_COMPONENT, GL_FLOAT, &z0);
+    
+    // 背景でないとき
+    if (z0 < 1.0f)
     {
-      glReadPixels(x, height - y, 1, 1, GL_DEPTH_COMPONENT, GL_FLOAT, &z0);
-      if (z0 < 1.0f)
+      switch (press)
       {
+      case GLUT_LEFT_BUTTON:
         // 平行移動開始
         pick(p0, x, height - y, z0, imv * imp);
         mt0 = mt;
-        glutIdleFunc(idle);
+        break;
+      case GLUT_RIGHT_BUTTON:
+        // トラックボール開始
+        tb.start(x, y);
+        break;
+      default:
+        break;
       }
-      else {
-        press = -1;
-      }
-    }
-    else {
-      // 平行移動停止
-      glutIdleFunc(0);
-    }
-    break;
-  case GLUT_RIGHT_BUTTON:
-    if (state == GLUT_DOWN)
-    {
-      // トラックボール開始
-      tb.start(x, y);
+      
+      // アニメーション開始
       glutIdleFunc(idle);
     }
-    else {
-      // トラックボール停止
-      tb.stop(x, y);
-      glutIdleFunc(0);
+    else
+    {
+      press = -1;
     }
-    break;
-  default:
-    break;
+  }
+  else
+  {
+    switch (press)
+    {
+    case GLUT_LEFT_BUTTON:
+      // 平行移動終了
+      break;
+    case GLUT_RIGHT_BUTTON:
+      // トラックボール終了
+      tb.stop(x, y);
+      break;
+    default:
+      break;
+    }
+    
+    // アニメーション停止
+    glutIdleFunc(0);
   }
 }
 
@@ -179,23 +198,28 @@ static void init(void)
   ggInit();
   
   // シェーダプログラムの読み込み
-  GgSimpleShader *simple = new GgSimpleShader("simple.vert", "simple.frag");
+  GgBlurShader *blur = new GgBlurShader("blur.vert", "blur.frag");
 
   // 光源
-  simple->setLightPosition(3.0f, 4.0f, 5.0f);
-  simple->setLightAmbient(0.2f, 0.2f, 0.2f);
-  simple->setLightDiffuse(1.0f, 1.0f, 1.0f);
-  simple->setLightSpecular(1.0f, 1.0f, 1.0f);
+  blur->setLightPosition(3.0f, 4.0f, 5.0f);
+  blur->setLightAmbient(0.2f, 0.2f, 0.2f);
+  blur->setLightDiffuse(1.0f, 1.0f, 1.0f);
+  blur->setLightSpecular(1.0f, 1.0f, 1.0f);
 
   // 材質
-  simple->setMaterialAmbient(0.8f, 0.6f, 0.6f);
-  simple->setMaterialDiffuse(0.8f, 0.6f, 0.6f);
-  simple->setMaterialSpecular(0.2f, 0.2f, 0.2f);
-  simple->setMaterialShininess(50.0f);
+  blur->setMaterialAmbient(0.8f, 0.6f, 0.6f);
+  blur->setMaterialDiffuse(0.8f, 0.6f, 0.6f);
+  blur->setMaterialSpecular(0.2f, 0.2f, 0.2f);
+  blur->setMaterialShininess(50.0f);
   
   // OBJ ファイルの読み込み
   model = ggObj("model.dat");
-  model->attachShader(simple);
+  
+  // オブジェクトにシェーダを登録
+  model->attachShader(blur);
+
+  // transform feedback buffer に初期値を設定する
+  blur->copyBuffer(model->pnum(), model->pbuf());
   
   // 視野変換行列
   mv.loadLookat(0.0f, 0.0f, 3.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f);
@@ -215,6 +239,7 @@ static void init(void)
 
 int main(int argc, char *argv[])
 {
+  glutInitWindowSize(1024, 1024);
   glutInit(&argc, argv);
   glutInitDisplayMode(GLUT_RGBA | GLUT_DEPTH | GLUT_DOUBLE);
   glutCreateWindow("Screen Space Motion Blur");

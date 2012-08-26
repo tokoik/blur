@@ -37,8 +37,8 @@ namespace gg
     // コンストラクタ
     GgPointShader(void) {}
     GgPointShader(const char *vert, const char *frag = 0,
-      const char *geom = 0, GLenum input = GL_POINTS, GLenum output = GL_TRIANGLE_STRIP, int vertices = 0,
-      int nvarying = 0, const char **varyings = 0);
+      const char *geom = 0, GLenum input = GL_POINTS, GLenum output = GL_TRIANGLE_STRIP, GLint vertices = 0,
+      GLint nvarying = 0, const char **varyings = 0);
     GgPointShader(const GgPointShader &o)
       : GgShader(o), m(o.m), loc(o.loc) {}
 

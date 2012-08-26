@@ -40,24 +40,10 @@ void gg::ggInit(void)
   if (atof(reinterpret_cast<const char *>(glGetString(GL_VERSION))) < 2.1)
   {
     std::cerr << "Error: This program requires OpenGL 2.1 or lator." << std::endl;
-    exit(1);
   }
 
   // Swap Interval の設定
-#if defined(X11)
-  Display *dpy = glXGetCurrentDisplay();
-  GLXDrawable drawable = glXGetCurrentDrawable();
-  if (drawable)
-  {
-    glXSwapIntervalEXT(dpy, drawable, 1);
-    return;
-  }
-#elif defined(__APPLE__)
-  int swap_interval = 1;
-  CGLContextObj cgl_context = CGLGetCurrentContext();
-  if (!CGLSetParameter(cgl_context, kCGLCPSwapInterval, &swap_interval))
-    return;
-#elif defined(WIN32)
+#if defined(WIN32)
   GLenum err = glewInit();
   if (err != GLEW_OK)
   {
@@ -71,6 +57,18 @@ void gg::ggInit(void)
     return;
   }
 #  endif
+#elif defined(__APPLE__)
+  int swap_interval = 1;
+  CGLContextObj cgl_context = CGLGetCurrentContext();
+  if (!CGLSetParameter(cgl_context, kCGLCPSwapInterval, &swap_interval)) return;
+#elif defined(X11)
+  Display *dpy = glXGetCurrentDisplay();
+  GLXDrawable drawable = glXGetCurrentDrawable();
+  if (drawable)
+  {
+    glXSwapIntervalEXT(dpy, drawable, 1);
+    return;
+  }
 #else
   std::cerr << "Warning: Could not set swap interval" << std::endl;
 #endif
@@ -400,8 +398,8 @@ GLuint gg::loadShader(
   const char *geom,       // ジオメトリシェーダのソースファイル名
   GLenum input,           // ジオメトリシェーダの入力プリミティブ
   GLenum output,          // ジオメトリシェーダの出力プリミティブ
-  int vertices,           // ジオメトリシェーダの出力頂点数
-  int nvarying,           // Transform Feedback する varying 変数の数
+  GLint vertices,         // ジオメトリシェーダの出力頂点数
+  GLint nvarying,         // Transform Feedback する varying 変数の数
   const char **varyings   // Transform Feedback する varying 変数のリスト
   )
 {
@@ -556,8 +554,8 @@ void gg::GgMatrix::multiply(GLfloat *c, const GLfloat *a, const GLfloat *b) cons
 gg::GgMatrix &gg::GgMatrix::loadIdentity(void)
 {
   array[ 1] = array[ 2] = array[ 3] = array[ 4] =
-    array[ 6] = array[ 7] = array[ 8] = array[ 9] =
-    array[11] = array[12] = array[13] = array[14] = 0.0f;
+  array[ 6] = array[ 7] = array[ 8] = array[ 9] =
+  array[11] = array[12] = array[13] = array[14] = 0.0f;
   array[ 0] = array[ 5] = array[10] = array[15] = 1.0f;
 
   return *this;
@@ -573,8 +571,8 @@ gg::GgMatrix &gg::GgMatrix::loadTranslate(GLfloat x, GLfloat y, GLfloat z, GLflo
   array[14] = z;
   array[ 0] = array[ 5] = array[10] = array[15] = w;
   array[ 1] = array[ 2] = array[ 3] = array[ 4] =
-    array[ 6] = array[ 7] = array[ 8] = array[ 9] =
-    array[11] = 0.0f;
+  array[ 6] = array[ 7] = array[ 8] = array[ 9] =
+  array[11] = 0.0f;
 
   return *this;
 }
@@ -589,8 +587,8 @@ gg::GgMatrix &gg::GgMatrix::loadScale(GLfloat x, GLfloat y, GLfloat z, GLfloat w
   array[10] = z;
   array[15] = w;
   array[ 1] = array[ 2] = array[ 3] = array[ 4] =
-    array[ 6] = array[ 7] = array[ 8] = array[ 9] =
-    array[11] = array[12] = array[13] = array[14] = 0.0f;
+  array[ 6] = array[ 7] = array[ 8] = array[ 9] =
+  array[11] = array[12] = array[13] = array[14] = 0.0f;
 
   return *this;
 }
@@ -873,7 +871,7 @@ gg::GgMatrix &gg::GgMatrix::loadOrthogonal(GLfloat left, GLfloat right, GLfloat 
     array[14] = -(zFar + zNear) / dz;
     array[15] =  1.0f;
     array[ 1] = array[ 2] = array[ 3] = array[ 4] =
-      array[ 6] = array[ 7] = array[ 8] = array[ 9] = array[11] = 0.0f;
+    array[ 6] = array[ 7] = array[ 8] = array[ 9] = array[11] = 0.0f;
   }
 
   return *this;
@@ -898,7 +896,7 @@ gg::GgMatrix &gg::GgMatrix::loadFrustum(GLfloat left, GLfloat right, GLfloat bot
     array[11] = -1.0f;
     array[14] = -2.0f * zFar * zNear / dz;
     array[ 1] = array[ 2] = array[ 3] = array[ 4] =
-      array[ 6] = array[ 7] = array[12] = array[13] = array[15] = 0.0f;
+    array[ 6] = array[ 7] = array[12] = array[13] = array[15] = 0.0f;
   }
 
   return *this;
@@ -921,8 +919,8 @@ gg::GgMatrix &gg::GgMatrix::loadPerspective(GLfloat fovy, GLfloat aspect, GLfloa
     array[11] = -1.0f;
     array[14] = -2.0f * zFar * zNear / dz;
     array[ 1] = array[ 2] = array[ 3] = array[ 4] =
-      array[ 6] = array[ 7] = array[ 8] = array[ 9] =
-      array[12] = array[13] = array[15] = 0.0f;
+    array[ 6] = array[ 7] = array[ 8] = array[ 9] =
+    array[12] = array[13] = array[15] = 0.0f;
   }
 
   return *this;
@@ -1135,7 +1133,7 @@ GLfloat gg::GgQuaternion::norm(void) const
 */
 gg::GgQuaternion gg::GgQuaternion::conjugate(void) const
 {
-  GgQuaternion t(-this->array[0], -this->array[1], -this->array[2], this->array[3]);
+  GgQuaternion t(-array[0], -array[1], -array[2], array[3]);
 
   return t;
 }
@@ -1145,9 +1143,8 @@ gg::GgQuaternion gg::GgQuaternion::conjugate(void) const
 */
 gg::GgQuaternion gg::GgQuaternion::invert(void) const
 {
-  GgQuaternion t = this->conjugate();
-  GLfloat l = this->array[0] * this->array[0] + this->array[1] * this->array[1]
-  + this->array[2] * this->array[2] + this->array[3] * this->array[3];
+  GgQuaternion t = conjugate();
+  GLfloat l = array[0] * array[0] + array[1] * array[1] + array[2] * array[2] + array[3] * array[3];
 
   if (l > 0.0f)
   {
@@ -1166,7 +1163,7 @@ gg::GgQuaternion gg::GgQuaternion::invert(void) const
 gg::GgQuaternion gg::GgQuaternion::normalize(void) const
 {
   GgQuaternion t = *this;
-  GLfloat l = this->norm();
+  GLfloat l = norm();
 
   if (l > 0.0f)
   {
@@ -1348,7 +1345,13 @@ gg::GgPoints *gg::ggPointSphere(GLuint nv, GLfloat cx, GLfloat cy, GLfloat cz, G
     vert[v][2] = r * cp + cz;
   }
 
-  return new gg::GgPoints(nv, vert);
+  // ポイントの作成
+  GgPoints *points = new gg::GgPoints(nv, vert);
+  
+  // 作業用のメモリの解放
+  delete[] vert;
+  
+  return points;
 }
 
 /*
@@ -1366,20 +1369,10 @@ gg::GgPolygon *gg::ggRectangle(GLfloat width, GLfloat height)
   };
 
   // メモリの確保
-  GLfloat (*vert)[3] = 0;
-  GLfloat (*norm)[3] = 0;
-  try
-  {
-    vert = new GLfloat[4][3];
-    norm = new GLfloat[4][3];
-  }
-  catch (std::bad_alloc e)
-  {
-    delete[] vert;
-    delete[] norm;
-    throw e;
-  }
+  GLfloat vert[4][3];
+  GLfloat norm[4][3];
 
+  // 頂点位置の計算
   for (int v = 0; v < 4; ++v)
   {
     vert[v][0] = p[v][0] * width;
@@ -1391,6 +1384,7 @@ gg::GgPolygon *gg::ggRectangle(GLfloat width, GLfloat height)
     norm[v][2] = 1.0f;
   }
 
+  // ポリゴンの作成
   return new gg::GgPolygon(4, vert, norm);
 }
 
@@ -1414,6 +1408,7 @@ gg::GgPolygon *gg::ggEllipse(GLfloat width, GLfloat height, GLuint slices)
     throw e;
   }
 
+  // 頂点位置の計算
   for (GLuint v = 0; v < slices; ++v)
   {
     float t = 6.2831853f * (float)v / (float)slices;
@@ -1425,9 +1420,16 @@ gg::GgPolygon *gg::ggEllipse(GLfloat width, GLfloat height, GLuint slices)
     norm[v][0] = 0.0f;
     norm[v][1] = 0.0f;
     norm[v][2] = 1.0f;
-  }
+  } 
+  
+  // ポリゴンの作成
+  GgPolygon *ellipse = new gg::GgPolygon(slices, vert, norm);
 
-  return new gg::GgPolygon(slices, vert, norm);
+  // 作業用のメモリの解放
+  delete[] vert;
+  delete[] norm;
+
+  return ellipse;
 }
 
 /*
@@ -1575,12 +1577,10 @@ gg::GgObject *gg::ggObj(const char *name, bool normalize)
     norm[face[f][2]][2] += fnorm[f][2];
   }
 
-  // 頂点の法線ベクトルを正規化する
+  // 頂点の法線ベクトルの正規化
   for (int v = 0; v < nv; ++v)
   {
-    GLfloat a = sqrt(norm[v][0] * norm[v][0]
-    + norm[v][1] * norm[v][1]
-    + norm[v][2] * norm[v][2]);
+    GLfloat a = sqrt(norm[v][0] * norm[v][0] + norm[v][1] * norm[v][1] + norm[v][2] * norm[v][2]);
 
     if (a != 0.0)
     {
@@ -1590,8 +1590,14 @@ gg::GgObject *gg::ggObj(const char *name, bool normalize)
     }
   }
 
-  // 面の法線ベクトルは頂点の法線ベクトルの算出にしか使わないので解放
-  delete[] fnorm;
+  // オブジェクトの作成
+  GgObject *obj = new gg::GgObject(nv, vert, norm, nf, face);
 
-  return new gg::GgObject(nv, vert, norm, nf, face);
+  // 作業用のメモリの解放
+  delete[] vert;
+  delete[] norm;
+  delete[] fnorm;
+  delete[] face;
+  
+  return obj;
 }

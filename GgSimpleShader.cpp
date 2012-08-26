@@ -6,8 +6,8 @@
 #include "GgSimpleShader.h"
 
 gg::GgSimpleShader::GgSimpleShader(const char *vert, const char *frag,
-  const char *geom, GLenum input, GLenum output, int vertices,
-  int nvarying, const char **varyings)
+  const char *geom, GLenum input, GLenum output, GLint vertices,
+  GLint nvarying, const char **varyings)
   : GgPointShader(vert, frag, geom, input, output, vertices, nvarying, varyings)
 {
   // ƒvƒƒOƒ‰ƒ€–¼

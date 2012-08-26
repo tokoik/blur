@@ -36,58 +36,16 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #  include "glew.h"
 #  include "wglew.h"
 #  include "glut.h"
+#elif defined(__APPLE__)
+#  define GL_DO_NOT_WARN_IF_MULTI_GL_VERSION_HEADERS_INCLUDED
+#  include <OpenGL/OpenGL.h>
+#  include <OpenGL/gl3.h>
+#  include <GLUT/glut.h>
 #elif defined(X11)
 #  define GL_GLEXT_PROTOTYPES
 #  define GLX_GLXEXT_PROTOTYPES
-#  include <GL/glx.h>
 #  include <GL/glut.h>
-#elif defined(__APPLE__)
-#  include <OpenGL/OpenGL.h>
-#  include <GLUT/glut.h>
-// GL_ARB_texture_float
-#  define GL_RGBA32F GL_RGBA32F_ARB
-#  define GL_RGB32F GL_RGB32F_ARB
-#  define GL_ALPHA32F GL_ALPHA32F_ARB
-#  define GL_INTENSITY32F GL_INTENSITY32F_ARB
-#  define GL_LUMINANCE32F GL_LUMINANCE32F_ARB
-#  define GL_LUMINANCE_ALPHA32F GL_LUMINANCE_ALPHA32F_ARB
-#  define GL_RGBA16F GL_RGBA16F_ARB
-#  define GL_RGB16F GL_RGB16F_ARB
-#  define GL_ALPHA16F GL_ALPHA16F_ARB
-#  define GL_INTENSITY16F GL_INTENSITY16F_ARB
-#  define GL_LUMINANCE16F GL_LUMINANCE16F_ARB
-#  define GL_LUMINANCE_ALPHA16F GL_LUMINANCE_ALPHA16F_ARB
-// GL_EXT_transform_feedback
-#  define glBindBufferRange glBindBufferRangeEXT
-#  define glBindBufferOffset glBindBufferOffsetEXT
-#  define glBindBufferBase glBindBufferBaseEXT
-#  define glBeginTransformFeedback glBeginTransformFeedbackEXT
-#  define glEndTransformFeedback glEndTransformFeedbackEXT
-#  define glTransformFeedbackVaryings glTransformFeedbackVaryingsEXT
-#  define glGetTransformFeedbackVarying glGetTransformFeedbackVaryingEXT
-#  define glGetIntegerIndexedv glGetIntegerIndexedvEXT
-#  define glGetBooleanIndexedv glGetBooleanIndexedvEXT
-#  define GL_TRANSFORM_FEEDBACK_BUFFER GL_TRANSFORM_FEEDBACK_BUFFER_EXT
-#  define GL_TRANSFORM_FEEDBACK_BUFFER_START GL_TRANSFORM_FEEDBACK_BUFFER_START_EXT
-#  define GL_TRANSFORM_FEEDBACK_BUFFER_SIZE GL_TRANSFORM_FEEDBACK_BUFFER_SIZE_EXT
-#  define GL_TRANSFORM_FEEDBACK_BUFFER_BINDING GL_TRANSFORM_FEEDBACK_BUFFER_BINDING_EXT
-#  define GL_INTERLEAVED_ATTRIBS GL_INTERLEAVED_ATTRIBS_EXT
-#  define GL_SEPARATE_ATTRIBS GL_SEPARATE_ATTRIBS_EXT
-#  define GL_PRIMITIVES_GENERATED GL_PRIMITIVES_GENERATED_EXT
-#  define GL_TRANSFORM_FEEDBACK_PRIMITIVES_WRITTEN GL_TRANSFORM_FEEDBACK_PRIMITIVES_WRITTEN_EXT
-#  define GL_RASTERIZER_DISCARD GL_RASTERIZER_DISCARD_EXT
-#  define GL_MAX_TRANSFORM_FEEDBACK_INTERLEAVED_COMPONENTS GL_MAX_TRANSFORM_FEEDBACK_INTERLEAVED_COMPONENTS_EXT
-#  define GL_MAX_TRANSFORM_FEEDBACK_SEPARATE_ATTRIBS GL_MAX_TRANSFORM_FEEDBACK_SEPARATE_ATTRIBS_EXT
-#  define GL_MAX_TRANSFORM_FEEDBACK_SEPARATE_COMPONENTS GL_MAX_TRANSFORM_FEEDBACK_SEPARATE_COMPONENTS_EXT
-#  define GL_TRANSFORM_FEEDBACK_VARYINGS GL_TRANSFORM_FEEDBACK_VARYINGS_EXT
-#  define GL_TRANSFORM_FEEDBACK_BUFFER_MODE GL_TRANSFORM_FEEDBACK_BUFFER_MODE_EXT
-#  define GL_TRANSFORM_FEEDBACK_VARYING_MAX_LENGTH GL_TRANSFORM_FEEDBACK_VARYING_MAX_LENGTH_EXT
-// GL_APPLE_vertex_array_object
-#  define glGenVertexArrays glGenVertexArraysAPPLE
-#  define glBindVertexArray glBindVertexArrayAPPLE
-#  define glDeleteVertexArrays glDeleteVertexArraysAPPLE
-#  define glIsVertexArray glIsVertexArrayAPPLE
-#  define GL_VERTEX_ARRAY_BINDING GL_VERTEX_ARRAY_BINDING_APPLE
+#  include <GL/glx.h>
 #else
 #  error "This platform is not supported."
 #endif
@@ -833,14 +791,6 @@ namespace gg
     // テクスチャ名
     GLuint texture;
 
-  protected:
-
-    // テクスチャオブジェクトを取り出す
-    GLuint get(void) const
-    {
-      return texture;
-    }
-
   public:
 
     // デストラクタ
@@ -890,6 +840,12 @@ namespace gg
     {
       glBindTexture(GL_TEXTURE_2D, 0);
       glActiveTexture(GL_TEXTURE0);
+    }
+
+    // テクスチャオブジェクトを取り出す
+    GLuint get(void) const
+    {
+      return texture;
     }
   };
   
@@ -989,8 +945,8 @@ namespace gg
       const char *geom = 0,               // ジオメトリシェーダのソースファイル名（0 なら不使用）
       GLenum input = GL_TRIANGLES,        // ジオメトリシェーダの入力プリミティブ
       GLenum output = GL_TRIANGLE_STRIP,  // ジオメトリシェーダの出力プリミティブ
-      int vertices = 0,                   // ジオメトリシェーダの出力頂点数
-      int nvarying = 0,                   // フィードバックする varying 変数の数（0 なら不使用）
+      GLint vertices = 0,                 // ジオメトリシェーダの出力頂点数
+      GLint nvarying = 0,                 // フィードバックする varying 変数の数（0 なら不使用）
       const char **varyings = 0           // フィードバックする varying 変数のリスト
       )
     {
@@ -1079,6 +1035,27 @@ namespace gg
       glBufferData(target, sizeof (T) * n, data, usage);
     }
 
+    // データを複写する
+    void copy(GLuint buf)
+    {
+#ifdef __APPLE__
+      const size_t size = sizeof (T) * number;
+      T *temp = new T[number];
+      glBindBuffer(GL_ARRAY_BUFFER, buf);
+      glGetBufferSubData(GL_ARRAY_BUFFER, 0, size, temp);
+      glBindBuffer(GL_ARRAY_BUFFER, buffer);
+      glBufferSubData(GL_ARRAY_BUFFER, 0, size, temp);
+      glBindBuffer(GL_ARRAY_BUFFER, 0);
+      delete[] temp;
+#else
+      glBindBuffer(GL_COPY_READ_BUFFER, buf);
+      glBindBuffer(GL_COPY_WRITE_BUFFER, buffer);
+      glCopyBufferSubData(GL_COPY_READ_BUFFER, GL_COPY_WRITE_BUFFER, 0, 0, size);
+      glBindBuffer(GL_COPY_WRITE_BUFFER, 0);
+      glBindBuffer(GL_COPY_READ_BUFFER, 0);
+#endif
+    }
+    
     // バッファオブジェクト名を取り出す
     GLuint buf(void) const
     {
@@ -1155,20 +1132,6 @@ namespace gg
     // 頂点バッファオブジェクト
     GgBuffer<GLfloat[3]> position;
 
-  protected:
-
-    // バッファオブジェクト名を取り出す
-    GLuint pbuf(void) const
-    {
-      return position.buf();
-    }
-
-    // データの数を取り出す
-    GLuint pnum(void) const
-    {
-      return position.num();
-    }
-
   public:
 
     // デストラクタ
@@ -1176,7 +1139,7 @@ namespace gg
 
     // コンストラクタ
     GgPoints(void) {}
-    GgPoints(int n, const GLfloat (*pos)[3], GLenum usage = GL_STATIC_DRAW)
+    GgPoints(GLuint n, const GLfloat (*pos)[3], GLenum usage = GL_STATIC_DRAW)
     {
       load(n, pos, usage);
     }
@@ -1196,11 +1159,23 @@ namespace gg
 
     // バッファオブジェクトを確保して頂点を格納する
     //    n: 頂点数, pos: 頂点の位置
-    void load(int n, const GLfloat (*pos)[3], GLenum usage = GL_STATIC_DRAW)
+    void load(GLuint n, const GLfloat (*pos)[3], GLenum usage = GL_STATIC_DRAW)
     {
       position.load(GL_ARRAY_BUFFER, n, pos, usage);
     }
 
+    // バッファオブジェクト名を取り出す
+    GLuint pbuf(void) const
+    {
+      return position.buf();
+    }
+    
+    // データの数を取り出す
+    GLuint pnum(void) const
+    {
+      return position.num();
+    }
+    
     // ポイントの描画
     virtual void draw(GLenum mode = GL_POINTS) const;
   };
@@ -1213,20 +1188,6 @@ namespace gg
   {
     // 頂点の法線ベクトル
     GgBuffer<GLfloat[3]> normal;
-
-  protected:
-
-    // バッファオブジェクト名を取り出す
-    GLuint nbuf(void) const
-    {
-      return normal.buf();
-    }
-
-    // データの数を取り出す
-    GLuint nnum(void) const
-    {
-      return normal.num();
-    }
 
   public:
 
@@ -1262,6 +1223,18 @@ namespace gg
       normal.load(GL_ARRAY_BUFFER, n, norm, usage);
     }
 
+    // バッファオブジェクト名を取り出す
+    GLuint nbuf(void) const
+    {
+      return normal.buf();
+    }
+    
+    // データの数を取り出す
+    GLuint nnum(void) const
+    {
+      return normal.num();
+    }
+    
     // 三角形群を描画する手続き
     virtual void draw(GLenum mode = GL_TRIANGLE_FAN) const;
   };
@@ -1274,20 +1247,6 @@ namespace gg
   {
     // インデックスバッファオブジェクト
     GgBuffer<GLuint[3]> index;
-
-  protected:
-
-    // バッファオブジェクト名を取り出す
-    GLuint fbuf(void) const
-    {
-      return index.buf();
-    }
-
-    // データの数を取り出す
-    GLuint fnum(void) const
-    {
-      return index.num();
-    }
 
   public:
 
@@ -1326,6 +1285,18 @@ namespace gg
       index.load(GL_ELEMENT_ARRAY_BUFFER, f, face);
     }
 
+    // バッファオブジェクト名を取り出す
+    GLuint fbuf(void) const
+    {
+      return index.buf();
+    }
+    
+    // データの数を取り出す
+    GLuint fnum(void) const
+    {
+      return index.num();
+    }
+    
     // 三角形ポリゴンを描画する手続き
     virtual void draw(GLenum mode = GL_TRIANGLES) const;
   };
