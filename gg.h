@@ -1038,8 +1038,8 @@ namespace gg
     // ÉfÅ[É^Çï°é Ç∑ÇÈ
     void copy(GLuint buf)
     {
-#ifdef __APPLE__
       const size_t size = sizeof (T) * number;
+#ifdef __APPLE__
       T *temp = new T[number];
       glBindBuffer(GL_ARRAY_BUFFER, buf);
       glGetBufferSubData(GL_ARRAY_BUFFER, 0, size, temp);

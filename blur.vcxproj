@@ -75,18 +75,20 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="gg.h" />
+    <ClInclude Include="GgBlurShader.h" />
     <ClInclude Include="GgPointShader.h" />
     <ClInclude Include="GgSimpleShader.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="gg.cpp" />
+    <ClCompile Include="GgBlurShader.cpp" />
     <ClCompile Include="GgPointShader.cpp" />
     <ClCompile Include="GgSimpleShader.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="simple.frag" />
-    <None Include="simple.vert" />
+    <None Include="blur.frag" />
+    <None Include="blur.vert" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
