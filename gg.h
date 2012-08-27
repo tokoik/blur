@@ -92,12 +92,17 @@ namespace gg
   /*
   ** テクスチャマッピング用の RAW 画像ファイルの読み込み
   */
-  extern void loadImage(const char *name, int width, int height, GLenum format);
+  extern bool loadImage(const char *name, int width, int height, GLenum format);
 
   /*
   ** 高さマップ用の RAW 画像ファイルの読み込んで法線マップを作成する
   */
-  extern void loadHeight(const char *name, int width, int height, float nz);
+  extern bool loadHeight(const char *name, int width, int height, float nz);
+
+  /*
+  ** 三角形分割された OBJ ファイルを読み込む
+  */
+  extern bool loadObj(const char *name, GLuint &nv, GLfloat (*&vert)[3], GLfloat (*&norm)[3], GLuint &nf, GLuint (*&face)[3], bool normalize);
 
   /*
   ** 基底クラス
@@ -1083,6 +1088,11 @@ namespace gg
     // シェーダー
     GgShader *shader;
 
+  protected:
+
+    // 描画図形
+    GLenum mode;
+
   public:
 
     // デストラクタ
@@ -1090,14 +1100,18 @@ namespace gg
 
     // コンストラクタ
     GgShape(void)
-      : shader(0) {}
+      : shader(0), mode(GL_POINTS) {}
     GgShape(const GgShape &o)
-      : shader(o.shader) {}
+      : shader(o.shader), mode(o.mode) {}
 
     // 代入演算子
     GgShape &operator=(const GgShape &o)
     {
-      if (this != &o) attachShader(o.shader);
+      if (this != &o)
+      {
+        attachShader(o.shader);
+        mode = o.mode;
+      }
       return *this;
     }
 
@@ -1119,8 +1133,14 @@ namespace gg
       return shader;
     }
 
+    // 描画に使う基本図形を設定する
+    void setMode(GLenum m)
+    {
+      mode = m;
+    }
+
     // この形状を描画する手続きをオーバーライドする
-    virtual void draw(GLenum mode = GL_POINTS) const = 0;
+    virtual void draw(void) const = 0;
   };
 
   /*
@@ -1142,6 +1162,7 @@ namespace gg
     GgPoints(GLuint n, const GLfloat (*pos)[3], GLenum usage = GL_STATIC_DRAW)
     {
       load(n, pos, usage);
+      mode = GL_POINTS;
     }
     GgPoints(const GgPoints &o)
       : GgShape(o), position(o.position) {}
@@ -1177,13 +1198,13 @@ namespace gg
     }
     
     // ポイントの描画
-    virtual void draw(GLenum mode = GL_POINTS) const;
+    virtual void draw(void) const;
   };
 
   /*
   ** ポリゴン
   */
-  class GgPolygon
+  class GgTriangles
     : public GgPoints
   {
     // 頂点の法線ベクトル
@@ -1192,20 +1213,21 @@ namespace gg
   public:
 
     // デストラクタ
-    virtual ~GgPolygon(void) {}
+    virtual ~GgTriangles(void) {}
 
     // コンストラクタ
-    GgPolygon(void) {}
-    GgPolygon(int n, const GLfloat (*pos)[3], const GLfloat (*norm)[3], GLenum usage = GL_STATIC_DRAW)
+    GgTriangles(void) {}
+    GgTriangles(GLuint n, const GLfloat (*pos)[3], const GLfloat (*norm)[3], GLenum usage = GL_STATIC_DRAW)
       : GgPoints(n, pos, usage)
     {
       normal.load(GL_ARRAY_BUFFER, n, norm, usage);
+      mode = GL_TRIANGLES;
     }
-    GgPolygon(const GgPolygon &o)
+    GgTriangles(const GgTriangles &o)
       : GgPoints(o), normal(o.normal) {}
 
     // 代入
-    GgPolygon &operator=(const GgPolygon &o)
+    GgTriangles &operator=(const GgTriangles &o)
     {
       if (&o != this)
       {
@@ -1236,14 +1258,14 @@ namespace gg
     }
     
     // 三角形群を描画する手続き
-    virtual void draw(GLenum mode = GL_TRIANGLE_FAN) const;
+    virtual void draw(void) const;
   };
 
   /*
   ** 三角形の形状データ
   */
   class GgObject
-    : public GgPolygon
+    : public GgTriangles
   {
     // インデックスバッファオブジェクト
     GgBuffer<GLuint[3]> index;
@@ -1257,19 +1279,19 @@ namespace gg
     GgObject(void) {}
     GgObject(GLuint n, const GLfloat (*pos)[3], const GLfloat (*norm)[3],
       GLuint f, const GLuint (*face)[3], GLenum usage = GL_STATIC_DRAW)
-      : GgPolygon(n, pos, norm, usage)
+      : GgTriangles(n, pos, norm, usage)
     {
       index.load(GL_ELEMENT_ARRAY_BUFFER, f, face);
     }
     GgObject(const GgObject &o)
-      : GgPolygon(o), index(o.index) {}
+      : GgTriangles(o), index(o.index) {}
     
     // 代入
     GgObject &operator=(const GgObject &o)
     {
       if (&o != this)
       {
-        GgPolygon::operator=(o);
+        GgTriangles::operator=(o);
         index = o.index;
       }
       return *this;
@@ -1281,7 +1303,7 @@ namespace gg
     void load(GLuint n, const GLfloat (*pos)[3], const GLfloat (*norm)[3],
       GLuint f, const GLuint (*face)[3], GLenum usage = GL_STATIC_DRAW)
     {
-      GgPolygon::load(n, pos, norm, usage);
+      GgTriangles::load(n, pos, norm, usage);
       index.load(GL_ELEMENT_ARRAY_BUFFER, f, face);
     }
 
@@ -1298,7 +1320,7 @@ namespace gg
     }
     
     // 三角形ポリゴンを描画する手続き
-    virtual void draw(GLenum mode = GL_TRIANGLES) const;
+    virtual void draw(void) const;
   };
 
   /*
@@ -1309,15 +1331,20 @@ namespace gg
   /*
   ** 矩形
   */
-  extern GgPolygon *ggRectangle(GLfloat width = 1.0f, GLfloat height = 1.0f);
+  extern GgTriangles *ggRectangle(GLfloat width = 1.0f, GLfloat height = 1.0f);
 
   /*
   ** 楕円
   */
-  extern GgPolygon *ggEllipse(GLfloat width = 1.0f, GLfloat height = 1.0f, GLuint slices = 16);
+  extern GgTriangles *ggEllipse(GLfloat width = 1.0f, GLfloat height = 1.0f, GLuint slices = 16);
 
   /*
-  ** 三角形分割された Alias OBJ ファイル
+  ** 三角形分割された Alias OBJ ファイル (Arrays 形式)
+  */
+  extern GgTriangles *ggObjArray(const char *name, bool normalize = false);
+
+  /*
+  ** 三角形分割された Alias OBJ ファイル (Elements 形式)
   */
   extern GgObject *ggObj(const char *name, bool normalize = false);
 }

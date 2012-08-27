@@ -18,14 +18,14 @@ static GgMatrix mp, imp;   // 投影変換行列
 static GgMatrix mt;        // 平行移動
 
 /*
-** OBJ ファイル
-*/
-static GgObject *model = 0;
-
-/*
 ** シェーダ
 */
 #include "GgBlurShader.h"
+
+/*
+** OBJ ファイル
+*/
+static GgTriangles *model = 0;
 
 /*
 ** ウィンドウの高さ
@@ -43,7 +43,6 @@ static void display(void)
   {
     blur->loadMatrix(mp, mv * mt * tb.get());
     model->draw();
-    ggError("draw");
     blur->swapBuffers();
   }
   
@@ -213,7 +212,7 @@ static void init(void)
   blur->setMaterialShininess(50.0f);
   
   // OBJ ファイルの読み込み
-  model = ggObj("model.dat");
+  model = ggObjArray("model.dat");
   
   // オブジェクトにシェーダを登録
   model->attachShader(blur);

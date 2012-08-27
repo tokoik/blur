@@ -1,6 +1,8 @@
 /*
 ** モーションブラー
 */
+#include <iostream>
+#include <fstream>
 #include <cstdarg>
 
 #include "GgBlurShader.h"
@@ -33,23 +35,18 @@ void gg::GgBlurShader::use(GLuint vert, ...) const
   
   // フィードバックのソースとなるバッファオブジェクトを選択する
   glBindBuffer(GL_ARRAY_BUFFER, b.fb[b.buffer].buf());
-  ggError("fb0");
   
   // attribute 変数 p0 をバッファオブジェクトから得ることを有効にする
   glEnableVertexAttribArray(loc.p0);
-  ggError("p0");
   
   // attribute 変数 nv とバッファオブジェクトを結びつける
   glVertexAttribPointer(loc.p0, 3, GL_FLOAT, GL_FALSE, 0, 0);
-  ggError("fb0a");
   
   // フィードバックのターゲットとなるバッファオブジェクトを選択する
   glBindBufferBase(GL_TRANSFORM_FEEDBACK_BUFFER, 0, b.fb[1 - b.buffer].buf());
-  ggError("fb1");
   
   // Transform Feedback 開始
   glBeginTransformFeedback(GL_TRIANGLES);
-  ggError("begin");
 }
 
 void gg::GgBlurShader::unuse(void) const
@@ -67,7 +64,7 @@ void gg::GgBlurShader::unuse(void) const
 void gg::GgBlurShader::copyBuffer(GLuint num, GLuint buf)
 {
   // フィードバックバッファ用の頂点バッファオブジェクトのメモリの確保
-  b.fb[b.buffer].load(GL_ARRAY_BUFFER, num, 0);
-  b.fb[1 - b.buffer].load(GL_ARRAY_BUFFER, num, 0);
+  b.fb[b.buffer].load(GL_ARRAY_BUFFER, num, 0, GL_DYNAMIC_COPY);
+  b.fb[1 - b.buffer].load(GL_ARRAY_BUFFER, num, 0, GL_DYNAMIC_COPY);
   b.fb[b.buffer].copy(buf);
 }
