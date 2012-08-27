@@ -1,9 +1,9 @@
 #version 120
 
 uniform sampler2D texure0, texure1;
-varying vec4 iamb, idiff, ispec;
+varying vec4 dc, sc;
 
 void main(void)
 {
-  gl_FragColor = iamb + idiff + ispec;
+  gl_FragColor = dc + sc;
 }

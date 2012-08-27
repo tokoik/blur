@@ -197,7 +197,7 @@ static void init(void)
   ggInit();
   
   // シェーダプログラムの読み込み
-  GgBlurShader *blur = new GgBlurShader("blur.vert", "blur.frag");
+  GgBlurShader *blur = new GgBlurShader("blur.vert", "blur.frag", "blur.geom", GL_TRIANGLES, GL_TRIANGLE_STRIP, 80);
 
   // 光源
   blur->setLightPosition(3.0f, 4.0f, 5.0f);

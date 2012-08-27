@@ -11,6 +11,7 @@
 		7D48B1A11563EBDE00B6F38A /* GgSimpleShader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7D48B1971563EBDE00B6F38A /* GgSimpleShader.cpp */; };
 		7D48B1C51563ED8A00B6F38A /* blur.frag in Resources */ = {isa = PBXBuildFile; fileRef = 7D48B1C11563ED8600B6F38A /* blur.frag */; };
 		7D48B1C71563ED8A00B6F38A /* blur.vert in Resources */ = {isa = PBXBuildFile; fileRef = 7D48B1C31563ED8600B6F38A /* blur.vert */; };
+		7D4B58B015EBA427004D32E2 /* blur.geom in Resources */ = {isa = PBXBuildFile; fileRef = 7D4B58AF15EBA41E004D32E2 /* blur.geom */; };
 		7D64180515DE6EC3009D7F5D /* model.dat in Resources */ = {isa = PBXBuildFile; fileRef = 7D64180415DE6EBC009D7F5D /* model.dat */; };
 		7D64182515DE6FD4009D7F5D /* GgPointShader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7D64182415DE6FD4009D7F5D /* GgPointShader.cpp */; };
 		7D7AF85F1222C8CC003A0434 /* opengl.icns in Resources */ = {isa = PBXBuildFile; fileRef = 7D7AF85E1222C8CC003A0434 /* opengl.icns */; };
@@ -26,6 +27,7 @@
 		7D48B1971563EBDE00B6F38A /* GgSimpleShader.cpp */ = {isa = PBXFileReference; fileEncoding = 8; lastKnownFileType = sourcecode.cpp.cpp; path = GgSimpleShader.cpp; sourceTree = "<group>"; };
 		7D48B1C11563ED8600B6F38A /* blur.frag */ = {isa = PBXFileReference; fileEncoding = 8; lastKnownFileType = sourcecode.glsl; path = blur.frag; sourceTree = "<group>"; };
 		7D48B1C31563ED8600B6F38A /* blur.vert */ = {isa = PBXFileReference; fileEncoding = 8; lastKnownFileType = sourcecode.glsl; path = blur.vert; sourceTree = "<group>"; };
+		7D4B58AF15EBA41E004D32E2 /* blur.geom */ = {isa = PBXFileReference; fileEncoding = 8; lastKnownFileType = text; path = blur.geom; sourceTree = "<group>"; };
 		7D64180415DE6EBC009D7F5D /* model.dat */ = {isa = PBXFileReference; fileEncoding = 8; lastKnownFileType = text; path = model.dat; sourceTree = "<group>"; };
 		7D64182315DE6FCF009D7F5D /* GgPointShader.h */ = {isa = PBXFileReference; fileEncoding = 8; lastKnownFileType = sourcecode.c.h; path = GgPointShader.h; sourceTree = "<group>"; };
 		7D64182415DE6FD4009D7F5D /* GgPointShader.cpp */ = {isa = PBXFileReference; fileEncoding = 8; lastKnownFileType = sourcecode.cpp.cpp; path = GgPointShader.cpp; sourceTree = "<group>"; };
@@ -60,6 +62,7 @@
 				7DDEEE0F15E88C6A00F9309E /* GgBlurShader.h */,
 				7DDEEE0E15E88C6A00F9309E /* GgBlurShader.cpp */,
 				7D48B1C31563ED8600B6F38A /* blur.vert */,
+				7D4B58AF15EBA41E004D32E2 /* blur.geom */,
 				7D48B1C11563ED8600B6F38A /* blur.frag */,
 				7D64180415DE6EBC009D7F5D /* model.dat */,
 				7D1E90EF1123E36C005E6C75 /* Products */,
@@ -130,6 +133,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				7D48B1C71563ED8A00B6F38A /* blur.vert in Resources */,
+				7D4B58B015EBA427004D32E2 /* blur.geom in Resources */,
 				7D48B1C51563ED8A00B6F38A /* blur.frag in Resources */,
 				7D64180515DE6EC3009D7F5D /* model.dat in Resources */,
 				7D7AF85F1222C8CC003A0434 /* opengl.icns in Resources */,

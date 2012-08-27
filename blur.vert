@@ -27,8 +27,9 @@ varying vec4 idiff; // ŠgŽU”½ŽËŒõ‹­“x
 varying vec4 ispec; // ‹¾–Ê”½ŽËŒõ‹­“x
 
 // transform feedback
-attribute vec4 p0;
-varying vec3 p1;
+attribute vec3 p0;
+varying vec3 pos;
+varying vec2 vel;
 
 void main(void)
 {
@@ -42,6 +43,7 @@ void main(void)
   ispec = pow(max(dot(n, h), 0.0), kshi) * kspec * lspec;
   iamb = kamb * lamb;
   
-  gl_Position = mc * p0;
-  p1 = p0.xyz / p0.w;
+  gl_Position = mc * pv;
+  pos = gl_Position.xyz / gl_Position.w;
+  vel = (pos - p0).xy;
 }
