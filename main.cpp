@@ -44,12 +44,11 @@ static GgTexture *texture0, *texture1;
 #define FBOWIDTH 1024
 #define FBOHEIGHT 1024
 static GLuint fb;           // フレームバッファオブジェクト
-static GLuint rb;           // デプスバッファ用のレンダーバッファ
 
 /*
-** ウィンドウの高さ
+** ウィンドウの幅と高さ
 */
-static int height;
+static int width, height;
 
 static void display(void)
 {
@@ -58,17 +57,23 @@ static void display(void)
   if (pass1 != 0)
   {
     // レンダーターゲットのリスト
-    static const GLenum bufs[] = {
+    static const GLenum bufs[] =
+    {
       GL_COLOR_ATTACHMENT0_EXT, //   色
       GL_COLOR_ATTACHMENT1_EXT, //   速度
     };
 
     // フレームバッファオブジェクト指定
     glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, fb);
+    ggError("glBindFramebufferEXT");
 
     // レンダーターゲット指定
     glDrawBuffers(sizeof bufs / sizeof bufs[0], bufs);
+    ggError("glDrawBuffers");
 
+    // ビューポートの設定
+    glViewport(0, 0, FBOWIDTH, FBOHEIGHT);
+    
     // 画面クリア
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -78,11 +83,11 @@ static void display(void)
     model->draw();
     pass1->swapBuffers();
 
-    // レンダーターゲット復帰
-    glDrawBuffer(GL_BACK);
-
     // フレームバッファオブジェクト解除
     glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
+
+    // レンダーターゲット復帰
+    glDrawBuffer(GL_BACK);
   }
   
   // カラーテクスチャの使用
@@ -90,6 +95,7 @@ static void display(void)
   texture1->use(1);
 
   // 画面いっぱいの矩形の描画
+  glViewport(0, 0, width, height);
   glDisable(GL_DEPTH_TEST);
   rect->draw();
 
@@ -104,7 +110,7 @@ static void display(void)
 static void resize(int w, int h)
 {
   // ウィンドウ全体に表示
-  glViewport(0, 0, w, height = h);
+  glViewport(0, 0, width = w, height = h);
   
   // 投影変換行列
   mp.loadPerspective(0.6f, (GLfloat)w / (GLfloat)h, 1.0f, 10.0f);
@@ -152,7 +158,11 @@ static void mouse(int button, int state, int x, int y)
   if (state == GLUT_DOWN)
   {
     // クリックしたところの深度値を読む
+    ggError("++glBindFramebufferEXT");
+    glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, fb);
+    ggError("--glBindFramebufferEXT");
     glReadPixels(x, height - y, 1, 1, GL_DEPTH_COMPONENT, GL_FLOAT, &z0);
+    ggError("glReadPixels");
     
     // 背景でないとき
     if (z0 < 1.0f)
@@ -179,6 +189,8 @@ static void mouse(int button, int state, int x, int y)
     {
       press = -1;
     }
+    
+    glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
   }
   else
   {
@@ -287,9 +299,10 @@ static void init(void)
   
   // テクスチャ
   texture0 = new GgTexture(0, FBOWIDTH, FBOHEIGHT, GL_RGBA);
-  texture1 = new GgTexture(0, FBOWIDTH, FBOHEIGHT, GL_RGB16F);
+  texture1 = new GgTexture(0, FBOWIDTH, FBOHEIGHT, GL_RGBA32F);
 
   // レンダーバッファ
+  GLuint rb;
   glGenRenderbuffersEXT(1, &rb);
   glBindRenderbufferEXT(GL_RENDERBUFFER_EXT, rb);
   glRenderbufferStorageEXT(GL_RENDERBUFFER_EXT, GL_DEPTH_COMPONENT, FBOWIDTH, FBOHEIGHT);
@@ -302,9 +315,9 @@ static void init(void)
   glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT1_EXT, GL_TEXTURE_2D, texture1->get(), 0);
   glFramebufferRenderbufferEXT(GL_FRAMEBUFFER_EXT, GL_DEPTH_ATTACHMENT_EXT, GL_RENDERBUFFER_EXT, rb);
   glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
-
+  
   // 初期設定
-  glClearColor(0.0f, 0.2f, 0.4f, 0.0f);
+  glClearColor(0.1f, 0.3f, 0.5f, 0.0f);
   glEnable(GL_CULL_FACE);
   
   // 後始末
@@ -315,7 +328,7 @@ int main(int argc, char *argv[])
 {
   glutInitWindowSize(1024, 1024);
   glutInit(&argc, argv);
-  glutInitDisplayMode(GLUT_RGBA | GLUT_DEPTH | GLUT_DOUBLE);
+  glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE);
   glutCreateWindow("Screen Space Motion Blur");
   glutDisplayFunc(display);
   glutReshapeFunc(resize);

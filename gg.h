@@ -93,7 +93,7 @@ namespace gg
   /*
   ** テクスチャマッピング用の RAW 画像ファイルの読み込み
   */
-  extern bool loadImage(const char *name, int width, int height, GLenum format);
+  extern bool loadImage(const char *name, int width, int height, GLenum internal);
 
   /*
   ** 高さマップ用の RAW 画像ファイルの読み込んで法線マップを作成する
@@ -810,10 +810,10 @@ namespace gg
     {
       glGenTextures(1, &texture);
     }
-    GgTexture(const char *name, int width, int height, GLenum format = GL_RGB)
+    GgTexture(const char *name, int width, int height, GLenum internal = GL_RGB)
     {
       glGenTextures(1, &texture);
-      load(name, width, height, format);
+      load(name, width, height, internal);
     }
     GgTexture(const GgTexture &o)
       : GgAttribute(o), texture(o.texture) {}
@@ -830,11 +830,11 @@ namespace gg
     }
 
     // 拡散反射色テクスチャを読み込む
-    //     name: ファイル名, width, height: 幅と高さ (2^n), format: GL_RGB か GL_RGBA
-    void load(const char *name, int width, int height, GLenum format = GL_RGB) const
+    //     name: ファイル名, width, height: 幅と高さ (2^n), internal: GL_RGB か GL_RGBA
+    void load(const char *name, int width, int height, GLenum internal = GL_RGB) const
     {
       glBindTexture(GL_TEXTURE_2D, texture);
-      loadImage(name, width, height, format);
+      loadImage(name, width, height, internal);
       glBindTexture(GL_TEXTURE_2D, 0);
     }
 
@@ -844,7 +844,6 @@ namespace gg
     void use(GLuint unit = 0) const
     {
       glActiveTexture(GL_TEXTURE0 + unit);
-      ggError("active");
       glBindTexture(GL_TEXTURE_2D, texture);
     }
 

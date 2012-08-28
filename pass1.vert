@@ -46,6 +46,4 @@ void main(void)
   gl_Position = mc * pv;
   p1 = gl_Position.xyz / gl_Position.w;
   vel = (p1 - p0).xy;
-  iamb = vec4(normalize(vel) * 0.5 + 0.5, 0.0, 1.0);
-  idiff = ispec = vec4(0.0);
 }

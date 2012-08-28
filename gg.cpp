@@ -135,7 +135,7 @@ void gg::ggFBOError(const char *msg)
     switch (status)
     {
     case GL_FRAMEBUFFER_UNSUPPORTED_EXT:
-      std::cerr << "Unsupported framebuffer format" << std::endl;
+      std::cerr << "Unsupported framebuffer internal" << std::endl;
       break;
     case GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT_EXT:
       std::cerr << "Framebuffer incomplete, missing attachment" << std::endl;
@@ -147,7 +147,7 @@ void gg::ggFBOError(const char *msg)
       std::cerr << "Framebuffer incomplete, attached images must have same dimensions" << std::endl;
       break;
     case GL_FRAMEBUFFER_INCOMPLETE_FORMATS_EXT:
-      std::cerr << "Framebuffer incomplete, attached images must have same format" << std::endl;
+      std::cerr << "Framebuffer incomplete, attached images must have same internal" << std::endl;
       break;
     case GL_FRAMEBUFFER_INCOMPLETE_DRAW_BUFFER_EXT:
       std::cerr << "Framebuffer incomplete, missing draw buffer" << std::endl;
@@ -165,11 +165,14 @@ void gg::ggFBOError(const char *msg)
 /*
 ** テクスチャマッピング用の RAW 画像ファイルの読み込み
 */
-bool gg::loadImage(const char *name, int width, int height, GLenum format)
+bool gg::loadImage(const char *name, int width, int height, GLenum internal)
 {
   // 戻り値
   bool ret = true;
 
+  // ファイルフォーマット
+  GLenum format = GL_RGB;
+  
   // テクスチャの読み込み先
   char *image = 0;
 
@@ -192,35 +195,54 @@ bool gg::loadImage(const char *name, int width, int height, GLenum format)
       GLsizei size = static_cast<GLsizei>(file.tellg());
 
       // テクスチャサイズ分のメモリを確保する
-      GLsizei maxsize = width * height * ((format == GL_RGB) ? 3 : 4);
-      try
+      GLsizei maxsize = 0;
+      switch (internal)
       {
-        image = new char[maxsize];
-      }
-      catch (std::bad_alloc e)
-      {
+      case GL_RGBA:
+      case GL_RGBA32F:
+        maxsize = width * height * 4;
+        format = GL_RGBA;
+        glPixelStorei(GL_UNPACK_ALIGNMENT, 4);
+        break;
+      case GL_RGB:
+      case GL_RGB32F:
+        maxsize = width * height * 3;
+        break;
+      default:
         ret = false;
+        break;
       }
-
-      // ファイルを先頭から読み込む
-      file.seekg(0L, std::ios::beg);
-      file.read(image, (size < maxsize) ? size : maxsize);
-
-      if (file.bad())
+      if (maxsize > 0)
       {
-        // うまく読み込めなかった
-        std::cerr << "Warning: Could not read texture file: " << name << std::endl;
-        ret = false;
+        try
+        {
+          image = new char[maxsize];
+        }
+        catch (std::bad_alloc e)
+        {
+          ret = false;
+        }
+        if (ret)
+        {
+          // ファイルを先頭から読み込む
+          file.seekg(0L, std::ios::beg);
+          file.read(image, (size < maxsize) ? size : maxsize);
+          
+          if (file.bad())
+          {
+            // うまく読み込めなかった
+            std::cerr << "Warning: Could not read texture file: " << name << std::endl;
+            ret = false;
+          }
+        }
       }
+      
       file.close();
     }
-
-    // format が RGBA なら 4 バイト境界に設定
-    glPixelStorei(GL_UNPACK_ALIGNMENT, (format == GL_RGBA) ? 4 : 1);
   }
 
   // テクスチャを割り当てる
-  glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, image);
+  glTexImage2D(GL_TEXTURE_2D, 0, internal, width, height, 0, format, GL_UNSIGNED_BYTE, image);
 
   // バイリニア（ミップマップなし），エッジでクランプ
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
@@ -272,16 +294,20 @@ bool gg::loadHeight(const char *name, int width, int height, float nz)
       ret = false;
     }
 
-    // ファイルを先頭から読み込む
-    file.seekg(0L, std::ios::beg);
-    file.read(reinterpret_cast<char *>(hmap), (size < maxsize) ? size : maxsize);
-
-    if (file.bad())
+    if (ret)
     {
-      // うまく読み込めなかった
-      std::cerr << "Warning: Could not read texture file: " << name << std::endl;
-      ret = false;
+      // ファイルを先頭から読み込む
+      file.seekg(0L, std::ios::beg);
+      file.read(reinterpret_cast<char *>(hmap), (size < maxsize) ? size : maxsize);
+      
+      if (file.bad())
+      {
+        // うまく読み込めなかった
+        std::cerr << "Warning: Could not read texture file: " << name << std::endl;
+        ret = false;
+      }
     }
+    
     file.close();
 
     // 法線マップの作成
