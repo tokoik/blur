@@ -26,9 +26,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #ifndef __GG_H__
 #define __GG_H__
 
-#include <iostream>
 #include <cstring>
-#include <cmath>
 
 #if defined(WIN32)
 #  pragma warning(disable:4996)
@@ -165,8 +163,10 @@ namespace gg
     }
     GgMatrix &multiply(const GLfloat *a)
     {
-      GLfloat t[16]; multiply(t, array, a);
-      memcpy(array, t, sizeof array); return *this;
+      GLfloat t[16];
+      multiply(t, array, a);
+      memcpy(array, t, sizeof array);
+      return *this;
     }
     GgMatrix &multiply(const GgMatrix &m)
     {
@@ -267,7 +267,9 @@ namespace gg
     // 平行移動変換を乗じる
     GgMatrix &translate(GLfloat x, GLfloat y, GLfloat z, GLfloat w = 1.0f)
     {
-      GgMatrix m; m.loadTranslate(x, y, z, w); multiply(m);
+      GgMatrix m;
+      m.loadTranslate(x, y, z, w);
+      multiply(m);
       return *this;
     }
     GgMatrix &translate(const GLfloat *t)
@@ -510,7 +512,8 @@ namespace gg
     // 回転の変換行列 m を表す四元数を設定する
     GgQuaternion &loadMatrix(const GLfloat *m)
     {
-      toQuaternion(array, m); return *this;
+      toQuaternion(array, m);
+      return *this;
     }
 
     // 単位元を設定する
@@ -590,7 +593,8 @@ namespace gg
     }
     GgQuaternion &multiply(const GLfloat *a)
     {
-      GLfloat t[4]; multiply(t, array, a);
+      GLfloat t[4];
+      multiply(t, array, a);
       return load(t);
     }
     GgQuaternion &multiply(const GgQuaternion &q)
@@ -1040,7 +1044,7 @@ namespace gg
       return *this;
     }
 
-    // データを格納する
+    // バッファオブジェクトにデータを格納する
     void load(GLenum target, GLuint n, const T *data, GLenum usage = GL_STATIC_DRAW)
     {
       number = n;
@@ -1048,7 +1052,7 @@ namespace gg
       glBufferData(target, sizeof (T) * n, data, usage);
     }
 
-    // データを複写する
+    // バッファオブジェクトのデータを複写する
     void copy(GLuint buf)
     {
       const size_t size = sizeof (T) * number;
