@@ -18,24 +18,27 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="gg.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="GgPointShader.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="GgSimpleShader.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="GgBlurShader.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
+    <None Include="pass1.frag">
+      <Filter>シェーダー ファイル</Filter>
+    </None>
+    <None Include="pass1.vert">
+      <Filter>シェーダー ファイル</Filter>
+    </None>
+    <None Include="pass2.frag">
+      <Filter>シェーダー ファイル</Filter>
+    </None>
+    <None Include="pass2.vert">
+      <Filter>シェーダー ファイル</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="main.cpp">
+    <ClCompile Include="gg.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="gg.cpp">
+    <ClCompile Include="GgPass1Shader.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="GgPass2Shader.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="GgPointShader.cpp">
@@ -44,16 +47,25 @@
     <ClCompile Include="GgSimpleShader.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="GgBlurShader.cpp">
+    <ClCompile Include="main.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="blur.frag">
-      <Filter>シェーダー ファイル</Filter>
-    </None>
-    <None Include="blur.vert">
-      <Filter>シェーダー ファイル</Filter>
-    </None>
+    <ClInclude Include="gg.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="GgPass1Shader.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="GgPass2Shader.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="GgPointShader.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="GgSimpleShader.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

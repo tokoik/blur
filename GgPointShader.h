@@ -16,9 +16,15 @@ namespace gg
     struct
     {
       GLfloat c[16];    // モデルビュー・投影変換行列
-      void loadModelViewProjectionMatrix(const GgMatrix &m) { memcpy(c, m.get(), sizeof c); }
+      void loadModelViewProjectionMatrix(const GgMatrix &m)
+      {
+        memcpy(c, m.get(), sizeof c);
+      }
       GLfloat w[16];    // モデルビュー変換行列
-      void loadModelViewMatrix(const GgMatrix &m) { memcpy(w, m.get(), sizeof w); }
+      void loadModelViewMatrix(const GgMatrix &m)
+      {
+        memcpy(w, m.get(), sizeof w);
+      }
     } m;
 
     // 場所

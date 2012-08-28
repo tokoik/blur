@@ -10,6 +10,27 @@
       <Platform>Win32</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="pass1.frag" />
+    <None Include="pass1.vert" />
+    <None Include="pass2.frag" />
+    <None Include="pass2.vert" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="gg.cpp" />
+    <ClCompile Include="GgPass1Shader.cpp" />
+    <ClCompile Include="GgPass2Shader.cpp" />
+    <ClCompile Include="GgPointShader.cpp" />
+    <ClCompile Include="GgSimpleShader.cpp" />
+    <ClCompile Include="main.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="gg.h" />
+    <ClInclude Include="GgPass1Shader.h" />
+    <ClInclude Include="GgPass2Shader.h" />
+    <ClInclude Include="GgPointShader.h" />
+    <ClInclude Include="GgSimpleShader.h" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{2C10C400-05B4-4912-8622-FA854245ADFD}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
@@ -73,23 +94,6 @@
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
   </ItemDefinitionGroup>
-  <ItemGroup>
-    <ClInclude Include="gg.h" />
-    <ClInclude Include="GgBlurShader.h" />
-    <ClInclude Include="GgPointShader.h" />
-    <ClInclude Include="GgSimpleShader.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="gg.cpp" />
-    <ClCompile Include="GgBlurShader.cpp" />
-    <ClCompile Include="GgPointShader.cpp" />
-    <ClCompile Include="GgSimpleShader.cpp" />
-    <ClCompile Include="main.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="blur.frag" />
-    <None Include="blur.vert" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

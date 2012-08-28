@@ -33,7 +33,10 @@ namespace gg
     struct
     {
       GLfloat g[16];    // モデルビュー変換の法線変換行列
-      void loadNormalMatrix(const GgMatrix &m) { memcpy(g, m.get(), sizeof g); }
+      void loadNormalMatrix(const GgMatrix &m)
+      {
+        memcpy(g, m.get(), sizeof g);
+      }
     } m;
 
     // 場所
@@ -85,23 +88,89 @@ namespace gg
     virtual void unuse(void) const;
 
     // 光源
-    void setLightPosition(GLfloat x, GLfloat y, GLfloat z, GLfloat w = 1.0f) { l.pos[0] = x; l.pos[1] = y; l.pos[2] = z; l.pos[3] = w; }
-    void setLightPosition(const GLfloat *pos) { setLightPosition(pos[0], pos[1], pos[2], pos[3]); }
-    void setLightAmbient(GLfloat r, GLfloat g, GLfloat b, GLfloat a = 1.0f) { l.amb[0] = r; l.amb[1] = g; l.amb[2] = b; l.amb[3] = a; }
-    void setLightAmbient(const GLfloat *amb) { setLightAmbient(amb[0], amb[1], amb[2], amb[3]); }
-    void setLightDiffuse(GLfloat r, GLfloat g, GLfloat b, GLfloat a = 1.0f) { l.diff[0] = r; l.diff[1] = g; l.diff[2] = b; l.diff[3] = a; }
-    void setLightDiffuse(const GLfloat *diff) { setLightDiffuse(diff[0], diff[1], diff[2], diff[3]); }
-    void setLightSpecular(GLfloat r, GLfloat g, GLfloat b, GLfloat a = 1.0f) { l.spec[0] = r; l.spec[1] = g; l.spec[2] = b; l.spec[3] = a; }
-    void setLightSpecular(const GLfloat *spec) { setLightSpecular(spec[0], spec[1], spec[2], spec[3]); }
+    void setLightPosition(GLfloat x, GLfloat y, GLfloat z, GLfloat w = 1.0f)
+    {
+      l.pos[0] = x;
+      l.pos[1] = y;
+      l.pos[2] = z;
+      l.pos[3] = w;
+    }
+    void setLightPosition(const GLfloat *pos)
+    {
+      setLightPosition(pos[0], pos[1], pos[2], pos[3]);
+    }
+    void setLightAmbient(GLfloat r, GLfloat g, GLfloat b, GLfloat a = 1.0f)
+    {
+      l.amb[0] = r;
+      l.amb[1] = g;
+      l.amb[2] = b;
+      l.amb[3] = a;
+    }
+    void setLightAmbient(const GLfloat *amb)
+    {
+      setLightAmbient(amb[0], amb[1], amb[2], amb[3]);
+    }
+    void setLightDiffuse(GLfloat r, GLfloat g, GLfloat b, GLfloat a = 1.0f)
+    {
+      l.diff[0] = r;
+      l.diff[1] = g;
+      l.diff[2] = b;
+      l.diff[3] = a;
+    }
+    void setLightDiffuse(const GLfloat *diff)
+    {
+      setLightDiffuse(diff[0], diff[1], diff[2], diff[3]);
+    }
+    void setLightSpecular(GLfloat r, GLfloat g, GLfloat b, GLfloat a = 1.0f)
+    {
+      l.spec[0] = r;
+      l.spec[1] = g;
+      l.spec[2] = b;
+      l.spec[3] = a;
+    }
+    void setLightSpecular(const GLfloat *spec)
+    {
+      setLightSpecular(spec[0], spec[1], spec[2], spec[3]);
+    }
 
     // 材質
-    void setMaterialAmbient(GLfloat r, GLfloat g, GLfloat b, GLfloat a = 1.0f) { k.amb[0] = r; k.amb[1] = g; k.amb[2] = b; k.amb[3] = a; }
-    void setMaterialAmbient(const GLfloat *amb) { setMaterialAmbient(amb[0], amb[1], amb[2], amb[3]); }
-    void setMaterialDiffuse(GLfloat r, GLfloat g, GLfloat b, GLfloat a = 1.0f) { k.diff[0] = r; k.diff[1] = g; k.diff[2] = b; k.diff[3] = a; }
-    void setMaterialDiffuse(const GLfloat *diff) { setMaterialDiffuse(diff[0], diff[1], diff[2], diff[3]); }
-    void setMaterialSpecular(GLfloat r, GLfloat g, GLfloat b, GLfloat a = 1.0f) { k.spec[0] = r; k.spec[1] = g; k.spec[2] = b; k.spec[3] = a; }
-    void setMaterialSpecular(const GLfloat *spec) { setMaterialSpecular(spec[0], spec[1], spec[2], spec[3]); }
-    void setMaterialShininess(GLfloat shi) { k.shi = shi; }
+    void setMaterialAmbient(GLfloat r, GLfloat g, GLfloat b, GLfloat a = 1.0f)
+    {
+      k.amb[0] = r;
+      k.amb[1] = g;
+      k.amb[2] = b;
+      k.amb[3] = a;
+    }
+    void setMaterialAmbient(const GLfloat *amb)
+    {
+      setMaterialAmbient(amb[0], amb[1], amb[2], amb[3]);
+    }
+    void setMaterialDiffuse(GLfloat r, GLfloat g, GLfloat b, GLfloat a = 1.0f)
+    {
+      k.diff[0] = r;
+      k.diff[1] = g;
+      k.diff[2] = b;
+      k.diff[3] = a;
+    }
+    void setMaterialDiffuse(const GLfloat *diff)
+    {
+      setMaterialDiffuse(diff[0], diff[1], diff[2], diff[3]);
+    }
+    void setMaterialSpecular(GLfloat r, GLfloat g, GLfloat b, GLfloat a = 1.0f)
+    {
+      k.spec[0] = r;
+      k.spec[1] = g;
+      k.spec[2] = b;
+      k.spec[3] = a;
+    }
+    void setMaterialSpecular(const GLfloat *spec)
+    {
+      setMaterialSpecular(spec[0], spec[1], spec[2], spec[3]);
+    }
+    void setMaterialShininess(GLfloat shi)
+    {
+      k.shi = shi;
+    }
 
     // 変換
     virtual void loadMatrix(const GgMatrix &mp, const GgMatrix &mw);

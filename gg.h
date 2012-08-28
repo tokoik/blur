@@ -26,6 +26,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #ifndef __GG_H__
 #define __GG_H__
 
+#include <iostream>
 #include <cstring>
 #include <cmath>
 
@@ -809,6 +810,11 @@ namespace gg
     {
       glGenTextures(1, &texture);
     }
+    GgTexture(const char *name, int width, int height, GLenum format = GL_RGB)
+    {
+      glGenTextures(1, &texture);
+      load(name, width, height, format);
+    }
     GgTexture(const GgTexture &o)
       : GgAttribute(o), texture(o.texture) {}
 
@@ -827,7 +833,9 @@ namespace gg
     //     name: ファイル名, width, height: 幅と高さ (2^n), format: GL_RGB か GL_RGBA
     void load(const char *name, int width, int height, GLenum format = GL_RGB) const
     {
+      glBindTexture(GL_TEXTURE_2D, texture);
       loadImage(name, width, height, format);
+      glBindTexture(GL_TEXTURE_2D, 0);
     }
 
     // テクスチャオブジェクトを結合する
@@ -836,6 +844,7 @@ namespace gg
     void use(GLuint unit = 0) const
     {
       glActiveTexture(GL_TEXTURE0 + unit);
+      ggError("active");
       glBindTexture(GL_TEXTURE_2D, texture);
     }
 

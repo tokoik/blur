@@ -173,47 +173,51 @@ bool gg::loadImage(const char *name, int width, int height, GLenum format)
   // テクスチャの読み込み先
   char *image = 0;
 
-  // テクスチャファイルを開く
-  std::ifstream file(name, std::ios::binary);
-
-  if (file.fail())
+  // ファイル名 name が非 0 ならそのファイルを読み込む
+  if (name != 0)
   {
-    // 開けなかった
-    std::cerr << "Waring: Can't open texture file: " << name << std::endl;
-    ret = false;
-  }
-  else
-  {
-    // ファイルの末尾に移動し現在位置（＝ファイルサイズ）を得る
-    file.seekg(0L, std::ios::end);
-    GLsizei size = static_cast<GLsizei>(file.tellg());
+    // テクスチャファイルを開く
+    std::ifstream file(name, std::ios::binary);
 
-    // テクスチャサイズ分のメモリを確保する
-    GLsizei maxsize = width * height * ((format == GL_RGB) ? 3 : 4);
-    try
+    if (file.fail())
     {
-      image = new char[maxsize];
-    }
-    catch (std::bad_alloc e)
-    {
+      // 開けなかった
+      std::cerr << "Waring: Can't open texture file: " << name << std::endl;
       ret = false;
     }
-
-    // ファイルを先頭から読み込む
-    file.seekg(0L, std::ios::beg);
-    file.read(image, (size < maxsize) ? size : maxsize);
-
-    if (file.bad())
+    else
     {
-      // うまく読み込めなかった
-      std::cerr << "Warning: Could not read texture file: " << name << std::endl;
-      ret = false;
-    }
-    file.close();
-  }
+      // ファイルの末尾に移動し現在位置（＝ファイルサイズ）を得る
+      file.seekg(0L, std::ios::end);
+      GLsizei size = static_cast<GLsizei>(file.tellg());
 
-  // format が RGBA なら 4 バイト境界に設定
-  glPixelStorei(GL_UNPACK_ALIGNMENT, (format == GL_RGBA) ? 4 : 1);
+      // テクスチャサイズ分のメモリを確保する
+      GLsizei maxsize = width * height * ((format == GL_RGB) ? 3 : 4);
+      try
+      {
+        image = new char[maxsize];
+      }
+      catch (std::bad_alloc e)
+      {
+        ret = false;
+      }
+
+      // ファイルを先頭から読み込む
+      file.seekg(0L, std::ios::beg);
+      file.read(image, (size < maxsize) ? size : maxsize);
+
+      if (file.bad())
+      {
+        // うまく読み込めなかった
+        std::cerr << "Warning: Could not read texture file: " << name << std::endl;
+        ret = false;
+      }
+      file.close();
+    }
+
+    // format が RGBA なら 4 バイト境界に設定
+    glPixelStorei(GL_UNPACK_ALIGNMENT, (format == GL_RGBA) ? 4 : 1);
+  }
 
   // テクスチャを割り当てる
   glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, image);

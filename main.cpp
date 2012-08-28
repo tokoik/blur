@@ -20,12 +20,31 @@ static GgMatrix mt;        // 平行移動
 /*
 ** シェーダ
 */
-#include "GgBlurShader.h"
+#include "GgPass1Shader.h"
+#include "GgPass2Shader.h"
 
 /*
 ** OBJ ファイル
 */
 static GgTriangles *model = 0;
+
+/*
+** 画面いっぱいの矩形
+*/
+static GgTriangles *rect = 0;
+
+/*
+** テクスチャ
+*/
+static GgTexture *texture0, *texture1;
+
+/*
+** フレームバッファオブジェクト
+*/
+#define FBOWIDTH 1024
+#define FBOHEIGHT 1024
+static GLuint fb;           // フレームバッファオブジェクト
+static GLuint rb;           // デプスバッファ用のレンダーバッファ
 
 /*
 ** ウィンドウの高さ
@@ -34,18 +53,50 @@ static int height;
 
 static void display(void)
 {
-  // 画面クリア
-  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-  
   // 図形の描画
-  GgBlurShader *blur = dynamic_cast<GgBlurShader *>(model->getShader());
-  if (blur != 0)
+  GgPass1Shader *pass1 = dynamic_cast<GgPass1Shader *>(model->getShader());
+  if (pass1 != 0)
   {
-    blur->loadMatrix(mp, mv * mt * tb.get());
+    // レンダーターゲットのリスト
+    static const GLenum bufs[] = {
+      GL_COLOR_ATTACHMENT0_EXT, //   色
+      GL_COLOR_ATTACHMENT1_EXT, //   速度
+    };
+
+    // フレームバッファオブジェクト指定
+    glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, fb);
+
+    // レンダーターゲット指定
+    glDrawBuffers(sizeof bufs / sizeof bufs[0], bufs);
+
+    // 画面クリア
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+    // レンダリング
+    glEnable(GL_DEPTH_TEST);
+    pass1->loadMatrix(mp, mv * mt * tb.get());
     model->draw();
-    blur->swapBuffers();
+    pass1->swapBuffers();
+
+    // レンダーターゲット復帰
+    glDrawBuffer(GL_BACK);
+
+    // フレームバッファオブジェクト解除
+    glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
   }
   
+  // カラーテクスチャの使用
+  texture0->use(0);
+  texture1->use(1);
+
+  // 画面いっぱいの矩形の描画
+  glDisable(GL_DEPTH_TEST);
+  rect->draw();
+
+  // カラーテクスチャの解放
+  texture0->unuse();
+  texture1->unuse();
+
   // ダブルバッファリング
   glutSwapBuffers();
 }
@@ -197,28 +248,35 @@ static void init(void)
   ggInit();
   
   // シェーダプログラムの読み込み
-  GgBlurShader *blur = new GgBlurShader("blur.vert", "blur.frag", "blur.geom", GL_TRIANGLES, GL_TRIANGLE_STRIP, 80);
+  GgPass1Shader *pass1 = new GgPass1Shader("pass1.vert", "pass1.frag");
 
   // 光源
-  blur->setLightPosition(3.0f, 4.0f, 5.0f);
-  blur->setLightAmbient(0.2f, 0.2f, 0.2f);
-  blur->setLightDiffuse(1.0f, 1.0f, 1.0f);
-  blur->setLightSpecular(1.0f, 1.0f, 1.0f);
+  pass1->setLightPosition(3.0f, 4.0f, 5.0f);
+  pass1->setLightAmbient(0.2f, 0.2f, 0.2f);
+  pass1->setLightDiffuse(1.0f, 1.0f, 1.0f);
+  pass1->setLightSpecular(1.0f, 1.0f, 1.0f);
 
   // 材質
-  blur->setMaterialAmbient(0.8f, 0.6f, 0.6f);
-  blur->setMaterialDiffuse(0.8f, 0.6f, 0.6f);
-  blur->setMaterialSpecular(0.2f, 0.2f, 0.2f);
-  blur->setMaterialShininess(50.0f);
+  pass1->setMaterialAmbient(0.8f, 0.6f, 0.6f);
+  pass1->setMaterialDiffuse(0.8f, 0.6f, 0.6f);
+  pass1->setMaterialSpecular(0.2f, 0.2f, 0.2f);
+  pass1->setMaterialShininess(50.0f);
   
   // OBJ ファイルの読み込み
   model = ggObjArray("model.dat");
   
   // オブジェクトにシェーダを登録
-  model->attachShader(blur);
+  model->attachShader(pass1);
 
   // transform feedback buffer に初期値を設定する
-  blur->copyBuffer(model->pnum(), model->pbuf());
+  pass1->copyBuffer(model->pnum(), model->pbuf());
+
+  // シェーダプログラムの読み込み
+  GgPointShader *pass2 = new GgPass2Shader("pass2.vert", "pass2.frag");
+
+  // 画面いっぱいのポリゴンの生成
+  rect = ggRectangle(2.0f, 2.0f);
+  rect->attachShader(pass2);
   
   // 視野変換行列
   mv.loadLookat(0.0f, 0.0f, 3.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f);
@@ -227,9 +285,26 @@ static void init(void)
   // 平行移動
   mt.loadIdentity();
   
+  // テクスチャ
+  texture0 = new GgTexture(0, FBOWIDTH, FBOHEIGHT, GL_RGBA);
+  texture1 = new GgTexture(0, FBOWIDTH, FBOHEIGHT, GL_RGB16F);
+
+  // レンダーバッファ
+  glGenRenderbuffersEXT(1, &rb);
+  glBindRenderbufferEXT(GL_RENDERBUFFER_EXT, rb);
+  glRenderbufferStorageEXT(GL_RENDERBUFFER_EXT, GL_DEPTH_COMPONENT, FBOWIDTH, FBOHEIGHT);
+  glBindRenderbufferEXT(GL_RENDERBUFFER_EXT, 0);
+
+  // フレームバッファオブジェクト
+  glGenFramebuffersEXT(1, &fb);
+  glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, fb);
+  glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, GL_TEXTURE_2D, texture0->get(), 0);
+  glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT1_EXT, GL_TEXTURE_2D, texture1->get(), 0);
+  glFramebufferRenderbufferEXT(GL_FRAMEBUFFER_EXT, GL_DEPTH_ATTACHMENT_EXT, GL_RENDERBUFFER_EXT, rb);
+  glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
+
   // 初期設定
   glClearColor(0.0f, 0.2f, 0.4f, 0.0f);
-  glEnable(GL_DEPTH_TEST);
   glEnable(GL_CULL_FACE);
   
   // 後始末
