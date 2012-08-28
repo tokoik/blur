@@ -242,7 +242,7 @@ static void keyboard(unsigned char key, int kx, int ky)
     case 'Q':
     case 'q':
     case '\033':
-      exit(0);
+      exit(EXIT_SUCCESS);
     default:
       break;
   }

@@ -23,11 +23,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 **
 */
 
-#include <iostream>
 #include <fstream>
-#include <cstdlib>
-#include <cmath>
-#include <float.h>
+#include <cfloat>
 
 #include "gg.h"
 
@@ -39,7 +36,12 @@ void gg::ggInit(void)
   // バージョンチェック
   if (atof(reinterpret_cast<const char *>(glGetString(GL_VERSION))) < 2.1)
   {
+#if defined(WIN32)
+    MessageBox(NULL, L"OpenGL Version 2.1 以降に対応したビデオカードが必要です", L"GG特論", MB_OK);
+#else
     std::cerr << "Error: This program requires OpenGL 2.1 or lator." << std::endl;
+#endif
+    exit(EXIT_FAILURE);
   }
 
   // Swap Interval の設定
@@ -47,8 +49,8 @@ void gg::ggInit(void)
   GLenum err = glewInit();
   if (err != GLEW_OK)
   {
-    std::cerr <<  "Error: " << glewGetErrorString(err) << std::endl;
-    exit(1);
+    MessageBox(NULL, L"GLEW の初期化に失敗しました", L"GG特論", MB_OK);
+    exit(EXIT_FAILURE);
   }
 #  if defined(WGLEW_EXT_swap_control)
   if (WGLEW_EXT_swap_control)
@@ -70,7 +72,7 @@ void gg::ggInit(void)
     return;
   }
 #else
-  std::cerr << "Warning: Could not set swap interval" << std::endl;
+  std::cerr << "Warning: Could not set swap interval." << std::endl;
 #endif
 }
 
@@ -285,11 +287,13 @@ bool gg::loadHeight(const char *name, int width, int height, float nz)
     // メモリを確保する
     GLsizei maxsize = width * height;
     GLubyte *hmap = 0;
-    try {
+    try
+    {
       hmap = new GLubyte[maxsize];
       nmap = new GLfloat[maxsize][4];
     }
-    catch (std::bad_alloc e) {
+    catch (std::bad_alloc e)
+    {
       delete[] hmap;
       ret = false;
     }
