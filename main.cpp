@@ -13,9 +13,9 @@ static GgTrackball tb;
 /*
 ** 変換行列
 */
-static GgMatrix mv, imv;   // 視野変換行列
-static GgMatrix mp, imp;   // 投影変換行列
-static GgMatrix mt;        // 平行移動
+static GgMatrix mv;   // 視野変換行列
+static GgMatrix mp;   // 投影変換行列
+static GgMatrix mt;   // 平行移動
 
 /*
 ** シェーダ
@@ -36,24 +36,26 @@ static GgTriangles *rect = 0;
 /*
 ** テクスチャ
 */
-static GgTexture *texture0, *texture1;
+static GgTexture *texture0 = 0;
+static GgTexture *texture1 = 0;
 
 /*
 ** フレームバッファオブジェクト
 */
 #define FBOWIDTH 1024
 #define FBOHEIGHT 1024
-static GLuint fb;           // フレームバッファオブジェクト
+static GLuint fb;
 
 /*
-** ウィンドウの幅と高さ
+** ビューポート
 */
-static int width, height;
+static int vp[4];
 
 static void display(void)
 {
   // 図形の描画
   GgPass1Shader *pass1 = dynamic_cast<GgPass1Shader *>(model->getShader());
+
   if (pass1 != 0)
   {
     // レンダーターゲットのリスト
@@ -65,11 +67,9 @@ static void display(void)
 
     // フレームバッファオブジェクト指定
     glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, fb);
-    ggError("glBindFramebufferEXT");
 
     // レンダーターゲット指定
     glDrawBuffers(sizeof bufs / sizeof bufs[0], bufs);
-    ggError("glDrawBuffers");
 
     // ビューポートの設定
     glViewport(0, 0, FBOWIDTH, FBOHEIGHT);
@@ -95,7 +95,7 @@ static void display(void)
   texture1->use(1);
 
   // 画面いっぱいの矩形の描画
-  glViewport(0, 0, width, height);
+  glViewport(vp[0], vp[1], vp[2], vp[3]);
   glDisable(GL_DEPTH_TEST);
   rect->draw();
 
@@ -110,11 +110,10 @@ static void display(void)
 static void resize(int w, int h)
 {
   // ウィンドウ全体に表示
-  glViewport(0, 0, width = w, height = h);
+  glViewport(vp[0] = 0, vp[1] = 0, vp[2] = w, vp[3] = h);
   
   // 投影変換行列
   mp.loadPerspective(0.6f, (GLfloat)w / (GLfloat)h, 1.0f, 10.0f);
-  imp.loadInvert(mp);
 
   // トラックボールする範囲
   tb.region(w, h);
@@ -126,27 +125,23 @@ static void idle(void)
   glutPostRedisplay();
 }
 
-static void pick(GLfloat *pw, int x, int y, GLfloat z, const GgMatrix &m)
+static void pick(GLfloat *pw, GLint x, GLint y, GLfloat z, const GgMatrix &mc)
 {
-  // ビューポートの取り出し
-  GLint vp[4];
-  glGetIntegerv(GL_VIEWPORT, vp);
-  
   // クリッピング空間中の座標値
   GLfloat pc[] =
   {
-    (GLfloat)(x - vp[0]) * 2.0f / (GLfloat)vp[2] - 1.0f,
-    (GLfloat)(y - vp[1]) * 2.0f / (GLfloat)vp[3] - 1.0f,
+    (GLfloat)x * 2.0f / (GLfloat)FBOWIDTH -  1.0f,
+    (GLfloat)y * 2.0f / (GLfloat)FBOHEIGHT - 1.0f,
     z * 2.0f - 1.0f,
     1.0f,
   };
-  
+
   // ワールド空間中の座標値
-  m.projection(pw, pc);
+  mc.projection(pw, pc);
 }
 
 static GLfloat p0[4], z0;
-static GgMatrix mt0;
+static GgMatrix mt0, imc;
 
 // 押されているボタン
 static int press = -1;
@@ -157,13 +152,19 @@ static void mouse(int button, int state, int x, int y)
   
   if (state == GLUT_DOWN)
   {
+    // ビューポート上のクリック位置に直す
+    GLint x0 = x - vp[0];
+    GLint y0 = vp[3] - vp[1] - y;
+
+    // フレームバッファオブジェクト上のクリック位置に直す
+    x0 = (GLint)((GLfloat)x0 * (GLfloat)FBOWIDTH / (GLfloat)vp[2] + 0.5f);
+    y0 = (GLint)((GLfloat)y0 * (GLfloat)FBOHEIGHT / (GLfloat)vp[3] + 0.5f);
+
     // クリックしたところの深度値を読む
-    ggError("++glBindFramebufferEXT");
     glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, fb);
-    ggError("--glBindFramebufferEXT");
-    glReadPixels(x, height - y, 1, 1, GL_DEPTH_COMPONENT, GL_FLOAT, &z0);
-    ggError("glReadPixels");
-    
+    glReadPixels(x0, y0, 1, 1, GL_DEPTH_COMPONENT, GL_FLOAT, &z0);
+    glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
+
     // 背景でないとき
     if (z0 < 1.0f)
     {
@@ -171,7 +172,8 @@ static void mouse(int button, int state, int x, int y)
       {
       case GLUT_LEFT_BUTTON:
         // 平行移動開始
-        pick(p0, x, height - y, z0, imv * imp);
+        imc.loadInvert(mp * mv);
+        pick(p0, x0, y0, z0, imc);
         mt0 = mt;
         break;
       case GLUT_RIGHT_BUTTON:
@@ -187,10 +189,9 @@ static void mouse(int button, int state, int x, int y)
     }
     else
     {
+      // クリックしなかったことにする
       press = -1;
     }
-    
-    glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
   }
   else
   {
@@ -216,12 +217,21 @@ static void motion(int x, int y)
 {
   GgMatrix mt1;
   GLfloat p1[4];
+  GLint x0, y0;
 
   switch (press)
   {
   case GLUT_LEFT_BUTTON:
+    // ビューポート上のクリック位置に直す
+    x0 = x - vp[0];
+    y0 = vp[3] - vp[1] - y;
+
+    // フレームバッファオブジェクト上のクリック位置に直す
+    x0 = (GLint)((GLfloat)x0 * (GLfloat)FBOWIDTH / (GLfloat)vp[2] + 0.5f);
+    y0 = (GLint)((GLfloat)y0 * (GLfloat)FBOHEIGHT / (GLfloat)vp[3] + 0.5f);
+
     // クリック位置の奥行きを平行移動
-    pick(p1, x, height - y, z0, imv * imp);
+    pick(p1, x0, y0, z0, imc);
     mt1.loadTranslate(p1[0] / p1[3] - p0[0] / p0[3], p1[1] / p1[3] - p0[1] / p0[3], 0.0f);
     mt = mt0 * mt1;
     break;
@@ -292,7 +302,6 @@ static void init(void)
   
   // 視野変換行列
   mv.loadLookat(0.0f, 0.0f, 3.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f);
-  imv.loadInvert(mv);
   
   // 平行移動
   mt.loadIdentity();

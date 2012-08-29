@@ -62,7 +62,7 @@ namespace gg
   ** OpenGL のエラーチェック
   **
   **     OpenGL の API を呼び出し直後に実行すればエラーのあるときにメッセージを表示する
-  **     msg はメッセージに乗じる文字列
+  **     msg はメッセージの頭に追加する文字列
   */
   extern void ggError(const char *msg = 0);
 
