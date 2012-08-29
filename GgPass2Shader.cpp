@@ -1,6 +1,7 @@
 /*
 ** ’Pƒ‚È‰A‰e•t‚¯
 */
+#include <cstdlib>
 #include <cstdarg>
 #include <cmath>
 

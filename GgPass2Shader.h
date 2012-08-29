@@ -12,7 +12,7 @@ namespace gg
     : public GgPointShader
   {
     // —”
-    struct
+    struct RnTable
     {
       static const int samples = 16;  // —”‚Ì”
       GLfloat rn[samples * 2];        // —”ƒe[ƒuƒ‹ (vec2)
