@@ -27,9 +27,7 @@ varying vec4 idiff; // 拡散反射光
 varying vec4 ispec; // 鏡面反射光
 
 // transform feedback
-attribute vec3 p0;	// スクリーン上での以前の頂点位置
 varying vec3 p1;	// 現在の頂点位置を保存するフィードバックバッファ
-varying vec2 vel;	// 現在の頂点の速度ベクトル
 
 void main(void)
 {
@@ -48,9 +46,6 @@ void main(void)
   // 頂点位置の算出
   gl_Position = mc * pv;
 
-  // 現在の頂点位置を保存する
+  // 現在のスクリーン上の頂点位置を保存する
   p1 = gl_Position.xyz / gl_Position.w;
-
-  // 頂点の速度ベクトルをラスタライザに送る
-  vel = (p1 - p0).xy;
 }

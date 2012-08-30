@@ -985,8 +985,8 @@ namespace gg
     }
 
     // 変換行列を設定する
-    virtual void loadMatrix(const GgMatrix &mp, const GgMatrix &mw) = 0;
-    virtual void loadMatrix(const GLfloat *mp, const GLfloat *mw) = 0;
+    virtual void loadMatrix(const GgMatrix &mp, const GgMatrix &mw) {};
+    virtual void loadMatrix(const GLfloat *mp, const GLfloat *mw) {};
 
     // シェーダプログラム名を取り出す
     GLuint get(void) const
@@ -1152,7 +1152,7 @@ namespace gg
     }
 
     // この形状を描画する手続きをオーバーライドする
-    virtual void draw(void) const = 0;
+    virtual void draw(void) const {};
   };
 
   /*

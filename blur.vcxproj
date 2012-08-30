@@ -14,12 +14,16 @@
     <None Include="pass1.frag" />
     <None Include="pass1.vert" />
     <None Include="pass2.frag" />
+    <None Include="pass2.geom" />
     <None Include="pass2.vert" />
+    <None Include="pass3.frag" />
+    <None Include="pass3.vert" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="gg.cpp" />
     <ClCompile Include="GgPass1Shader.cpp" />
     <ClCompile Include="GgPass2Shader.cpp" />
+    <ClCompile Include="GgPass3Shader.cpp" />
     <ClCompile Include="GgPointShader.cpp" />
     <ClCompile Include="GgSimpleShader.cpp" />
     <ClCompile Include="main.cpp" />
@@ -28,6 +32,7 @@
     <ClInclude Include="gg.h" />
     <ClInclude Include="GgPass1Shader.h" />
     <ClInclude Include="GgPass2Shader.h" />
+    <ClInclude Include="GgPass3Shader.h" />
     <ClInclude Include="GgPointShader.h" />
     <ClInclude Include="GgSimpleShader.h" />
   </ItemGroup>

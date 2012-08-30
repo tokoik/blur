@@ -1,58 +1,61 @@
 /*
-** 単純な陰影付け
+** モーションブラー (Pass 2)
 */
-#include <cstdlib>
 #include <cstdarg>
-#include <cmath>
 
 #include "GgPass2Shader.h"
 
 gg::GgPass2Shader::GgPass2Shader(const char *vert, const char *frag,
-  const char *geom, GLenum input, GLenum output, GLint vertices,
-  GLint nvarying, const char **varyings)
-  : GgPointShader(vert, frag, geom, input, output, vertices, nvarying, varyings)
+  const char *geom, GLenum input, GLenum output, GLint vertices)
+  : GgShader(vert, frag, geom, input, output, vertices)
 {
   // プログラム名
   GLuint program = get();
 
-  // サンプラの uniform 変数の場所
-  loc.texture0 = glGetUniformLocation(program, "texture0");
-  loc.texture1 = glGetUniformLocation(program, "texture1");
-  
-  // 乱数の uniform 変数の場所
-  loc.rn = glGetUniformLocation(program, "rn");
+  // 以前の頂点のスクリーン上の位置 p1 の attribute 変数の場所
+  loc.p0 = glGetAttribLocation(program, "p0");
 
-  // 乱数の発生
-  size(0.01f, 0.01f);
-}
-
-void gg::GgPass2Shader::size(GLfloat x, GLfloat y)
-{
-  // 乱数の発生
-  for (unsigned int i = 0; i < random.samples * 2; i += 2)
-  {
-    GLfloat r = sqrt(2.0f * (float)rand() / ((float)RAND_MAX + 1.0f));
-    GLfloat t = 6.283185f * (float)rand() / ((float)RAND_MAX + 1.0f);
-    random.rn[i + 0] = x * r * cos(t);
-    random.rn[i + 1] = y * r * sin(t);
-  }
+  // 現在の頂点のスクリーン上の位置 p1 の attribute 変数の場所
+  loc.p1 = glGetAttribLocation(program, "p1");
 }
 
 void gg::GgPass2Shader::use(GLuint vert, ...) const
 {
-  // 基底クラスのシェーダの設定を呼び出す
-  GgPointShader::use(vert);
+  va_list list;
+  va_start(list, vert);
+  const GLuint p1 = va_arg(list, GLuint);
+  va_end(list);
 
-  // サンプラ
-  glUniform1i(loc.texture0, 0);
-  glUniform1i(loc.texture1, 1);
-  
-  // 乱数
-  glUniform2fv(loc.rn, random.samples, random.rn);
+  // 基底クラスのシェーダの設定を呼び出す
+  GgShader::use(0);
+
+  // 頂点属性にバッファオブジェクト vert を使用する
+  glBindBuffer(GL_ARRAY_BUFFER, vert);
+
+  // attribute 変数 p0 をバッファオブジェクトから得ることを有効にする
+  glEnableVertexAttribArray(loc.p0);
+
+  // attribute 変数 p0 とバッファオブジェクトを結びつける
+  glVertexAttribPointer(loc.p0, 4, GL_FLOAT, GL_FALSE, 0, 0);
+
+  // 頂点属性にバッファオブジェクト p1 を使用する
+  glBindBuffer(GL_ARRAY_BUFFER, p1);
+
+  // attribute 変数 p1 をバッファオブジェクトから得ることを有効にする
+  glEnableVertexAttribArray(loc.p1);
+
+  // attribute 変数 p1 とバッファオブジェクトを結びつける
+  glVertexAttribPointer(loc.p1, 4, GL_FLOAT, GL_FALSE, 0, 0);
 }
 
 void gg::GgPass2Shader::unuse(void) const
 {
+  // attribute 変数 p0 をバッファオブジェクトから得ることを無効にする
+  glDisableVertexAttribArray(loc.p0);
+
+  // attribute 変数 p1 をバッファオブジェクトから得ることを無効にする
+  glDisableVertexAttribArray(loc.p1);
+
   // 基底クラスのシェーダの設定を呼び出す
-  GgPointShader::unuse();
+  GgShader::unuse();
 }

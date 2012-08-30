@@ -1,16 +1,16 @@
 #version 120
 
-// クリッピング空間を覆うポリゴンの頂点位置
-attribute vec4 pv;
+// 以前のスクリーン上の頂点位置
+attribute vec3 p0;
 
-// 頂点の位置から求めるテクスチャ座標
-varying vec2 t;
+// 現在のスクリーン上の頂点位置
+attribute vec3 p1;
+
+// 以前の頂点位置
+varying vec3 q0;
 
 void main(void)
 {
-  // 頂点位置はそのままラスタライザに送る
-  gl_Position = pv;
-
-  // ラスタライザで頂点位置を補間してクリッピング空間中の画素位置を求める
-  t = pv.xy * 0.5 + 0.5;
+  q0 = p0;
+  gl_Position = vec4(p1, 1.0);
 }

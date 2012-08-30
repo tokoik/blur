@@ -21,14 +21,8 @@ namespace gg
       GgBuffer<GLfloat[3]> fb[2];
 
       // feedback buffer の選択
-      unsigned int buffer;
+      unsigned int select;
     } b;
-    
-    // 場所
-    struct
-    {
-      GLint p0;         // フィードバックバッファからの読み出し用の attribute 変数の場所
-    } loc;
     
   public:
     
@@ -38,9 +32,14 @@ namespace gg
     // コンストラクタ
     GgPass1Shader(void) {}
     GgPass1Shader(const char *vert, const char *frag = 0,
-      const char *geom = 0, GLenum input = GL_TRIANGLES, GLenum output = GL_TRIANGLE_STRIP, GLint vertices = 0);
+      const char *geom = 0, GLenum input = GL_TRIANGLES, GLenum output = GL_TRIANGLE_STRIP, GLint vertices = 0)
+      : GgSimpleShader(vert, frag, geom, input, output, vertices, 1, varyings)
+    {
+      // 最初に使用するバッファ
+      b.select = 0;
+    }
     GgPass1Shader(const GgPass1Shader &o)
-      : GgSimpleShader(o), b(o.b), loc(o.loc) {}
+      : GgSimpleShader(o), b(o.b) {}
     
     // 代入
     GgPass1Shader &operator=(const GgPass1Shader &o)
@@ -49,7 +48,6 @@ namespace gg
       {
         GgSimpleShader::operator=(o);
         b = o.b;
-        loc = o.loc;
       }
       return *this;
     }
@@ -60,19 +58,31 @@ namespace gg
     // シェーダの使用終了
     virtual void unuse(void) const;
     
-    // バッファオブジェクトの複写
+    // バッファオブジェクト確保と値の設定
     void copyBuffer(GLuint num, GLuint buf);
     
     // フィードバックバッファオブジェクトの選択
     void selectBuffer(unsigned int frame)
     {
-      b.buffer = frame & 1;
+      b.select = frame & 1;
     }
     
     // フィードバックバッファオブジェクトの選択
     void swapBuffers(void)
     {
-      b.buffer = 1 - b.buffer;
+      b.select = 1 - b.select;
+    }
+
+    // フロントバッファのバッファオブジェクト
+    GLuint front(void)
+    {
+      return b.fb[b.select].buf();
+    }
+
+    // バックバッファのバッファオブジェクト
+    GLuint back(void)
+    {
+      return b.fb[1 - b.select].buf();
     }
   };
 }
