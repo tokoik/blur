@@ -24,10 +24,19 @@
     <None Include="pass1.vert">
       <Filter>シェーダー ファイル</Filter>
     </None>
+    <None Include="pass3.frag">
+      <Filter>シェーダー ファイル</Filter>
+    </None>
+    <None Include="pass3.vert">
+      <Filter>シェーダー ファイル</Filter>
+    </None>
     <None Include="pass2.frag">
       <Filter>シェーダー ファイル</Filter>
     </None>
     <None Include="pass2.vert">
+      <Filter>シェーダー ファイル</Filter>
+    </None>
+    <None Include="pass2.geom">
       <Filter>シェーダー ファイル</Filter>
     </None>
   </ItemGroup>
@@ -36,9 +45,6 @@
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="GgPass1Shader.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="GgPass2Shader.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="GgPointShader.cpp">
@@ -50,6 +56,12 @@
     <ClCompile Include="main.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
+    <ClCompile Include="GgPass3Shader.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="GgPass2Shader.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="gg.h">
@@ -58,13 +70,16 @@
     <ClInclude Include="GgPass1Shader.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="GgPass2Shader.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="GgPointShader.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="GgSimpleShader.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="GgPass3Shader.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="GgPass2Shader.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>

@@ -22,6 +22,8 @@ static GgMatrix mt;   // 平行移動
 */
 #include "GgPass1Shader.h"
 #include "GgPass2Shader.h"
+#include "GgPass3Shader.h"
+static GgPass2Shader *pass2;
 
 /*
 ** OBJ ファイル
@@ -44,7 +46,7 @@ static GgTexture *texture1 = 0;
 */
 #define FBOWIDTH 1024
 #define FBOHEIGHT 1024
-static GLuint fb;
+static GLuint fb[2];
 
 /*
 ** ビューポート
@@ -58,36 +60,45 @@ static void display(void)
 
   if (pass1 != 0)
   {
-    // レンダーターゲットのリスト
-    static const GLenum bufs[] =
-    {
-      GL_COLOR_ATTACHMENT0_EXT, //   色
-      GL_COLOR_ATTACHMENT1_EXT, //   速度
-    };
-
-    // フレームバッファオブジェクト指定
-    glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, fb);
-
-    // レンダーターゲット指定
-    glDrawBuffers(sizeof bufs / sizeof bufs[0], bufs);
-
     // ビューポートの設定
     glViewport(0, 0, FBOWIDTH, FBOHEIGHT);
     
-    // 画面クリア
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    // フレームバッファオブジェクト指定
+    glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, fb[0]);
+    ggError("glBindFramebufferEXT:0");
 
-    // レンダリング
+    // 画面クリア
+    glClearColor(0.1f, 0.3f, 0.5f, 0.0f);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    ggError("glClearColor:0");
+
+    // カラーバッファへのレンダリング
     glEnable(GL_DEPTH_TEST);
     pass1->loadMatrix(mp, mv * mt * tb.get());
     model->draw();
+    ggError("draw:0");
+
+    // フレームバッファオブジェクト指定
+    glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, fb[1]);
+    ggError("glBindFramebufferEXT:1");
+    
+    // 画面クリア
+    glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    ggError("clear:1");
+
+    // 速度バッファへのレンダリング
+    pass2->use(pass1->back(), pass1->front());
+    ggError("use:1");
+    glDrawArrays(GL_TRIANGLES, 0, model->pnum());
+    pass2->unuse();
+    ggError("draw:1");
+
+    // バッファオブジェクトの入れ替え
     pass1->swapBuffers();
 
     // フレームバッファオブジェクト解除
     glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
-
-    // レンダーターゲット復帰
-    glDrawBuffer(GL_BACK);
   }
   
   // カラーテクスチャの使用
@@ -161,7 +172,7 @@ static void mouse(int button, int state, int x, int y)
     y0 = (GLint)((GLfloat)y0 * (GLfloat)FBOHEIGHT / (GLfloat)vp[3] + 0.5f);
 
     // クリックしたところの深度値を読む
-    glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, fb);
+    glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, fb[0]);
     glReadPixels(x0, y0, 1, 1, GL_DEPTH_COMPONENT, GL_FLOAT, &z0);
     glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
 
@@ -269,7 +280,7 @@ static void init(void)
   // ゲームグラフィックス特論の都合にもとづく初期化
   ggInit();
   
-  // シェーダプログラムの読み込み
+  // Pass 1 シェーダプログラムの読み込み
   GgPass1Shader *pass1 = new GgPass1Shader("pass1.vert", "pass1.frag");
 
   // 光源
@@ -286,19 +297,22 @@ static void init(void)
   
   // OBJ ファイルの読み込み
   model = ggObjArray("model.dat");
-  
-  // オブジェクトにシェーダを登録
   model->attachShader(pass1);
+  
+  // transform feedback buffer を確保して初期値を設定する
+  pass1->createBuffer(model->pnum());
+  
+  
+  
+  // Pass 2 シェーダプログラムの読み込み
+  pass2 = new GgPass2Shader("pass2.vert", "pass2.frag", "pass2.geom", GL_TRIANGLES, GL_TRIANGLE_STRIP, 80);
 
-  // transform feedback buffer に初期値を設定する
-  pass1->copyBuffer(model->pnum(), model->pbuf());
-
-  // シェーダプログラムの読み込み
-  GgPointShader *pass2 = new GgPass2Shader("pass2.vert", "pass2.frag");
+  // Pass 3 シェーダプログラムの読み込み
+  GgPointShader *pass3 = new GgPass3Shader("pass3.vert", "pass3.frag");
 
   // 画面いっぱいのポリゴンの生成
   rect = ggRectangle(2.0f, 2.0f);
-  rect->attachShader(pass2);
+  rect->attachShader(pass3);
   
   // 視野変換行列
   mv.loadLookat(0.0f, 0.0f, 3.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f);
@@ -311,22 +325,25 @@ static void init(void)
   texture1 = new GgTexture(0, FBOWIDTH, FBOHEIGHT, GL_RGBA32F);
 
   // レンダーバッファ
-  GLuint rb;
-  glGenRenderbuffersEXT(1, &rb);
-  glBindRenderbufferEXT(GL_RENDERBUFFER_EXT, rb);
+  GLuint rb[2];
+  glGenRenderbuffersEXT(2, rb);
+  glBindRenderbufferEXT(GL_RENDERBUFFER_EXT, rb[0]);
+  glRenderbufferStorageEXT(GL_RENDERBUFFER_EXT, GL_DEPTH_COMPONENT, FBOWIDTH, FBOHEIGHT);
+  glBindRenderbufferEXT(GL_RENDERBUFFER_EXT, rb[1]);
   glRenderbufferStorageEXT(GL_RENDERBUFFER_EXT, GL_DEPTH_COMPONENT, FBOWIDTH, FBOHEIGHT);
   glBindRenderbufferEXT(GL_RENDERBUFFER_EXT, 0);
 
   // フレームバッファオブジェクト
-  glGenFramebuffersEXT(1, &fb);
-  glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, fb);
+  glGenFramebuffersEXT(2, fb);
+  glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, fb[0]);
   glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, GL_TEXTURE_2D, texture0->get(), 0);
-  glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT1_EXT, GL_TEXTURE_2D, texture1->get(), 0);
-  glFramebufferRenderbufferEXT(GL_FRAMEBUFFER_EXT, GL_DEPTH_ATTACHMENT_EXT, GL_RENDERBUFFER_EXT, rb);
+  glFramebufferRenderbufferEXT(GL_FRAMEBUFFER_EXT, GL_DEPTH_ATTACHMENT_EXT, GL_RENDERBUFFER_EXT, rb[0]);
+  glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, fb[1]);
+  glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, GL_TEXTURE_2D, texture1->get(), 0);
+  glFramebufferRenderbufferEXT(GL_FRAMEBUFFER_EXT, GL_DEPTH_ATTACHMENT_EXT, GL_RENDERBUFFER_EXT, rb[1]);
   glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
-  
+
   // 初期設定
-  glClearColor(0.1f, 0.3f, 0.5f, 0.0f);
   glEnable(GL_CULL_FACE);
   
   // 後始末

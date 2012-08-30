@@ -101,7 +101,7 @@ namespace gg
   /*
   ** 三角形分割された OBJ ファイルを読み込む
   */
-  extern bool loadObj(const char *name, GLuint &nv, GLfloat (*&vert)[3], GLfloat (*&norm)[3], GLuint &nf, GLuint (*&face)[3], bool normalize);
+  extern bool loadObj(const char *name, GLuint &nv, GLfloat (*&vert)[4], GLfloat (*&norm)[3], GLuint &nf, GLuint (*&face)[3], bool normalize);
 
   /*
   ** 基底クラス
@@ -985,8 +985,8 @@ namespace gg
     }
 
     // 変換行列を設定する
-    virtual void loadMatrix(const GgMatrix &mp, const GgMatrix &mw) = 0;
-    virtual void loadMatrix(const GLfloat *mp, const GLfloat *mw) = 0;
+    virtual void loadMatrix(const GgMatrix &mp, const GgMatrix &mw) {}
+    virtual void loadMatrix(const GLfloat *mp, const GLfloat *mw) {}
 
     // シェーダプログラム名を取り出す
     GLuint get(void) const
@@ -1152,7 +1152,7 @@ namespace gg
     }
 
     // この形状を描画する手続きをオーバーライドする
-    virtual void draw(void) const = 0;
+    virtual void draw(void) const {}
   };
 
   /*
@@ -1162,7 +1162,7 @@ namespace gg
     : public GgShape
   {
     // 頂点バッファオブジェクト
-    GgBuffer<GLfloat[3]> position;
+    GgBuffer<GLfloat[4]> position;
 
   public:
 
@@ -1171,7 +1171,7 @@ namespace gg
 
     // コンストラクタ
     GgPoints(void) {}
-    GgPoints(GLuint n, const GLfloat (*pos)[3], GLenum usage = GL_STATIC_DRAW)
+    GgPoints(GLuint n, const GLfloat (*pos)[4], GLenum usage = GL_STATIC_DRAW)
     {
       load(n, pos, usage);
       mode = GL_POINTS;
@@ -1192,7 +1192,7 @@ namespace gg
 
     // バッファオブジェクトを確保して頂点を格納する
     //    n: 頂点数, pos: 頂点の位置
-    void load(GLuint n, const GLfloat (*pos)[3], GLenum usage = GL_STATIC_DRAW)
+    void load(GLuint n, const GLfloat (*pos)[4], GLenum usage = GL_STATIC_DRAW)
     {
       position.load(GL_ARRAY_BUFFER, n, pos, usage);
     }
@@ -1229,7 +1229,7 @@ namespace gg
 
     // コンストラクタ
     GgTriangles(void) {}
-    GgTriangles(GLuint n, const GLfloat (*pos)[3], const GLfloat (*norm)[3], GLenum usage = GL_STATIC_DRAW)
+    GgTriangles(GLuint n, const GLfloat (*pos)[4], const GLfloat (*norm)[3], GLenum usage = GL_STATIC_DRAW)
       : GgPoints(n, pos, usage)
     {
       normal.load(GL_ARRAY_BUFFER, n, norm, usage);
@@ -1251,7 +1251,7 @@ namespace gg
 
     // バッファオブジェクトを確保して位置と法線を格納する
     //    n: 頂点数, pos: 頂点の位置, norm: 頂点の法線
-    void load(GLuint n, const GLfloat (*pos)[3], const GLfloat (*norm)[3], GLenum usage = GL_STATIC_DRAW)
+    void load(GLuint n, const GLfloat (*pos)[4], const GLfloat (*norm)[3], GLenum usage = GL_STATIC_DRAW)
     {
       GgPoints::load(n, pos, usage);
       normal.load(GL_ARRAY_BUFFER, n, norm, usage);
@@ -1289,7 +1289,7 @@ namespace gg
 
     // コンストラクタ
     GgObject(void) {}
-    GgObject(GLuint n, const GLfloat (*pos)[3], const GLfloat (*norm)[3],
+    GgObject(GLuint n, const GLfloat (*pos)[4], const GLfloat (*norm)[3],
       GLuint f, const GLuint (*face)[3], GLenum usage = GL_STATIC_DRAW)
       : GgTriangles(n, pos, norm, usage)
     {
@@ -1312,7 +1312,7 @@ namespace gg
     // バッファオブジェクトを確保して位置と法線とインデックスを格納する
     //    n: 頂点数, pos: 頂点の位置, norm:頂点の法線
     //    f: 面数, face: 頂点のインデックスデータ
-    void load(GLuint n, const GLfloat (*pos)[3], const GLfloat (*norm)[3],
+    void load(GLuint n, const GLfloat (*pos)[4], const GLfloat (*norm)[3],
       GLuint f, const GLuint (*face)[3], GLenum usage = GL_STATIC_DRAW)
     {
       GgTriangles::load(n, pos, norm, usage);

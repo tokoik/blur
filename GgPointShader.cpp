@@ -28,14 +28,14 @@ void gg::GgPointShader::use(GLuint vert, ...) const
   glUniformMatrix4fv(loc.mc, 1, GL_FALSE, m.c);
   glUniformMatrix4fv(loc.mw, 1, GL_FALSE, m.w);
 
-  // 頂点属性にバッファオブジェクトを指定する
+  // バッファオブジェクト vert を頂点属性に使用する
   glBindBuffer(GL_ARRAY_BUFFER, vert);
 
   // attribute 変数 pv をバッファオブジェクトから得ることを有効にする
   glEnableVertexAttribArray(loc.pv);
 
-  // attribute 変数 pv と配列変数 vert を結びつける
-  glVertexAttribPointer(loc.pv, 3, GL_FLOAT, GL_FALSE, 0, 0);
+  // attribute 変数 pv とバッファオブジェクトを結びつける
+  glVertexAttribPointer(loc.pv, 4, GL_FLOAT, GL_FALSE, 0, 0);
 }
 
 void gg::GgPointShader::unuse(void) const

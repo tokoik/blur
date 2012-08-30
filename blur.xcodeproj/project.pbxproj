@@ -12,6 +12,10 @@
 		7D64180515DE6EC3009D7F5D /* model.dat in Resources */ = {isa = PBXBuildFile; fileRef = 7D64180415DE6EBC009D7F5D /* model.dat */; };
 		7D64182515DE6FD4009D7F5D /* GgPointShader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7D64182415DE6FD4009D7F5D /* GgPointShader.cpp */; };
 		7D7AF85F1222C8CC003A0434 /* opengl.icns in Resources */ = {isa = PBXBuildFile; fileRef = 7D7AF85E1222C8CC003A0434 /* opengl.icns */; };
+		7D8ECEC315EF6F7100B1E965 /* pass3.frag in Resources */ = {isa = PBXBuildFile; fileRef = 7D8ECEC115EF6F3600B1E965 /* pass3.frag */; };
+		7D8ECEC415EF6F7100B1E965 /* pass3.vert in Resources */ = {isa = PBXBuildFile; fileRef = 7D8ECEC215EF6F3600B1E965 /* pass3.vert */; };
+		7D8ECEC615EF6FC500B1E965 /* GgPass3Shader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7D8ECEC515EF6FC500B1E965 /* GgPass3Shader.cpp */; };
+		7D8ECEC815EF704200B1E965 /* pass2.geom in Resources */ = {isa = PBXBuildFile; fileRef = 7D8ECEC715EF703C00B1E965 /* pass2.geom */; };
 		7DD1A6CC15A9E439003B72C1 /* gg.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7DD1A6CA15A9E439003B72C1 /* gg.cpp */; };
 		7DE9A2A115ECC98500325026 /* GgPass1Shader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7DE9A29D15ECC98500325026 /* GgPass1Shader.cpp */; };
 		7DE9A2A215ECC98500325026 /* GgPass2Shader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7DE9A29F15ECC98500325026 /* GgPass2Shader.cpp */; };
@@ -31,6 +35,11 @@
 		7D64182315DE6FCF009D7F5D /* GgPointShader.h */ = {isa = PBXFileReference; fileEncoding = 8; lastKnownFileType = sourcecode.c.h; path = GgPointShader.h; sourceTree = "<group>"; };
 		7D64182415DE6FD4009D7F5D /* GgPointShader.cpp */ = {isa = PBXFileReference; fileEncoding = 8; lastKnownFileType = sourcecode.cpp.cpp; path = GgPointShader.cpp; sourceTree = "<group>"; };
 		7D7AF85E1222C8CC003A0434 /* opengl.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = opengl.icns; sourceTree = "<group>"; };
+		7D8ECEBE15EF6F1700B1E965 /* GgPass3Shader.h */ = {isa = PBXFileReference; fileEncoding = 8; lastKnownFileType = sourcecode.c.h; path = GgPass3Shader.h; sourceTree = "<group>"; };
+		7D8ECEC115EF6F3600B1E965 /* pass3.frag */ = {isa = PBXFileReference; fileEncoding = 8; lastKnownFileType = sourcecode.glsl; path = pass3.frag; sourceTree = "<group>"; };
+		7D8ECEC215EF6F3600B1E965 /* pass3.vert */ = {isa = PBXFileReference; fileEncoding = 8; lastKnownFileType = sourcecode.glsl; path = pass3.vert; sourceTree = "<group>"; };
+		7D8ECEC515EF6FC500B1E965 /* GgPass3Shader.cpp */ = {isa = PBXFileReference; fileEncoding = 8; lastKnownFileType = sourcecode.cpp.cpp; path = GgPass3Shader.cpp; sourceTree = "<group>"; };
+		7D8ECEC715EF703C00B1E965 /* pass2.geom */ = {isa = PBXFileReference; fileEncoding = 8; lastKnownFileType = sourcecode.glsl; path = pass2.geom; sourceTree = "<group>"; };
 		7DD1A6CA15A9E439003B72C1 /* gg.cpp */ = {isa = PBXFileReference; fileEncoding = 8; lastKnownFileType = sourcecode.cpp.cpp; path = gg.cpp; sourceTree = "<group>"; };
 		7DD1A6CB15A9E439003B72C1 /* gg.h */ = {isa = PBXFileReference; fileEncoding = 8; lastKnownFileType = sourcecode.c.h; path = gg.h; sourceTree = "<group>"; };
 		7DE9A29D15ECC98500325026 /* GgPass1Shader.cpp */ = {isa = PBXFileReference; fileEncoding = 8; lastKnownFileType = sourcecode.cpp.cpp; path = GgPass1Shader.cpp; sourceTree = "<group>"; };
@@ -68,10 +77,15 @@
 				7DE9A29D15ECC98500325026 /* GgPass1Shader.cpp */,
 				7DE9A2A015ECC98500325026 /* GgPass2Shader.h */,
 				7DE9A29F15ECC98500325026 /* GgPass2Shader.cpp */,
+				7D8ECEBE15EF6F1700B1E965 /* GgPass3Shader.h */,
+				7D8ECEC515EF6FC500B1E965 /* GgPass3Shader.cpp */,
 				7DE9A2A715ECC9A400325026 /* pass1.frag */,
 				7DE9A2A815ECC9A400325026 /* pass1.vert */,
 				7DE9A2A915ECC9A400325026 /* pass2.frag */,
+				7D8ECEC715EF703C00B1E965 /* pass2.geom */,
 				7DE9A2AA15ECC9A400325026 /* pass2.vert */,
+				7D8ECEC115EF6F3600B1E965 /* pass3.frag */,
+				7D8ECEC215EF6F3600B1E965 /* pass3.vert */,
 				7D64180415DE6EBC009D7F5D /* model.dat */,
 				7D1E90EF1123E36C005E6C75 /* Products */,
 				7D1E90F11123E36C005E6C75 /* Info.plist */,
@@ -140,10 +154,13 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7D8ECEC815EF704200B1E965 /* pass2.geom in Resources */,
 				7DE9A2AC15ECC9AA00325026 /* pass1.vert in Resources */,
 				7DE9A2AB15ECC9AA00325026 /* pass1.frag in Resources */,
 				7DE9A2AE15ECC9AA00325026 /* pass2.vert in Resources */,
 				7DE9A2AD15ECC9AA00325026 /* pass2.frag in Resources */,
+				7D8ECEC415EF6F7100B1E965 /* pass3.vert in Resources */,
+				7D8ECEC315EF6F7100B1E965 /* pass3.frag in Resources */,
 				7D64180515DE6EC3009D7F5D /* model.dat in Resources */,
 				7D7AF85F1222C8CC003A0434 /* opengl.icns in Resources */,
 			);
@@ -162,6 +179,7 @@
 				7D64182515DE6FD4009D7F5D /* GgPointShader.cpp in Sources */,
 				7DE9A2A115ECC98500325026 /* GgPass1Shader.cpp in Sources */,
 				7DE9A2A215ECC98500325026 /* GgPass2Shader.cpp in Sources */,
+				7D8ECEC615EF6FC500B1E965 /* GgPass3Shader.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -45,10 +45,10 @@ void gg::GgSimpleShader::use(GLuint vert, ...) const
   // バッファオブジェクトからデータを取得する
   glBindBuffer(GL_ARRAY_BUFFER, norm);
 
-  // attribute 変数 nv を配列変数から得ることを有効にする
+  // attribute 変数 nv をバッファオブジェクトから得ることを有効にする
   glEnableVertexAttribArray(loc.nv);
 
-  // attribute 変数 nv と配列変数 norm を結びつける
+  // attribute 変数 nv とバッファオブジェクト norm を結びつける
   glVertexAttribPointer(loc.nv, 3, GL_FLOAT, GL_FALSE, 0, 0);
 
   // 光源
