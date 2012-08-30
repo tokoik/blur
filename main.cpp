@@ -65,34 +65,27 @@ static void display(void)
     
     // フレームバッファオブジェクト指定
     glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, fb[0]);
-    ggError("glBindFramebufferEXT:0");
 
     // 画面クリア
     glClearColor(0.1f, 0.3f, 0.5f, 0.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    ggError("glClearColor:0");
 
     // カラーバッファへのレンダリング
     glEnable(GL_DEPTH_TEST);
     pass1->loadMatrix(mp, mv * mt * tb.get());
     model->draw();
-    ggError("draw:0");
 
     // フレームバッファオブジェクト指定
     glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, fb[1]);
-    ggError("glBindFramebufferEXT:1");
     
     // 画面クリア
     glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    ggError("clear:1");
 
     // 速度バッファへのレンダリング
     pass2->use(pass1->back(), pass1->front());
-    ggError("use:1");
     glDrawArrays(GL_TRIANGLES, 0, model->pnum());
     pass2->unuse();
-    ggError("draw:1");
 
     // バッファオブジェクトの入れ替え
     pass1->swapBuffers();
@@ -301,9 +294,7 @@ static void init(void)
   
   // transform feedback buffer を確保して初期値を設定する
   pass1->createBuffer(model->pnum());
-  
-  
-  
+    
   // Pass 2 シェーダプログラムの読み込み
   pass2 = new GgPass2Shader("pass2.vert", "pass2.frag", "pass2.geom", GL_TRIANGLES, GL_TRIANGLE_STRIP, 80);
 
