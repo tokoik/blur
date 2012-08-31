@@ -360,7 +360,7 @@ bool gg::loadHeight(const char *name, int width, int height, float nz)
 /*
 ** 三角形分割された OBJ ファイルを読み込む
 */
-bool gg::loadObj(const char *name, GLuint &nv, GLfloat (*&vert)[4], GLfloat (*&norm)[3], GLuint &nf, GLuint (*&face)[3], bool normalize)
+bool gg::loadObj(const char *name, GLuint &nv, GLfloat (*&vert)[3], GLfloat (*&norm)[3], GLuint &nf, GLuint (*&face)[3], bool normalize)
 {
   // ファイルの読み込み
   std::ifstream file(name, std::ios::binary);
@@ -396,12 +396,11 @@ bool gg::loadObj(const char *name, GLuint &nv, GLfloat (*&vert)[4], GLfloat (*&n
   }
 
   // メモリの確保
-  GLfloat (*fnorm)[3] = norm = 0;
-  vert = 0;
+  GLfloat (*fnorm)[3] = vert = norm = 0;
   face = 0;
   try
   {
-    vert = new GLfloat[nv][4];
+    vert = new GLfloat[nv][3];
     norm = new GLfloat[nv][3];
     face = new GLuint[nf][3];
     fnorm = new GLfloat[nf][3];
@@ -450,7 +449,6 @@ bool gg::loadObj(const char *name, GLuint &nv, GLfloat (*&vert)[4], GLfloat (*&n
       vert[nv][0] = (x - cx) * scale;
       vert[nv][1] = (y - cy) * scale;
       vert[nv][2] = (z - cz) * scale;
-      vert[nv][3] = 1.0f;
       ++nv;
     }
     else if (buf[0] == 'f' && buf[1] == ' ')
@@ -1554,7 +1552,7 @@ void gg::GgObject::draw(void) const
 gg::GgPoints *gg::ggPointSphere(GLuint nv, GLfloat cx, GLfloat cy, GLfloat cz, GLfloat radius)
 {
   // メモリの確保
-  GLfloat (*vert)[4] = new GLfloat[nv][4];
+  GLfloat (*vert)[3] = new GLfloat[nv][3];
 
   // 点の生成
   for (GLuint v = 0; v < nv; ++v)
@@ -1568,7 +1566,6 @@ gg::GgPoints *gg::ggPointSphere(GLuint nv, GLfloat cx, GLfloat cy, GLfloat cz, G
     vert[v][0] = r * sp * ct + cx;
     vert[v][1] = r * sp * st + cy;
     vert[v][2] = r * cp + cz;
-    vert[v][3] = 1.0;
   }
 
   // ポイントの作成
@@ -1595,7 +1592,7 @@ gg::GgTriangles *gg::ggRectangle(GLfloat width, GLfloat height)
   };
 
   // メモリの確保
-  GLfloat vert[4][4];
+  GLfloat vert[4][3];
   GLfloat norm[4][3];
 
   // 頂点位置の計算
@@ -1604,7 +1601,6 @@ gg::GgTriangles *gg::ggRectangle(GLfloat width, GLfloat height)
     vert[v][0] = p[v][0] * width;
     vert[v][1] = p[v][1] * height;
     vert[v][2] = 0.0f;
-    vert[v][3] = 1.0f;
 
     norm[v][0] = 0.0f;
     norm[v][1] = 0.0f;
@@ -1624,11 +1620,11 @@ gg::GgTriangles *gg::ggRectangle(GLfloat width, GLfloat height)
 gg::GgTriangles *gg::ggEllipse(GLfloat width, GLfloat height, GLuint slices)
 {
   // メモリの確保
-  GLfloat (*vert)[4] = 0;
+  GLfloat (*vert)[3] = 0;
   GLfloat (*norm)[3] = 0;
   try
   {
-    vert = new GLfloat[slices][4];
+    vert = new GLfloat[slices][3];
     norm = new GLfloat[slices][3];
   }
   catch (std::bad_alloc e)
@@ -1646,7 +1642,6 @@ gg::GgTriangles *gg::ggEllipse(GLfloat width, GLfloat height, GLuint slices)
     vert[v][0] = cos(t) * width * 0.5f;
     vert[v][1] = sin(t) * height * 0.5f;
     vert[v][2] = 0.0f;
-    vert[v][3] = 1.0f;
 
     norm[v][0] = 0.0f;
     norm[v][1] = 0.0f;
@@ -1670,16 +1665,16 @@ gg::GgTriangles *gg::ggEllipse(GLfloat width, GLfloat height, GLuint slices)
 gg::GgTriangles *gg::ggObjArray(const char *name, bool normalize)
 {
   GLuint nv, nf;
-  GLfloat (*vert)[4], (*norm)[3];
+  GLfloat (*vert)[3], (*norm)[3];
   GLuint (*face)[3];
 
   if (!loadObj(name, nv, vert, norm, nf, face, normalize)) return 0;
 
   GLfloat (*fnorm)[3] = 0;
-  GLfloat (*fvert)[4] = 0;
+  GLfloat (*fvert)[3] = 0;
   try
   {
-    fvert = new GLfloat[nf * 3][4];
+    fvert = new GLfloat[nf * 3][3];
     fnorm = new GLfloat[nf * 3][3];
   }
   catch (std::bad_alloc e)
@@ -1698,17 +1693,14 @@ gg::GgTriangles *gg::ggObjArray(const char *name, bool normalize)
     fvert[f0][0] = vert[v0][0];
     fvert[f0][1] = vert[v0][1];
     fvert[f0][2] = vert[v0][2];
-    fvert[f0][3] = 1.0f;
 
     fvert[f1][0] = vert[v1][0];
     fvert[f1][1] = vert[v1][1];
     fvert[f1][2] = vert[v1][2];
-    fvert[f1][3] = 1.0f;
 
     fvert[f2][0] = vert[v2][0];
     fvert[f2][1] = vert[v2][1];
     fvert[f2][2] = vert[v2][2];
-    fvert[f2][3] = 1.0f;
 
     // 法線
     fnorm[f0][0] = norm[v0][0];
@@ -1743,7 +1735,7 @@ gg::GgTriangles *gg::ggObjArray(const char *name, bool normalize)
 gg::GgObject *gg::ggObj(const char *name, bool normalize)
 {
   GLuint nv, nf;
-  GLfloat (*vert)[4], (*norm)[3];
+  GLfloat (*vert)[3], (*norm)[3];
   GLuint (*face)[3];
 
   if (!loadObj(name, nv, vert, norm, nf, face, normalize)) return 0;

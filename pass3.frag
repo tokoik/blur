@@ -1,5 +1,14 @@
 #version 120
 
+// 露光時間比
+const float exp_rate = 0.8;
+
+// 露光遅延
+const float exp_delay = 0.3;
+
+// サンプリング数
+const int samples = 16;
+
 // 乱数
 uniform vec2 rn[16];
 
@@ -19,7 +28,7 @@ vec4 average(in vec2 v, in int n)
 
   for (int i = 0; i < n; ++i)
   {
-    c += texture2D(texture0, t + v * float(i) / float(n));
+    c += texture2D(texture0, t + v * (float(i) / float(n) * exp_rate - exp_delay));
   }
 
   return c / float(n);
@@ -32,7 +41,7 @@ void main(void)
   if (v.a != 0.0)
   {
     // フラグメントがオブジェクト上ならそこをぼかす
-    gl_FragColor = average(v.xy, 16);
+    gl_FragColor = average(v.xy, samples);
   }
   else
   {

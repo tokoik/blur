@@ -35,7 +35,7 @@ void gg::GgPointShader::use(GLuint vert, ...) const
   glEnableVertexAttribArray(loc.pv);
 
   // attribute 変数 pv とバッファオブジェクトを結びつける
-  glVertexAttribPointer(loc.pv, 4, GL_FLOAT, GL_FALSE, 0, 0);
+  glVertexAttribPointer(loc.pv, 3, GL_FLOAT, GL_FALSE, 0, 0);
 }
 
 void gg::GgPointShader::unuse(void) const
