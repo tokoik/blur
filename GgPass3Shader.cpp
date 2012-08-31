@@ -21,9 +21,6 @@ gg::GgPass3Shader::GgPass3Shader(const char *vert, const char *frag,
   
   // —”‚Ì uniform •Ï”‚ÌêŠ
   loc.rn = glGetUniformLocation(program, "rn");
-
-  // —”‚Ì”­¶
-  size(0.01f, 0.01f);
 }
 
 void gg::GgPass3Shader::size(GLfloat x, GLfloat y)
