@@ -18,7 +18,7 @@ namespace gg
     struct
     {
       // feedback buffer に使うバッファオブジェクト
-      GgBuffer<GLfloat[3]> fb[2];
+      GgBuffer<GLfloat[4]> fb[2];
 
       // feedback buffer の選択
       unsigned int buffer;

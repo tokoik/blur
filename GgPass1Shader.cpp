@@ -40,7 +40,7 @@ void gg::GgPass1Shader::use(GLuint vert, ...) const
   glEnableVertexAttribArray(loc.p0);
   
   // attribute 変数 nv とバッファオブジェクトを結びつける
-  glVertexAttribPointer(loc.p0, 3, GL_FLOAT, GL_FALSE, 0, 0);
+  glVertexAttribPointer(loc.p0, 4, GL_FLOAT, GL_FALSE, 0, 0);
   
   // フィードバックのターゲットとなるバッファオブジェクトを選択する
   glBindBufferBase(GL_TRANSFORM_FEEDBACK_BUFFER, 0, b.fb[1 - b.buffer].buf());

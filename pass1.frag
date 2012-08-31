@@ -6,7 +6,7 @@ varying vec4 idiff;	// 拡散反射光
 varying vec4 ispec;	// 鏡面反射光
 
 // 頂点の速度ベクトルの補間値
-varying vec2 vel;
+varying vec3 vel;
 
 void main(void)
 {
@@ -14,5 +14,5 @@ void main(void)
   gl_FragData[0] = iamb + idiff + ispec;
 
   // 速度バッファへの書き込み
-  gl_FragData[1] = vec4(vel, 0.0, 1.0);
+  gl_FragData[1] = vec4(vel, 1.0);
 }
