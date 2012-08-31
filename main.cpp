@@ -23,7 +23,9 @@ static GgMatrix mt;   // 平行移動
 #include "GgPass1Shader.h"
 #include "GgPass2Shader.h"
 #include "GgPass3Shader.h"
+static GgPass1Shader *pass1;
 static GgPass2Shader *pass2;
+static GgPass3Shader *pass3;
 
 /*
 ** OBJ ファイル
@@ -55,44 +57,38 @@ static int vp[4];
 
 static void display(void)
 {
-  // 図形の描画
-  GgPass1Shader *pass1 = dynamic_cast<GgPass1Shader *>(model->getShader());
-
-  if (pass1 != 0)
-  {
-    // ビューポートの設定
-    glViewport(0, 0, FBOWIDTH, FBOHEIGHT);
-    
-    // フレームバッファオブジェクト指定
-    glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, fb[0]);
-
-    // 画面クリア
-    glClearColor(0.1f, 0.3f, 0.5f, 0.0f);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-    // カラーバッファへのレンダリング
-    glEnable(GL_DEPTH_TEST);
-    pass1->loadMatrix(mp, mv * mt * tb.get());
-    model->draw();
-
-    // フレームバッファオブジェクト指定
-    glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, fb[1]);
-    
-    // 画面クリア
-    glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-    // 速度バッファへのレンダリング
-    pass2->use(pass1->back(), pass1->front());
-    glDrawArrays(GL_TRIANGLES, 0, model->pnum());
-    pass2->unuse();
-
-    // バッファオブジェクトの入れ替え
-    pass1->swapBuffers();
-
-    // フレームバッファオブジェクト解除
-    glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
-  }
+  // ビューポートの設定
+  glViewport(0, 0, FBOWIDTH, FBOHEIGHT);
+  
+  // フレームバッファオブジェクト指定
+  glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, fb[0]);
+  
+  // 画面クリア
+  glClearColor(0.1f, 0.3f, 0.5f, 0.0f);
+  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+  
+  // カラーバッファへのレンダリング
+  glEnable(GL_DEPTH_TEST);
+  pass1->loadMatrix(mp, mv * mt * tb.get());
+  model->draw();
+  
+  // フレームバッファオブジェクト指定
+  glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, fb[1]);
+  
+  // 画面クリア
+  glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+  
+  // 速度バッファへのレンダリング
+  pass2->use(pass1->back(), pass1->front());
+  glDrawArrays(GL_TRIANGLES, 0, model->pnum());
+  pass2->unuse();
+  
+  // バッファオブジェクトの入れ替え
+  pass1->swapBuffers();
+  
+  // フレームバッファオブジェクト解除
+  glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
   
   // カラーテクスチャの使用
   texture0->use(0);
@@ -121,6 +117,9 @@ static void resize(int w, int h)
 
   // トラックボールする範囲
   tb.region(w, h);
+  
+  // Pass 3 シェーダの乱数テーブルの作成
+  pass3->size(1.0f / (GLfloat)w, 1.0f / (GLfloat)h);
 }
 
 static void idle(void)
@@ -274,7 +273,7 @@ static void init(void)
   ggInit();
   
   // Pass 1 シェーダプログラムの読み込み
-  GgPass1Shader *pass1 = new GgPass1Shader("pass1.vert", "pass1.frag");
+  pass1 = new GgPass1Shader("pass1.vert", "pass1.frag");
 
   // 光源
   pass1->setLightPosition(3.0f, 4.0f, 5.0f);
@@ -299,7 +298,7 @@ static void init(void)
   pass2 = new GgPass2Shader("pass2.vert", "pass2.frag", "pass2.geom", GL_TRIANGLES, GL_TRIANGLE_STRIP, 80);
 
   // Pass 3 シェーダプログラムの読み込み
-  GgPointShader *pass3 = new GgPass3Shader("pass3.vert", "pass3.frag");
+  pass3 = new GgPass3Shader("pass3.vert", "pass3.frag");
 
   // 画面いっぱいのポリゴンの生成
   rect = ggRectangle(2.0f, 2.0f);
