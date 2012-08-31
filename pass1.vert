@@ -13,8 +13,9 @@ uniform vec4 kspec; // 鏡面反射係数
 uniform float kshi; // 輝き係数
 
 // 変換行列
-uniform mat4 mw;    // 視点座標系への変換行列
 uniform mat4 mc;    // クリッピング座標系への変換行列
+uniform mat4 mp;    // 投影変換行列
+uniform mat4 mw;    // 視点座標系への変換行列
 uniform mat4 mg;    // 法線ベクトルの変換行列
 
 // 頂点属性
@@ -29,7 +30,6 @@ varying vec4 ispec; // 鏡面反射光
 // transform feedback
 attribute vec4 p0;	// スクリーン上での以前の頂点位置
 varying vec4 p1;	  // 現在の頂点位置を保存するフィードバックバッファ
-varying vec3 vel;   // ラスタライザに送る速度
 
 void main(void)
 {
@@ -45,12 +45,18 @@ void main(void)
   ispec = pow(max(dot(n, h), 0.0), kshi) * kspec * lspec;
   iamb = kamb * lamb;
   
-  // 頂点位置の算出
-  gl_Position = mc * pv;
+  // 中心からの距離に比例した重み
+  float weight = length(pv);
+  
+  // 頂点の移動方向
+  vec3 direction = normalize(p * p0.w - p0 * p.w).xyz;
 
-  // 現在の頂点位置を保存する
-  p1 = gl_Position;
-
-  // 頂点のスクリーン上の速度ベクトルをラスタライザに送る
-  vel = p1.xyz / p1.w - p0.xyz / p0.w;
+  // 方向ベクトルと法線ベクトルの内積
+  float t = min(dot(direction, n), 0.0) * weight;
+  
+  // 移動した頂点位置を出力
+  gl_Position = mp * (p0 + (p - p0)* t);
+  
+  // 現在位置を保存する
+  p1 = p;
 }

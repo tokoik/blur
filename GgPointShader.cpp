@@ -16,6 +16,7 @@ gg::GgPointShader::GgPointShader(const char *vert, const char *frag,
 
   // 変換行列の uniform 変数の場所
   loc.mc = glGetUniformLocation(program, "mc");
+  loc.mp = glGetUniformLocation(program, "mp");
   loc.mw = glGetUniformLocation(program, "mw");
 }
 
@@ -26,6 +27,7 @@ void gg::GgPointShader::use(GLuint vert, ...) const
 
   // 変換
   glUniformMatrix4fv(loc.mc, 1, GL_FALSE, m.c);
+  glUniformMatrix4fv(loc.mp, 1, GL_FALSE, m.p);
   glUniformMatrix4fv(loc.mw, 1, GL_FALSE, m.w);
 
   // 頂点属性にバッファオブジェクトを指定する
@@ -50,6 +52,7 @@ void gg::GgPointShader::unuse(void) const
 void gg::GgPointShader::loadMatrix(const GgMatrix &mp, const GgMatrix &mw)
 {
   m.loadModelViewProjectionMatrix(mp * mw);
+  m.loadProjectionMatrix(mp);
   m.loadModelViewMatrix(mw);
 }
 

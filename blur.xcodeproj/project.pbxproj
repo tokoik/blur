@@ -37,10 +37,10 @@
 		7DE9A29E15ECC98500325026 /* GgPass1Shader.h */ = {isa = PBXFileReference; fileEncoding = 8; lastKnownFileType = sourcecode.c.h; path = GgPass1Shader.h; sourceTree = "<group>"; };
 		7DE9A29F15ECC98500325026 /* GgPass2Shader.cpp */ = {isa = PBXFileReference; fileEncoding = 8; lastKnownFileType = sourcecode.cpp.cpp; path = GgPass2Shader.cpp; sourceTree = "<group>"; };
 		7DE9A2A015ECC98500325026 /* GgPass2Shader.h */ = {isa = PBXFileReference; fileEncoding = 8; lastKnownFileType = sourcecode.c.h; path = GgPass2Shader.h; sourceTree = "<group>"; };
-		7DE9A2A715ECC9A400325026 /* pass1.frag */ = {isa = PBXFileReference; fileEncoding = 8; lastKnownFileType = sourcecode.glsl; path = pass1.frag; sourceTree = "<group>"; };
-		7DE9A2A815ECC9A400325026 /* pass1.vert */ = {isa = PBXFileReference; fileEncoding = 8; lastKnownFileType = sourcecode.glsl; path = pass1.vert; sourceTree = "<group>"; };
-		7DE9A2A915ECC9A400325026 /* pass2.frag */ = {isa = PBXFileReference; fileEncoding = 8; lastKnownFileType = sourcecode.glsl; path = pass2.frag; sourceTree = "<group>"; };
-		7DE9A2AA15ECC9A400325026 /* pass2.vert */ = {isa = PBXFileReference; fileEncoding = 8; lastKnownFileType = sourcecode.glsl; path = pass2.vert; sourceTree = "<group>"; };
+		7DE9A2A715ECC9A400325026 /* pass1.frag */ = {isa = PBXFileReference; explicitFileType = sourcecode.glsl; fileEncoding = 8; path = pass1.frag; sourceTree = "<group>"; };
+		7DE9A2A815ECC9A400325026 /* pass1.vert */ = {isa = PBXFileReference; explicitFileType = sourcecode.glsl; fileEncoding = 8; path = pass1.vert; sourceTree = "<group>"; };
+		7DE9A2A915ECC9A400325026 /* pass2.frag */ = {isa = PBXFileReference; explicitFileType = sourcecode.glsl; fileEncoding = 8; path = pass2.frag; sourceTree = "<group>"; };
+		7DE9A2AA15ECC9A400325026 /* pass2.vert */ = {isa = PBXFileReference; explicitFileType = sourcecode.glsl; fileEncoding = 8; path = pass2.vert; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
