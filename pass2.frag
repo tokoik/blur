@@ -6,6 +6,9 @@ const float exp_rate = 0.8;
 // 露光遅延
 const float exp_delay = 0.3;
 
+// サンプル数
+const int samples = 16;
+
 // 乱数
 uniform vec2 rn[16];
 
@@ -38,11 +41,40 @@ void main(void)
   if (v.a != 0.0)
   {
     // フラグメントがオブジェクト上ならそこをぼかす
-    gl_FragColor = average(v.xy, 16);
+    gl_FragColor = average(v.xy, samples);
   }
   else
   {
     // フラグメントが背景なら
+#if 1
+    int count = 0;
+    vec4 d = vec4(0.0);
+    
+    for (int i = 0; i < 16; ++i)
+    {
+      // そのフラグメントの周囲をランダムにサンプリングして
+      vec4 p = texture2D(texture1, t + rn[i] * v.xy);
+      
+      if (p.a != 0.0)
+      {
+        // オブジェクト上のフラグメントが見つかったら
+        vec4 q = texture2D(texture1, t + p.xy);
+        
+        if (q.a != 0.0)
+        {
+          // オブジェクト上のフラグメントを見つけたらそこをぼかす
+          d += average(q.xy, samples);
+          ++count;
+        }
+      }
+    }
+    
+    if (count == 0)
+      gl_FragColor = texture2D(texture1, t);
+    else
+      gl_FragColor = d / float(count);
+#else
     gl_FragColor = texture2D(texture1, t);
+#endif
   }
 }

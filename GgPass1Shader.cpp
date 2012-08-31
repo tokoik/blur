@@ -66,5 +66,4 @@ void gg::GgPass1Shader::copyBuffer(GLuint num, GLuint buf)
   // フィードバックバッファ用の頂点バッファオブジェクトのメモリの確保
   b.fb[b.buffer].load(GL_ARRAY_BUFFER, num, 0, GL_DYNAMIC_COPY);
   b.fb[1 - b.buffer].load(GL_ARRAY_BUFFER, num, 0, GL_DYNAMIC_COPY);
-  b.fb[b.buffer].copy(buf);
 }

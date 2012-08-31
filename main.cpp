@@ -22,6 +22,8 @@ static GgMatrix mt;   // 平行移動
 */
 #include "GgPass1Shader.h"
 #include "GgPass2Shader.h"
+static GgPass1Shader *pass1 = 0;
+static GgPass2Shader *pass2 = 0;
 
 /*
 ** OBJ ファイル
@@ -53,42 +55,36 @@ static int vp[4];
 
 static void display(void)
 {
-  // 図形の描画
-  GgPass1Shader *pass1 = dynamic_cast<GgPass1Shader *>(model->getShader());
-
-  if (pass1 != 0)
+  // レンダーターゲットのリスト
+  static const GLenum bufs[] =
   {
-    // レンダーターゲットのリスト
-    static const GLenum bufs[] =
-    {
-      GL_COLOR_ATTACHMENT0_EXT, //   色
-      GL_COLOR_ATTACHMENT1_EXT, //   速度
-    };
-
-    // フレームバッファオブジェクト指定
-    glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, fb);
-
-    // レンダーターゲット指定
-    glDrawBuffers(sizeof bufs / sizeof bufs[0], bufs);
-
-    // ビューポートの設定
-    glViewport(0, 0, FBOWIDTH, FBOHEIGHT);
-    
-    // 画面クリア
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-    // レンダリング
-    glEnable(GL_DEPTH_TEST);
-    pass1->loadMatrix(mp, mv * mt * tb.get());
-    model->draw();
-    pass1->swapBuffers();
-
-    // フレームバッファオブジェクト解除
-    glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
-
-    // レンダーターゲット復帰
-    glDrawBuffer(GL_BACK);
-  }
+    GL_COLOR_ATTACHMENT0_EXT, //   色
+    GL_COLOR_ATTACHMENT1_EXT, //   速度
+  };
+  
+  // フレームバッファオブジェクト指定
+  glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, fb);
+  
+  // レンダーターゲット指定
+  glDrawBuffers(sizeof bufs / sizeof bufs[0], bufs);
+  
+  // ビューポートの設定
+  glViewport(0, 0, FBOWIDTH, FBOHEIGHT);
+  
+  // 画面クリア
+  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+  
+  // レンダリング
+  glEnable(GL_DEPTH_TEST);
+  pass1->loadMatrix(mp, mv * mt * tb.get());
+  model->draw();
+  pass1->swapBuffers();
+  
+  // フレームバッファオブジェクト解除
+  glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
+  
+  // レンダーターゲット復帰
+  glDrawBuffer(GL_BACK);
   
   // カラーテクスチャの使用
   texture0->use(0);
@@ -117,6 +113,9 @@ static void resize(int w, int h)
 
   // トラックボールする範囲
   tb.region(w, h);
+  
+  // Pass 2 シェーダの乱数テーブルの生成
+  pass2->size(1.0f / (GLfloat)w, 1.0f / (GLfloat)h);
 }
 
 static void idle(void)
@@ -270,7 +269,7 @@ static void init(void)
   ggInit();
   
   // シェーダプログラムの読み込み
-  GgPass1Shader *pass1 = new GgPass1Shader("pass1.vert", "pass1.frag");
+  pass1 = new GgPass1Shader("pass1.vert", "pass1.frag");
 
   // 光源
   pass1->setLightPosition(3.0f, 4.0f, 5.0f);
@@ -294,7 +293,7 @@ static void init(void)
   pass1->copyBuffer(model->pnum(), model->pbuf());
 
   // シェーダプログラムの読み込み
-  GgPointShader *pass2 = new GgPass2Shader("pass2.vert", "pass2.frag");
+  pass2 = new GgPass2Shader("pass2.vert", "pass2.frag");
 
   // 画面いっぱいのポリゴンの生成
   rect = ggRectangle(2.0f, 2.0f);
