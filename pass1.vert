@@ -45,14 +45,14 @@ void main(void)
   ispec = pow(max(dot(n, h), 0.0), kshi) * kspec * lspec;
   iamb = kamb * lamb;
   
-  // 中心からの距離に比例した重み
-  float weight = length(pv);
+  // 中心からの距離に反比例した重み
+  float weight = 1.0f / (1.0f + length(pv));
   
   // 頂点の移動方向
   vec3 direction = normalize(p * p0.w - p0 * p.w).xyz;
 
   // 方向ベクトルと法線ベクトルの内積
-  float t = min(dot(direction, n), 0.0) * weight;
+  float t = min(dot(direction, n), 0.0);
   
   // 移動した頂点位置を出力
   gl_Position = mp * (p0 + (p - p0)* t);
