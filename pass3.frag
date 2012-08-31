@@ -19,10 +19,10 @@ vec4 average(in vec2 v, in int n)
 
   for (int i = 0; i < n; ++i)
   {
-    c += texture2D(texture0, t - v * (float(i) / float(n) - 0.5));
+    c += texture2D(texture0, t + v * float(i) / float(n));
   }
 
-  return vec4(c.xyz / float(n), 1.0);
+  return c / float(n);
 }
 
 void main(void)
