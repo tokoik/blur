@@ -46,8 +46,8 @@ static GgTexture *texture1 = 0;
 /*
 ** フレームバッファオブジェクト
 */
-#define FBOWIDTH 1024
-#define FBOHEIGHT 1024
+#define FBOWIDTH 512
+#define FBOHEIGHT 512
 static GLuint fb[2];
 
 /*
@@ -342,7 +342,7 @@ static void init(void)
 
 int main(int argc, char *argv[])
 {
-  glutInitWindowSize(1024, 1024);
+  glutInitWindowSize(FBOWIDTH, FBOHEIGHT);
   glutInit(&argc, argv);
   glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE);
   glutCreateWindow("Screen Space Motion Blur");
