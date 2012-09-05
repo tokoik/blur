@@ -44,8 +44,8 @@ static GgTexture *texture1 = 0;
 /*
 ** フレームバッファオブジェクト
 */
-#define FBOWIDTH 1024
-#define FBOHEIGHT 1024
+#define FBOWIDTH 512
+#define FBOHEIGHT 512
 static GLuint fb;
 
 /*
@@ -115,7 +115,7 @@ static void resize(int w, int h)
   tb.region(w, h);
   
   // Pass 2 シェーダの乱数テーブルの生成
-  pass2->size(1.0f / (GLfloat)w, 1.0f / (GLfloat)h);
+  pass2->size(50.0f / (GLfloat)w, 50.0f / (GLfloat)h);
 }
 
 static void idle(void)
@@ -334,7 +334,7 @@ static void init(void)
 
 int main(int argc, char *argv[])
 {
-  glutInitWindowSize(1024, 1024);
+  glutInitWindowSize(FBOWIDTH, FBOHEIGHT);
   glutInit(&argc, argv);
   glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE);
   glutCreateWindow("Screen Space Motion Blur");
