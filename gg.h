@@ -29,8 +29,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <cstring>
 
 #if defined(WIN32)
-#  pragma warning(disable:4996)
 //#  pragma comment(linker, "/subsystem:\"windows\" /entry:\"mainCRTStartup\"")
+#  pragma warning(disable:4996)
 #  pragma comment(lib, "glew32.lib")
 #  include "glew.h"
 #  include "wglew.h"
@@ -719,7 +719,7 @@ namespace gg
     : public Gg
   {
     friend class GgAttribute;
-    
+
     // 参照カウント
     unsigned int count;
 
@@ -777,7 +777,7 @@ namespace gg
     {
       inc();
     }
-    
+
     // 代入
     GgAttribute &operator=(const GgAttribute &o)
     {
@@ -865,7 +865,7 @@ namespace gg
       return texture;
     }
   };
-  
+
   /*
   ** 法線マップ
   **
@@ -943,7 +943,7 @@ namespace gg
       : program(loadShader(vert, frag, geom, input, output, vertices, nvarying, varyings)) {}
     GgShader(const GgShader &o)
       : GgAttribute(o), program(o.program) {}
-    
+
     // 代入
     GgShader &operator=(const GgShader &o)
     {
@@ -983,10 +983,6 @@ namespace gg
       glBindBuffer(GL_ARRAY_BUFFER, 0);
       glUseProgram(0);
     }
-
-    // 変換行列を設定する
-    virtual void loadMatrix(const GgMatrix &mp, const GgMatrix &mw) = 0;
-    virtual void loadMatrix(const GLfloat *mp, const GLfloat *mw) = 0;
 
     // シェーダプログラム名を取り出す
     GLuint get(void) const
@@ -1072,7 +1068,7 @@ namespace gg
       glBindBuffer(GL_COPY_READ_BUFFER, 0);
 #endif
     }
-    
+
     // バッファオブジェクト名を取り出す
     GLuint buf(void) const
     {
@@ -1202,13 +1198,13 @@ namespace gg
     {
       return position.buf();
     }
-    
+
     // データの数を取り出す
     GLuint pnum(void) const
     {
       return position.num();
     }
-    
+
     // ポイントの描画
     virtual void draw(void) const;
   };
@@ -1262,13 +1258,13 @@ namespace gg
     {
       return normal.buf();
     }
-    
+
     // データの数を取り出す
     GLuint nnum(void) const
     {
       return normal.num();
     }
-    
+
     // 三角形群を描画する手続き
     virtual void draw(void) const;
   };
@@ -1297,7 +1293,7 @@ namespace gg
     }
     GgObject(const GgObject &o)
       : GgTriangles(o), index(o.index) {}
-    
+
     // 代入
     GgObject &operator=(const GgObject &o)
     {
@@ -1324,13 +1320,13 @@ namespace gg
     {
       return index.buf();
     }
-    
+
     // データの数を取り出す
     GLuint fnum(void) const
     {
       return index.num();
     }
-    
+
     // 三角形ポリゴンを描画する手続き
     virtual void draw(void) const;
   };
