@@ -288,7 +288,7 @@ static void init(void)
   pass1->setMaterialShininess(50.0f);
   
   // OBJ ファイルの読み込み
-  model = ggObjArray("model.dat");
+  model = ggArraysObj("model.dat");
   model->attachShader(pass1);
   
   // transform feedback buffer を確保して初期値を設定する
@@ -311,8 +311,8 @@ static void init(void)
   mt.loadIdentity();
   
   // テクスチャ
-  texture0 = new GgTexture(0, FBOWIDTH, FBOHEIGHT, GL_RGBA);
-  texture1 = new GgTexture(0, FBOWIDTH, FBOHEIGHT, GL_RGBA32F);
+  texture0 = new GgTexture(FBOWIDTH, FBOHEIGHT, GL_RGBA);
+  texture1 = new GgTexture(FBOWIDTH, FBOHEIGHT, GL_RGBA32F);
 
   // レンダーバッファ
   GLuint rb[2];
