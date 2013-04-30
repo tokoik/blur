@@ -1,8 +1,8 @@
 /*
-** ゲームグラフィックス特論用補助プログラム
+** ゲームグラフィックス特論用補助プログラム GLUT 版
 **
 
-Copyright (c) 2011, 2012 Kohe Tokoi. All Rights Reserved.
+Copyright (c) 2011, 2012, 2013 Kohe Tokoi. All Rights Reserved.
 
 Permission is hereby granted, free of charge,  to any person obtaining a copy 
 of this software and associated documentation files (the "Software"), to deal 
@@ -188,7 +188,7 @@ bool gg::ggSaveTga(GLsizei sx, GLsizei sy, unsigned int depth, const GLubyte *bu
   {
     0,          // ID length
     0,          // Color map type (none)
-    (depth == 3) ? 2 : 3, // Image Type (2:RGB, 3:Grayscale)
+    static_cast<unsigned char>((depth == 3) ? 2 : 3), // Image Type (2:RGB, 3:Grayscale)
     0, 0,       // Offset into the color map table
     0, 0,       // Number of color map entries
     0,          // Number of a color map entry bits per pixel
@@ -198,7 +198,7 @@ bool gg::ggSaveTga(GLsizei sx, GLsizei sy, unsigned int depth, const GLubyte *bu
     static_cast<unsigned char>(sx >> 8),
     static_cast<unsigned char>(sy & 0xff),
     static_cast<unsigned char>(sy >> 8),
-    8 * depth,  // Pixel depth (bits per pixel)
+    static_cast<unsigned char>(8 * depth),  // Pixel depth (bits per pixel)
     0           // Image descriptor
   };
   file.write(reinterpret_cast<const char *>(header), sizeof header);
@@ -311,7 +311,7 @@ bool gg::ggSaveDepth(const char *name)
 /*
 ** TGA ファイル (8/16/24/32bit) の読み込み
 */
-GLubyte *gg::ggLoadTga(const char *name, GLsizei &width, GLsizei &height, GLenum &format)
+GLubyte *gg::ggLoadTga(const char *name, GLsizei *width, GLsizei *height, GLenum *format)
 {
   // ファイルを開く
   std::ifstream file(name, std::ios::binary);
@@ -334,24 +334,24 @@ GLubyte *gg::ggLoadTga(const char *name, GLsizei &width, GLsizei &height, GLenum
   }
 
   // 幅と高さ
-  width = header[13] << 8 | header[12];
-  height = header[15] << 8 | header[14];
+  *width = header[13] << 8 | header[12];
+  *height = header[15] << 8 | header[14];
 
   // 深度
   size_t depth = header[16] / 8;
   switch (depth)
   {
     case 1:
-      format = GL_RED;
+      *format = GL_RED;
       break;
     case 2:
-      format = GL_RG;
+      *format = GL_RG;
       break;
     case 3:
-      format = GL_BGR;
+      *format = GL_BGR;
       break;
     case 4:
-      format = GL_BGRA;
+      *format = GL_BGRA;
       break;
     default:
       std::cerr << "Waring: Unusable format: " << depth << std::endl;
@@ -360,7 +360,7 @@ GLubyte *gg::ggLoadTga(const char *name, GLsizei &width, GLsizei &height, GLenum
   }
 
   // データサイズ
-  size_t size = width * height * depth;
+  size_t size = *width * *height * depth;
 
   // メモリの確保
   GLubyte *buffer = 0;
@@ -456,7 +456,7 @@ bool gg::ggLoadImage(const char *name, GLenum internal)
   GLenum format;
 
   // 画像の読み込み先
-  GLubyte *image = ggLoadTga(name, width, height, format);
+  GLubyte *image = ggLoadTga(name, &width, &height, &format);
 
   // テクスチャメモリへの読み込み
   ggLoadTexture(width, height, internal, format, image);
@@ -479,7 +479,7 @@ bool gg::ggLoadHeight(const char *name, float nz)
   GLenum format;
 
   // 画像の読み込み先
-  GLubyte *hmap = ggLoadTga(name, width, height, format);
+  GLubyte *hmap = ggLoadTga(name, &width, &height, &format);
 
   // 画像が読み込めなかったら戻る
   if (hmap == 0) return false;

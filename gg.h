@@ -1,8 +1,8 @@
 /*
-** ゲームグラフィックス特論用補助プログラム
+** ゲームグラフィックス特論用補助プログラム GLUT 版
 **
 
-Copyright (c) 2011, 2012 Kohe Tokoi. All Rights Reserved.
+Copyright (c) 2011, 2012, 2013 Kohe Tokoi. All Rights Reserved.
 
 Permission is hereby granted, free of charge,  to any person obtaining a copy 
 of this software and associated documentation files (the "Software"), to deal 
@@ -120,9 +120,9 @@ namespace gg
   */
   extern GLubyte *ggLoadTga(            // 読み込んだ画像データのポインタを返す (使用後 delete する)
     const char *name,                   // 読み込むファイル名
-    GLsizei &width,                     // 読み込んだ TGA ファイルの幅
-    GLsizei &height,                    // 読み込んだ TGA ファイルの高さ
-    GLenum &format                      // 読み込んだ TGA ファイルの書式 (GL_R, GL_RG, GL_BGR, GL_BGRA)
+    GLsizei *width,                     // 読み込んだ TGA ファイルの幅
+    GLsizei *height,                    // 読み込んだ TGA ファイルの高さ
+    GLenum *format                      // 読み込んだ TGA ファイルの書式 (GL_R, GL_RG, GL_BGR, GL_BGRA)
     );
 
   /*
