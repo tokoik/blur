@@ -1,8 +1,8 @@
 /*
-** ゲームグラフィックス特論用補助プログラム
+** ゲームグラフィックス特論用補助プログラム GLUT 版
 **
 
-Copyright (c) 2011, 2012 Kohe Tokoi. All Rights Reserved.
+Copyright (c) 2011, 2012, 2013 Kohe Tokoi. All Rights Reserved.
 
 Permission is hereby granted, free of charge,  to any person obtaining a copy 
 of this software and associated documentation files (the "Software"), to deal 
@@ -79,7 +79,7 @@ namespace gg
   /*
   ** シェーダーソースファイルの読み込み
   */
-  extern GLuint loadShader(             // シェーダプログラムのプログラム名
+  extern GLuint ggLoadShader(           // シェーダプログラムのプログラム名
     const char *vert,                   // バーテックスシェーダのソースファイル名
     const char *frag = 0,               // フラグメントシェーダのソースファイル名（0 なら不使用）
     const char *geom = 0,               // ジオメトリシェーダのソースファイル名（0 なら不使用）
@@ -91,33 +91,44 @@ namespace gg
     );
 
   /*
+  ** 配列の内容を TGA ファイルに保存
+  */
+  bool ggSaveTga(                       // 保存できたら true
+    GLsizei sx,                         // 配列の行方向の大きさ
+    GLsizei sy,                         // 配列の列方向の大きさ
+    unsigned int depth,                 // 配列の要素のバイト数
+    const GLubyte *buffer,              // 保存する配列
+    const char *name                    // 保存するファイル名
+    );
+
+  /*
   ** カラーバッファの内容を TGA ファイルに保存
   */
-  extern bool saveColor(                // 読み込みできたら true
+  extern bool ggSaveColor(              // 保存できたら true
     const char *name                    // 保存するファイル名
     );
 
   /*
   ** デプスバッファの内容を TGA ファイルに保存
   */
-  extern bool saveDepth(                // 保存できたら true
+  extern bool ggSaveDepth(              // 保存できたら true
     const char *name                    // 保存するファイル名
     );
 
   /*
   ** TGA ファイル (8/16/24/32bit) の読み込み
   */
-  extern GLubyte *loadTga(              // 読み込んだ画像データのポインタを返す (使用後 delete する)
+  extern GLubyte *ggLoadTga(            // 読み込んだ画像データのポインタを返す (使用後 delete する)
     const char *name,                   // 読み込むファイル名
-    GLsizei &width,                     // 読み込んだ TGA ファイルの幅
-    GLsizei &height,                    // 読み込んだ TGA ファイルの高さ
-    GLenum &format                      // 読み込んだ TGA ファイルの書式 (GL_R, GL_RG, GL_BGR, GL_BGRA)
+    GLsizei *width,                     // 読み込んだ TGA ファイルの幅
+    GLsizei *height,                    // 読み込んだ TGA ファイルの高さ
+    GLenum *format                      // 読み込んだ TGA ファイルの書式 (GL_R, GL_RG, GL_BGR, GL_BGRA)
     );
 
   /*
   ** テクスチャメモリの確保
   */
-  extern void loadTexture(
+  extern void ggLoadTexture(
     GLsizei width,                      // 確保するテクスチャメモリの幅
     GLsizei height,                     // 確保するテクスチャメモリの高さ
     GLenum internal,                    // 確保するテクスチャメモリの内部書式
@@ -128,7 +139,7 @@ namespace gg
   /*
   ** TGA ファイルをテクスチャメモリに読み込む
   */
-  extern bool loadImage(                // 読み込みできたら true
+  extern bool ggLoadImage(              // 読み込みできたら true
     const char *name,                   // 読み込むファイル名
     GLenum internal                     // テクスチャメモリの内部フォーマット
     );
@@ -136,7 +147,7 @@ namespace gg
   /*
   ** TGA 画像ファイルの高さマップ読み込んでテクスチャメモリに法線マップを作成する
   */
-  extern bool loadHeight(               // 読み込みできたら true
+  extern bool ggLoadHeight(             // 読み込みできたら true
     const char *name,                   // 読み込むファイル名
     float nz                            // 法線の z 軸の長さ
     );
@@ -144,7 +155,7 @@ namespace gg
   /*
   ** 三角形分割された OBJ ファイルを読み込む (Elements 形式)
   */
-  extern bool loadObj(                  // 読み込みできたら true
+  extern bool ggLoadObj(                // 読み込みできたら true
     const char *name,                   // 読み込むファイル名
     GLuint &nv,                         // 読み込んだデータの頂点数
     GLfloat (*&vert)[3],                // 読み込んだデータの頂点位置
@@ -157,7 +168,7 @@ namespace gg
   /*
   ** 三角形分割された OBJ ファイルと MTL ファイルを読み込む (Arrays 形式)
   */
-  extern bool loadObj(                  // 読み込みできたら true
+  extern bool ggLoadObj(                // 読み込みできたら true
     const char *name,                   // 読み込むファイル名
     GLuint &ng,                         // 読み込んだデータのポリゴングループ数
     GLuint (*&group)[2],                // 読み込んだデータのポリゴングループの最初のポリゴンのインデックスとポリゴン数
@@ -886,14 +897,14 @@ namespace gg
     {
       glGenTextures(1, &texture);
       glBindTexture(GL_TEXTURE_2D, texture);
-      loadTexture(width, height, internal, format, image);
+      ggLoadTexture(width, height, internal, format, image);
       glBindTexture(GL_TEXTURE_2D, 0);
     }
     GgTexture(const char *name, GLenum internal = GL_RGBA)
     {
       glGenTextures(1, &texture);
       glBindTexture(GL_TEXTURE_2D, texture);
-      loadImage(name, internal);
+      ggLoadImage(name, internal);
       glBindTexture(GL_TEXTURE_2D, 0);
     }
     GgTexture(const GgTexture &o)
@@ -956,7 +967,7 @@ namespace gg
       : GgTexture()
     {
       glBindTexture(GL_TEXTURE_2D, get());
-      loadHeight(name, nz);
+      ggLoadHeight(name, nz);
       glBindTexture(GL_TEXTURE_2D, 0);
     }
     GgNormalTexture(const GgNormalTexture &o)
@@ -1002,7 +1013,7 @@ namespace gg
       int nvarying = 0,                   // フィードバックする varying 変数の数（0 なら不使用）
       const char **varyings = 0           // フィードバックする varying 変数のリスト
       )
-      : program(loadShader(vert, frag, geom, input, output, vertices, nvarying, varyings)) {}
+      : program(ggLoadShader(vert, frag, geom, input, output, vertices, nvarying, varyings)) {}
     GgShader(const GgShader &o)
       : GgAttribute(o), program(o.program) {}
 
@@ -1030,7 +1041,7 @@ namespace gg
       )
     {
       if (program != 0) glDeleteProgram(program);
-      program = loadShader(vert, frag, geom, input, output, vertices, nvarying, varyings);
+      program = ggLoadShader(vert, frag, geom, input, output, vertices, nvarying, varyings);
     }
 
     // シェーダプログラムの使用を開始する
