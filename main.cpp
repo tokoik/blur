@@ -61,7 +61,7 @@ static void display(void)
   glViewport(0, 0, FBOWIDTH, FBOHEIGHT);
   
   // フレームバッファオブジェクト指定
-  glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, fb[0]);
+  glBindFramebuffer(GL_FRAMEBUFFER, fb[0]);
   
   // 画面クリア
   glClearColor(0.1f, 0.3f, 0.5f, 0.0f);
@@ -73,7 +73,7 @@ static void display(void)
   model->draw();
   
   // フレームバッファオブジェクト指定
-  glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, fb[1]);
+  glBindFramebuffer(GL_FRAMEBUFFER, fb[1]);
   
   // 画面クリア
   glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
@@ -88,7 +88,7 @@ static void display(void)
   pass1->swapBuffers();
   
   // フレームバッファオブジェクト解除
-  glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
+  glBindFramebuffer(GL_FRAMEBUFFER, 0);
   
   // カラーテクスチャの使用
   texture0->use(0);
@@ -164,9 +164,9 @@ static void mouse(int button, int state, int x, int y)
     y0 = (GLint)((GLfloat)y0 * (GLfloat)FBOHEIGHT / (GLfloat)vp[3] + 0.5f);
 
     // クリックしたところの深度値を読む
-    glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, fb[0]);
+    glBindFramebuffer(GL_FRAMEBUFFER, fb[0]);
     glReadPixels(x0, y0, 1, 1, GL_DEPTH_COMPONENT, GL_FLOAT, &z0);
-    glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
     // 背景でないとき
     if (z0 < 1.0f)
@@ -316,22 +316,22 @@ static void init(void)
 
   // レンダーバッファ
   GLuint rb[2];
-  glGenRenderbuffersEXT(2, rb);
-  glBindRenderbufferEXT(GL_RENDERBUFFER_EXT, rb[0]);
-  glRenderbufferStorageEXT(GL_RENDERBUFFER_EXT, GL_DEPTH_COMPONENT, FBOWIDTH, FBOHEIGHT);
-  glBindRenderbufferEXT(GL_RENDERBUFFER_EXT, rb[1]);
-  glRenderbufferStorageEXT(GL_RENDERBUFFER_EXT, GL_DEPTH_COMPONENT, FBOWIDTH, FBOHEIGHT);
-  glBindRenderbufferEXT(GL_RENDERBUFFER_EXT, 0);
+  glGenRenderbuffers(2, rb);
+  glBindRenderbuffer(GL_RENDERBUFFER, rb[0]);
+  glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, FBOWIDTH, FBOHEIGHT);
+  glBindRenderbuffer(GL_RENDERBUFFER, rb[1]);
+  glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, FBOWIDTH, FBOHEIGHT);
+  glBindRenderbuffer(GL_RENDERBUFFER, 0);
 
   // フレームバッファオブジェクト
-  glGenFramebuffersEXT(2, fb);
-  glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, fb[0]);
-  glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, GL_TEXTURE_2D, texture0->get(), 0);
-  glFramebufferRenderbufferEXT(GL_FRAMEBUFFER_EXT, GL_DEPTH_ATTACHMENT_EXT, GL_RENDERBUFFER_EXT, rb[0]);
-  glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, fb[1]);
-  glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, GL_TEXTURE_2D, texture1->get(), 0);
-  glFramebufferRenderbufferEXT(GL_FRAMEBUFFER_EXT, GL_DEPTH_ATTACHMENT_EXT, GL_RENDERBUFFER_EXT, rb[1]);
-  glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
+  glGenFramebuffers(2, fb);
+  glBindFramebuffer(GL_FRAMEBUFFER, fb[0]);
+  glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture0->get(), 0);
+  glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, rb[0]);
+  glBindFramebuffer(GL_FRAMEBUFFER, fb[1]);
+  glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture1->get(), 0);
+  glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, rb[1]);
+  glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
   // 初期設定
   glEnable(GL_CULL_FACE);
