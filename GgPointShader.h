@@ -25,11 +25,6 @@ namespace gg
       {
         memcpy(w, m.get(), sizeof w);
       }
-      GLfloat p[16];    // 投影変換行列
-      void loadProjectionMatrix(const GgMatrix &m)
-      {
-        memcpy(p, m.get(), sizeof p);
-      }
     } m;
 
     // 場所
@@ -37,7 +32,6 @@ namespace gg
     {
       GLint pv;         // 位置の attribute 変数の場所
       GLint mc;         // モデルビュー・投影変換行列の uniform 変数の場所
-      GLint mp;         // 投影変換行列の uniform 変数の場所
       GLint mw;         // モデルビュー変換行列の uniform 変数の場所
     } loc;
 

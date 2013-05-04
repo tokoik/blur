@@ -189,7 +189,6 @@ static void mouse(int button, int state, int x, int y)
     else
     {
       // ƒNƒŠƒbƒN‚µ‚È‚©‚Á‚½‚±‚Æ‚É‚·‚é
-      glutPostRedisplay();
       press = -1;
     }
   }
