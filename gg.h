@@ -658,6 +658,18 @@ extern PFNWGLSWAPINTERVALEXTPROC wglSwapIntervalEXT;
 #  error "This platform is not supported."
 #endif
 
+#define glGenFramebuffersEXT glGenFramebuffers
+#define glGenRenderbuffersEXT glGenRenderbuffers
+#define glBindFramebufferEXT glBindFramebuffer
+#define glBindRenderbufferEXT glBindRenderbuffer
+#define glRenderbufferStorageEXT glRenderbufferStorage
+#define glFramebufferTexture2DEXT glFramebufferTexture2D
+#define glFramebufferRenderbufferEXT glFramebufferRenderbuffer
+#define glDeleteFramebuffersEXT glDeleteFramebuffers
+#define glDeleteRenderbuffersEXT glDeleteRenderbuffers
+#define glCheckFramebufferStatusEXT glCheckFramebufferStatus
+#define glProgramParameteriEXT glProgramParameteri
+
 namespace gg
 {
   /*
