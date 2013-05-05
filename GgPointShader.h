@@ -18,12 +18,12 @@ namespace gg
       GLfloat c[16];    // モデルビュー・投影変換行列
       void loadModelViewProjectionMatrix(const GgMatrix &m)
       {
-        memcpy(c, m.get(), sizeof c);
+        for (int i = 0; i < 16; ++i) c[i] = m.get()[i];
       }
       GLfloat w[16];    // モデルビュー変換行列
       void loadModelViewMatrix(const GgMatrix &m)
       {
-        memcpy(w, m.get(), sizeof w);
+        for (int i = 0; i < 16; ++i) w[i] = m.get()[i];
       }
     } m;
 

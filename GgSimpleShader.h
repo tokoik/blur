@@ -35,7 +35,7 @@ namespace gg
       GLfloat g[16];    // モデルビュー変換の法線変換行列
       void loadNormalMatrix(const GgMatrix &m)
       {
-        memcpy(g, m.get(), sizeof g);
+        for (int i = 0; i < 16; ++i) g[i] = m.get()[i];
       }
     } m;
 
