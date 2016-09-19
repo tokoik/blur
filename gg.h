@@ -648,6 +648,7 @@ extern PFNWGLSWAPINTERVALEXTPROC wglSwapIntervalEXT;
 #  include <OpenGL/gl3.h>
 #  include <OpenGL/gl3ext.h>
 #  include <GLUT/glut.h>
+#  include <cstdlib>
 #elif defined(X11)
 #  define GL_GLEXT_PROTOTYPES
 #  define GLX_GLXEXT_PROTOTYPES
