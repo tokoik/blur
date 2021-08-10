@@ -1,8 +1,8 @@
 /*
-** ゲームグラフィックス特論用補助プログラム GLUT 版
+** ゲームグラフィックス特論用補助プログラム
 **
 
-Copyright (c) 2011, 2012, 2013 Kohe Tokoi. All Rights Reserved.
+Copyright (c) 2011, 2012 Kohe Tokoi. All Rights Reserved.
 
 Permission is hereby granted, free of charge,  to any person obtaining a copy 
 of this software and associated documentation files (the "Software"), to deal 
@@ -29,8 +29,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <cstring>
 
 #if defined(WIN32)
-//#  pragma comment(linker, "/subsystem:\"windows\" /entry:\"mainCRTStartup\"")
 #  pragma warning(disable:4996)
+//#  pragma comment(linker, "/subsystem:\"windows\" /entry:\"mainCRTStartup\"")
 #  pragma comment(lib, "glew32.lib")
 #  include "glew.h"
 #  include "wglew.h"
@@ -62,24 +62,22 @@ namespace gg
   ** OpenGL のエラーチェック
   **
   **     OpenGL の API を呼び出し直後に実行すればエラーのあるときにメッセージを表示する
+  **     msg はメッセージの頭に追加する文字列
   */
-  extern void ggError(
-    const char *msg = 0                 // 出力するメッセージの先頭に追加する文字列
-    );
+  extern void ggError(const char *msg = 0);
 
   /*
   ** FBO のエラーチェック
   **
   **     FBO の API を呼び出し直後に実行すればエラーのあるときにメッセージを表示する
+  **     msg はメッセージに乗じる文字列
   */
-  extern void ggFBOError(
-    const char *msg = 0                 // 出力するメッセージの先頭に追加する文字列
-    );
+  extern void ggFBOError(const char *msg = 0);
 
   /*
   ** シェーダーソースファイルの読み込み
   */
-  extern GLuint ggLoadShader(           // シェーダプログラムのプログラム名
+  extern GLuint loadShader(
     const char *vert,                   // バーテックスシェーダのソースファイル名
     const char *frag = 0,               // フラグメントシェーダのソースファイル名（0 なら不使用）
     const char *geom = 0,               // ジオメトリシェーダのソースファイル名（0 なら不使用）
@@ -91,96 +89,19 @@ namespace gg
     );
 
   /*
-  ** 配列の内容を TGA ファイルに保存
+  ** テクスチャマッピング用の RAW 画像ファイルの読み込み
   */
-  bool ggSaveTga(                       // 保存できたら true
-    GLsizei sx,                         // 配列の行方向の大きさ
-    GLsizei sy,                         // 配列の列方向の大きさ
-    unsigned int depth,                 // 配列の要素のバイト数
-    const GLubyte *buffer,              // 保存する配列
-    const char *name                    // 保存するファイル名
-    );
+  extern bool loadImage(const char *name, int width, int height, GLenum internal);
 
   /*
-  ** カラーバッファの内容を TGA ファイルに保存
+  ** 高さマップ用の RAW 画像ファイルの読み込んで法線マップを作成する
   */
-  extern bool ggSaveColor(              // 保存できたら true
-    const char *name                    // 保存するファイル名
-    );
+  extern bool loadHeight(const char *name, int width, int height, float nz);
 
   /*
-  ** デプスバッファの内容を TGA ファイルに保存
+  ** 三角形分割された OBJ ファイルを読み込む
   */
-  extern bool ggSaveDepth(              // 保存できたら true
-    const char *name                    // 保存するファイル名
-    );
-
-  /*
-  ** TGA ファイル (8/16/24/32bit) の読み込み
-  */
-  extern GLubyte *ggLoadTga(            // 読み込んだ画像データのポインタを返す (使用後 delete する)
-    const char *name,                   // 読み込むファイル名
-    GLsizei *width,                     // 読み込んだ TGA ファイルの幅
-    GLsizei *height,                    // 読み込んだ TGA ファイルの高さ
-    GLenum *format                      // 読み込んだ TGA ファイルの書式 (GL_R, GL_RG, GL_BGR, GL_BGRA)
-    );
-
-  /*
-  ** テクスチャメモリの確保
-  */
-  extern void ggLoadTexture(
-    GLsizei width,                      // 確保するテクスチャメモリの幅
-    GLsizei height,                     // 確保するテクスチャメモリの高さ
-    GLenum internal,                    // 確保するテクスチャメモリの内部書式
-    GLenum format = GL_RGBA,            // image の書式
-    const GLvoid *image = 0
-    );
-
-  /*
-  ** TGA ファイルをテクスチャメモリに読み込む
-  */
-  extern bool ggLoadImage(              // 読み込みできたら true
-    const char *name,                   // 読み込むファイル名
-    GLenum internal                     // テクスチャメモリの内部フォーマット
-    );
-
-  /*
-  ** TGA 画像ファイルの高さマップ読み込んでテクスチャメモリに法線マップを作成する
-  */
-  extern bool ggLoadHeight(             // 読み込みできたら true
-    const char *name,                   // 読み込むファイル名
-    float nz                            // 法線の z 軸の長さ
-    );
-
-  /*
-  ** 三角形分割された OBJ ファイルを読み込む (Elements 形式)
-  */
-  extern bool ggLoadObj(                // 読み込みできたら true
-    const char *name,                   // 読み込むファイル名
-    GLuint &nv,                         // 読み込んだデータの頂点数
-    GLfloat (*&vert)[3],                // 読み込んだデータの頂点位置
-    GLfloat (*&norm)[3],                // 読み込んだデータの頂点法線
-    GLuint &nf,                         // 読み込んだデータの三角形数
-    GLuint (*&face)[3],                 // 読み込んだデータの三角形の頂点インデックス
-    bool normalize                      // true なら読み込んだデータの大きさを正規化する
-    );
-
-  /*
-  ** 三角形分割された OBJ ファイルと MTL ファイルを読み込む (Arrays 形式)
-  */
-  extern bool ggLoadObj(                // 読み込みできたら true
-    const char *name,                   // 読み込むファイル名
-    GLuint &ng,                         // 読み込んだデータのポリゴングループ数
-    GLuint (*&group)[2],                // 読み込んだデータのポリゴングループの最初のポリゴンのインデックスとポリゴン数
-    GLfloat (*&ka)[4],                  // 読み込んだっデータのポリゴングループごとの環境光に対する反射係数
-    GLfloat (*&kd)[4],                  // 読み込んだっデータのポリゴングループごとの拡散反射係数
-    GLfloat (*&ks)[4],                  // 読み込んだっデータのポリゴングループごとの鏡面反射係数
-    GLfloat *&kshi,                     // 読み込んだっデータのポリゴングループごとの輝き係数
-    GLuint &nv,                         // 読み込んだデータの頂点数
-    GLfloat (*&vert)[3],                // 読み込んだデータの頂点位置
-    GLfloat (*&norm)[3],                // 読み込んだデータの頂点法線
-    bool normalize                      // true なら読み込んだデータの大きさを正規化する
-    );
+  extern bool loadObj(const char *name, GLuint &nv, GLfloat (*&vert)[3], GLfloat (*&norm)[3], GLuint &nf, GLuint (*&face)[3], bool normalize);
 
   /*
   ** 基底クラス
@@ -798,7 +719,7 @@ namespace gg
     : public Gg
   {
     friend class GgAttribute;
-
+    
     // 参照カウント
     unsigned int count;
 
@@ -856,7 +777,7 @@ namespace gg
     {
       inc();
     }
-
+    
     // 代入
     GgAttribute &operator=(const GgAttribute &o)
     {
@@ -893,19 +814,10 @@ namespace gg
     {
       glGenTextures(1, &texture);
     }
-    GgTexture(GLsizei width, GLsizei height, GLenum internal = GL_RGBA, GLenum format = GL_RGBA, const GLvoid *image = 0)
+    GgTexture(const char *name, int width, int height, GLenum internal = GL_RGB)
     {
       glGenTextures(1, &texture);
-      glBindTexture(GL_TEXTURE_2D, texture);
-      ggLoadTexture(width, height, internal, format, image);
-      glBindTexture(GL_TEXTURE_2D, 0);
-    }
-    GgTexture(const char *name, GLenum internal = GL_RGBA)
-    {
-      glGenTextures(1, &texture);
-      glBindTexture(GL_TEXTURE_2D, texture);
-      ggLoadImage(name, internal);
-      glBindTexture(GL_TEXTURE_2D, 0);
+      load(name, width, height, internal);
     }
     GgTexture(const GgTexture &o)
       : GgAttribute(o), texture(o.texture) {}
@@ -919,6 +831,15 @@ namespace gg
         texture = o.texture;
       }
       return *this;
+    }
+
+    // 拡散反射色テクスチャを読み込む
+    //     name: ファイル名, width, height: 幅と高さ (2^n), internal: GL_RGB か GL_RGBA
+    void load(const char *name, int width, int height, GLenum internal = GL_RGB) const
+    {
+      glBindTexture(GL_TEXTURE_2D, texture);
+      loadImage(name, width, height, internal);
+      glBindTexture(GL_TEXTURE_2D, 0);
     }
 
     // テクスチャオブジェクトを結合する
@@ -944,7 +865,7 @@ namespace gg
       return texture;
     }
   };
-
+  
   /*
   ** 法線マップ
   **
@@ -961,14 +882,13 @@ namespace gg
     // コンストラクタ
     GgNormalTexture(void) {}
     GgNormalTexture(
-      const char *name,                   // 画像ファイル名（1 チャネルの TGA 画像）
+      const char *name,                   // 画像ファイル名（1 チャネルの RAW 画像）
+      int width, int height,              // 画像の幅と高さ（2^n 画素）
       float nz = 1.0f                     // 法線マップの z 成分の値
       )
       : GgTexture()
     {
-      glBindTexture(GL_TEXTURE_2D, get());
-      ggLoadHeight(name, nz);
-      glBindTexture(GL_TEXTURE_2D, 0);
+      load(name, width, height, nz);
     }
     GgNormalTexture(const GgNormalTexture &o)
       : GgTexture(o) {}
@@ -978,6 +898,13 @@ namespace gg
     {
       GgTexture::operator=(o);
       return *this;
+    }
+
+    // 高さマップを読み込んで法線マップを作成する
+    //    name: ファイル名, width, height: 幅と高さ (2^n), nz: 法線マップの z 成分の値
+    void load(const char *name, int width, int height, float nz = 1.0f) const
+    {
+      loadHeight(name, width, height, nz);
     }
   };
 
@@ -1013,10 +940,10 @@ namespace gg
       int nvarying = 0,                   // フィードバックする varying 変数の数（0 なら不使用）
       const char **varyings = 0           // フィードバックする varying 変数のリスト
       )
-      : program(ggLoadShader(vert, frag, geom, input, output, vertices, nvarying, varyings)) {}
+      : program(loadShader(vert, frag, geom, input, output, vertices, nvarying, varyings)) {}
     GgShader(const GgShader &o)
       : GgAttribute(o), program(o.program) {}
-
+    
     // 代入
     GgShader &operator=(const GgShader &o)
     {
@@ -1041,7 +968,7 @@ namespace gg
       )
     {
       if (program != 0) glDeleteProgram(program);
-      program = ggLoadShader(vert, frag, geom, input, output, vertices, nvarying, varyings);
+      program = loadShader(vert, frag, geom, input, output, vertices, nvarying, varyings);
     }
 
     // シェーダプログラムの使用を開始する
@@ -1056,6 +983,10 @@ namespace gg
       glBindBuffer(GL_ARRAY_BUFFER, 0);
       glUseProgram(0);
     }
+
+    // 変換行列を設定する
+    virtual void loadMatrix(const GgMatrix &mp, const GgMatrix &mw) = 0;
+    virtual void loadMatrix(const GLfloat *mp, const GLfloat *mw) = 0;
 
     // シェーダプログラム名を取り出す
     GLuint get(void) const
@@ -1141,7 +1072,7 @@ namespace gg
       glBindBuffer(GL_COPY_READ_BUFFER, 0);
 #endif
     }
-
+    
     // バッファオブジェクト名を取り出す
     GLuint buf(void) const
     {
@@ -1271,13 +1202,13 @@ namespace gg
     {
       return position.buf();
     }
-
+    
     // データの数を取り出す
     GLuint pnum(void) const
     {
       return position.num();
     }
-
+    
     // ポイントの描画
     virtual void draw(void) const;
   };
@@ -1331,13 +1262,13 @@ namespace gg
     {
       return normal.buf();
     }
-
+    
     // データの数を取り出す
     GLuint nnum(void) const
     {
       return normal.num();
     }
-
+    
     // 三角形群を描画する手続き
     virtual void draw(void) const;
   };
@@ -1345,7 +1276,7 @@ namespace gg
   /*
   ** 三角形の形状データ
   */
-  class GgElements
+  class GgObject
     : public GgTriangles
   {
     // インデックスバッファオブジェクト
@@ -1354,21 +1285,21 @@ namespace gg
   public:
 
     // デストラクタ
-    virtual ~GgElements(void) {}
+    virtual ~GgObject(void) {}
 
     // コンストラクタ
-    GgElements(void) {}
-    GgElements(GLuint n, const GLfloat (*pos)[3], const GLfloat (*norm)[3],
+    GgObject(void) {}
+    GgObject(GLuint n, const GLfloat (*pos)[3], const GLfloat (*norm)[3],
       GLuint f, const GLuint (*face)[3], GLenum usage = GL_STATIC_DRAW)
       : GgTriangles(n, pos, norm, usage)
     {
       index.load(GL_ELEMENT_ARRAY_BUFFER, f, face);
     }
-    GgElements(const GgElements &o)
+    GgObject(const GgObject &o)
       : GgTriangles(o), index(o.index) {}
-
+    
     // 代入
-    GgElements &operator=(const GgElements &o)
+    GgObject &operator=(const GgObject &o)
     {
       if (&o != this)
       {
@@ -1393,13 +1324,13 @@ namespace gg
     {
       return index.buf();
     }
-
+    
     // データの数を取り出す
     GLuint fnum(void) const
     {
       return index.num();
     }
-
+    
     // 三角形ポリゴンを描画する手続き
     virtual void draw(void) const;
   };
@@ -1422,12 +1353,12 @@ namespace gg
   /*
   ** 三角形分割された Alias OBJ ファイル (Arrays 形式)
   */
-  extern GgTriangles *ggArraysObj(const char *name, bool normalize = false);
+  extern GgTriangles *ggObjArray(const char *name, bool normalize = false);
 
   /*
   ** 三角形分割された Alias OBJ ファイル (Elements 形式)
   */
-  extern GgElements *ggElementsObj(const char *name, bool normalize = false);
+  extern GgObject *ggObj(const char *name, bool normalize = false);
 }
 
 #endif
