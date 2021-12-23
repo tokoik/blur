@@ -1,12 +1,24 @@
 #version 120
 
+// ŒõŒ¹
+uniform vec4 ldiff;		// ŠgU”½ËŒõ¬•ª
+uniform vec4 lspec;		// ‹¾–Ê”½ËŒõ¬•ª
+
+// Ş¿
+uniform vec4 kdiff;		// ŠgU”½ËŒW”
+uniform vec4 kspec;		// ‹¾–Ê”½ËŒW”
+
+// è‡’l
+uniform float tdiff = 0.5;	// ŠgU”½ËŒõ‹­“x‚Ìè‡’l
+uniform float tspec = 0.3;	// ‹¾–Ê”½ËŒõ‹­“x‚Ìè‡’l
+
 // ”½ËŒõ‹­“x
-varying vec4 iamb;	// ŠÂ‹«Œõ‚Ì”½ËŒõ
-varying vec4 idiff;	// ŠgU”½ËŒõ
-varying vec4 ispec;	// ‹¾–Ê”½ËŒõ
+varying vec4 iamb;		// ŠÂ‹«Œõ‚Ì”½ËŒõ‹­“x
+varying float idiff;	// ŠgU”½ËŒõ‚Ì”½Ë—¦
+varying float ispec;	// ‹¾–Ê”½ËŒõ‚Ì”½Ë—¦
 
 void main(void)
 {
   // Fƒoƒbƒtƒ@‚Ö‚Ì‘‚«‚İ
-  gl_FragData[0] = iamb + idiff + ispec;
+  gl_FragData[0] = iamb + step(tdiff, idiff) * kdiff * ldiff + step(tspec, ispec) * kspec * lspec;
 }
