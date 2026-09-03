@@ -1,10 +1,10 @@
 #version 120
 #extension GL_EXT_geometry_shader4: enable
 
-// 以前の頂点位置
+// 莉･蜑阪�ｮ鬆らせ菴咲ｽｮ
 varying in vec4 q0[3];
 
-// ラスタライザに送る頂点の速度
+// 繝ｩ繧ｹ繧ｿ繝ｩ繧､繧ｶ縺ｫ騾√ｋ鬆らせ縺ｮ騾溷ｺｦ
 varying out vec2 vel;
 
 void main(void)

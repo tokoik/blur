@@ -1,51 +1,51 @@
 #version 120
 
-// ŒõŒ¹
-uniform vec4 lpos;  // ˆÊ’u
-uniform vec4 lamb;  // ŠÂ‹«Œõ¬•ª
-uniform vec4 ldiff; // ŠgU”½ËŒõ¬•ª
-uniform vec4 lspec; // ‹¾–Ê”½ËŒõ¬•ª
+// å…‰æº
+uniform vec4 lpos;  // ä½ç½®
+uniform vec4 lamb;  // ç’°å¢ƒå…‰æˆåˆ†
+uniform vec4 ldiff; // æ‹¡æ•£åå°„å…‰æˆåˆ†
+uniform vec4 lspec; // é¡é¢åå°„å…‰æˆåˆ†
 
-// Ş¿
-uniform vec4 kamb;  // ŠÂ‹«Œõ‚Ì”½ËŒW”
-uniform vec4 kdiff; // ŠgU”½ËŒW”
-uniform vec4 kspec; // ‹¾–Ê”½ËŒW”
-uniform float kshi; // ‹P‚«ŒW”
+// æè³ª
+uniform vec4 kamb;  // ç’°å¢ƒå…‰ã®åå°„ä¿‚æ•°
+uniform vec4 kdiff; // æ‹¡æ•£åå°„ä¿‚æ•°
+uniform vec4 kspec; // é¡é¢åå°„ä¿‚æ•°
+uniform float kshi; // è¼ãä¿‚æ•°
 
-// •ÏŠ·s—ñ
-uniform mat4 mw;    // ‹“_À•WŒn‚Ö‚Ì•ÏŠ·s—ñ
-uniform mat4 mc;    // ƒNƒŠƒbƒsƒ“ƒOÀ•WŒn‚Ö‚Ì•ÏŠ·s—ñ
-uniform mat4 mg;    // –@üƒxƒNƒgƒ‹‚Ì•ÏŠ·s—ñ
+// å¤‰æ›è¡Œåˆ—
+uniform mat4 mw;    // è¦–ç‚¹åº§æ¨™ç³»ã¸ã®å¤‰æ›è¡Œåˆ—
+uniform mat4 mc;    // ã‚¯ãƒªãƒƒãƒ”ãƒ³ã‚°åº§æ¨™ç³»ã¸ã®å¤‰æ›è¡Œåˆ—
+uniform mat4 mg;    // æ³•ç·šãƒ™ã‚¯ãƒˆãƒ«ã®å¤‰æ›è¡Œåˆ—
 
-// ’¸“_‘®«
-attribute vec4 pv;  // ƒ[ƒJƒ‹À•WŒn‚Ì’¸“_ˆÊ’u
-attribute vec4 nv;  // ’¸“_‚Ì–@üƒxƒNƒgƒ‹
+// é ‚ç‚¹å±æ€§
+attribute vec4 pv;  // ãƒ­ãƒ¼ã‚«ãƒ«åº§æ¨™ç³»ã®é ‚ç‚¹ä½ç½®
+attribute vec4 nv;  // é ‚ç‚¹ã®æ³•ç·šãƒ™ã‚¯ãƒˆãƒ«
 
-// ”½ËŒõ‹­“x
-varying vec4 iamb;  // ŠÂ‹«Œõ‚Ì”½ËŒõ
-varying vec4 idiff; // ŠgU”½ËŒõ
-varying vec4 ispec; // ‹¾–Ê”½ËŒõ
+// åå°„å…‰å¼·åº¦
+varying vec4 iamb;  // ç’°å¢ƒå…‰ã®åå°„å…‰
+varying vec4 idiff; // æ‹¡æ•£åå°„å…‰
+varying vec4 ispec; // é¡é¢åå°„å…‰
 
 // transform feedback
-varying vec4 p1;	// Œ»İ‚Ì’¸“_ˆÊ’u‚ğ•Û‘¶‚·‚éƒtƒB[ƒhƒoƒbƒNƒoƒbƒtƒ@
+varying vec4 p1;	// ç¾åœ¨ã®é ‚ç‚¹ä½ç½®ã‚’ä¿å­˜ã™ã‚‹ãƒ•ã‚£ãƒ¼ãƒ‰ãƒãƒƒã‚¯ãƒãƒƒãƒ•ã‚¡
 
 void main(void)
 {
-  // ‰A‰eŒvZ‚Ì€”õ
+  // é™°å½±è¨ˆç®—ã®æº–å‚™
   vec4 p = mw * pv;
   vec3 v = normalize(p.xyz / p.w);
   vec3 l = normalize((lpos * p.w - p * lpos.w).xyz);
   vec3 n = normalize((mg * nv).xyz);
   vec3 h = normalize(l - v);
 
-  // ‰A‰eŒvZ
+  // é™°å½±è¨ˆç®—
   idiff = max(dot(n, l), 0.0) * kdiff * ldiff;
   ispec = pow(max(dot(n, h), 0.0), kshi) * kspec * lspec;
   iamb = kamb * lamb;
   
-  // ’¸“_ˆÊ’u‚ÌZo
+  // é ‚ç‚¹ä½ç½®ã®ç®—å‡º
   gl_Position = mc * pv;
 
-  // Œ»İ‚ÌƒXƒNƒŠ[ƒ“ã‚Ì’¸“_ˆÊ’u‚ğ•Û‘¶‚·‚é
+  // ç¾åœ¨ã®ã‚¹ã‚¯ãƒªãƒ¼ãƒ³ä¸Šã®é ‚ç‚¹ä½ç½®ã‚’ä¿å­˜ã™ã‚‹
   p1 = gl_Position;
 }

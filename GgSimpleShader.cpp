@@ -1,5 +1,5 @@
-/*
-** ’Pƒ‚È‰A‰e•t‚¯
+ï»¿/*
+** å˜ç´”ãªé™°å½±ä»˜ã‘
 */
 #include <cstdarg>
 
@@ -10,25 +10,25 @@ gg::GgSimpleShader::GgSimpleShader(const char *vert, const char *frag,
   GLint nvarying, const char **varyings)
   : GgPointShader(vert, frag, geom, input, output, vertices, nvarying, varyings)
 {
-  // ƒvƒƒOƒ‰ƒ€–¼
+  // ãƒ—ãƒ­ã‚°ãƒ©ãƒ å
   GLuint program = get();
 
-  // –@ü‚Ì attribute •Ï”‚ÌêŠ
+  // æ³•ç·šã® attribute å¤‰æ•°ã®å ´æ‰€
   loc.nv = glGetAttribLocation(program, "nv");
 
-  // ŒõŒ¹‚Ìƒpƒ‰ƒ[ƒ^‚Ì uniform •Ï”‚ÌêŠ
+  // å…‰æºã®ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ã® uniform å¤‰æ•°ã®å ´æ‰€
   loc.lpos = glGetUniformLocation(program, "lpos");
   loc.lamb = glGetUniformLocation(program, "lamb");
   loc.ldiff = glGetUniformLocation(program, "ldiff");
   loc.lspec = glGetUniformLocation(program, "lspec");
 
-  // Ş¿‚Ìƒpƒ‰ƒ[ƒ^‚Ì uniform •Ï”‚ÌêŠ
+  // æè³ªã®ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ã® uniform å¤‰æ•°ã®å ´æ‰€
   loc.kamb = glGetUniformLocation(program, "kamb");
   loc.kdiff = glGetUniformLocation(program, "kdiff");
   loc.kspec = glGetUniformLocation(program, "kspec");
   loc.kshi = glGetUniformLocation(program, "kshi");
 
-  // •ÏŠ·s—ñ‚Ì uniform •Ï”‚ÌêŠ
+  // å¤‰æ›è¡Œåˆ—ã® uniform å¤‰æ•°ã®å ´æ‰€
   loc.mg = glGetUniformLocation(program, "mg");
 }
 
@@ -39,40 +39,40 @@ void gg::GgSimpleShader::use(GLuint vert, ...) const
   const GLuint norm = va_arg(list, GLuint);
   va_end(list);
 
-  // Šî’êƒNƒ‰ƒX‚ÌƒVƒF[ƒ_‚Ìİ’è‚ğŒÄ‚Ño‚·
+  // åŸºåº•ã‚¯ãƒ©ã‚¹ã®ã‚·ã‚§ãƒ¼ãƒ€ã®è¨­å®šã‚’å‘¼ã³å‡ºã™
   GgPointShader::use(vert);
 
-  // ƒoƒbƒtƒ@ƒIƒuƒWƒFƒNƒg‚©‚çƒf[ƒ^‚ğæ“¾‚·‚é
+  // ãƒãƒƒãƒ•ã‚¡ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‹ã‚‰ãƒ‡ãƒ¼ã‚¿ã‚’å–å¾—ã™ã‚‹
   glBindBuffer(GL_ARRAY_BUFFER, norm);
 
-  // attribute •Ï” nv ‚ğƒoƒbƒtƒ@ƒIƒuƒWƒFƒNƒg‚©‚ç“¾‚é‚±‚Æ‚ğ—LŒø‚É‚·‚é
+  // attribute å¤‰æ•° nv ã‚’ãƒãƒƒãƒ•ã‚¡ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‹ã‚‰å¾—ã‚‹ã“ã¨ã‚’æœ‰åŠ¹ã«ã™ã‚‹
   glEnableVertexAttribArray(loc.nv);
 
-  // attribute •Ï” nv ‚Æƒoƒbƒtƒ@ƒIƒuƒWƒFƒNƒg norm ‚ğŒ‹‚Ñ‚Â‚¯‚é
+  // attribute å¤‰æ•° nv ã¨ãƒãƒƒãƒ•ã‚¡ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ norm ã‚’çµã³ã¤ã‘ã‚‹
   glVertexAttribPointer(loc.nv, 3, GL_FLOAT, GL_FALSE, 0, 0);
 
-  // ŒõŒ¹
+  // å…‰æº
   glUniform4fv(loc.lpos, 1, l.pos);
   glUniform4fv(loc.lamb, 1, l.amb);
   glUniform4fv(loc.ldiff, 1, l.diff);
   glUniform4fv(loc.lspec, 1, l.spec);
 
-  // Ş¿
+  // æè³ª
   glUniform4fv(loc.kamb, 1, k.amb);
   glUniform4fv(loc.kdiff, 1, k.diff);
   glUniform4fv(loc.kspec, 1, k.spec);
   glUniform1f(loc.kshi, k.shi);
 
-  // •ÏŠ·
+  // å¤‰æ›
   glUniformMatrix4fv(loc.mg, 1, GL_FALSE, m.g);
 }
 
 void gg::GgSimpleShader::unuse(void) const
 {
-  // attribute •Ï” pv ‚ğƒoƒbƒtƒ@ƒIƒuƒWƒFƒNƒg‚©‚ç“¾‚é‚±‚Æ‚ğ–³Œø‚É‚·‚é
+  // attribute å¤‰æ•° pv ã‚’ãƒãƒƒãƒ•ã‚¡ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‹ã‚‰å¾—ã‚‹ã“ã¨ã‚’ç„¡åŠ¹ã«ã™ã‚‹
   glDisableVertexAttribArray(loc.nv);
 
-  // Šî’êƒNƒ‰ƒX‚ÌƒVƒF[ƒ_‚Ìİ’è‚ğŒÄ‚Ño‚·
+  // åŸºåº•ã‚¯ãƒ©ã‚¹ã®ã‚·ã‚§ãƒ¼ãƒ€ã®è¨­å®šã‚’å‘¼ã³å‡ºã™
   GgShader::unuse();
 }
 

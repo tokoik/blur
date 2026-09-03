@@ -1,8 +1,8 @@
-#ifndef __GG_Pass2Shader_H__
+ï»¿#ifndef __GG_Pass2Shader_H__
 #define __GG_Pass2Shader_H__
 
 /*
-** ƒ‚[ƒVƒ‡ƒ“ƒuƒ‰[ (Pass 2)
+** ãƒ¢ãƒ¼ã‚·ãƒ§ãƒ³ãƒ–ãƒ©ãƒ¼ (Pass 2)
 */
 #include "gg.h"
 
@@ -11,26 +11,26 @@ namespace gg
   class GgPass2Shader
     : public GgShader
   {
-    // êŠ
+    // å ´æ‰€
     struct
     {
-      GLint p0;         // ˆÈ‘O‚ÌƒXƒNƒŠ[ƒ“ã‚Ì’¸“_ˆÊ’u
-      GLint p1;         // Œ»İ‚ÌƒXƒNƒŠ[ƒ“ã‚Ì’¸“_ˆÊ’u
+      GLint p0;         // ä»¥å‰ã®ã‚¹ã‚¯ãƒªãƒ¼ãƒ³ä¸Šã®é ‚ç‚¹ä½ç½®
+      GLint p1;         // ç¾åœ¨ã®ã‚¹ã‚¯ãƒªãƒ¼ãƒ³ä¸Šã®é ‚ç‚¹ä½ç½®
     } loc;
 
   public:
     
-    // ƒfƒXƒgƒ‰ƒNƒ^
+    // ãƒ‡ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
     virtual ~GgPass2Shader(void) {}
     
-    // ƒRƒ“ƒXƒgƒ‰ƒNƒ^
+    // ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
     GgPass2Shader(void) {}
     GgPass2Shader(const char *vert, const char *frag = 0,
       const char *geom = 0, GLenum input = GL_TRIANGLES, GLenum output = GL_TRIANGLE_STRIP, GLint vertices = 0);
     GgPass2Shader(const GgPass2Shader &o)
       : GgShader(o), loc(o.loc) {}
     
-    // ‘ã“ü
+    // ä»£å…¥
     GgPass2Shader &operator=(const GgPass2Shader &o)
     {
       if (&o != this)
@@ -41,10 +41,10 @@ namespace gg
       return *this;
     }
 
-    // ƒVƒF[ƒ_‚Ìg—pŠJn
+    // ã‚·ã‚§ãƒ¼ãƒ€ã®ä½¿ç”¨é–‹å§‹
     virtual void use(GLuint vert, ...) const;
     
-    // ƒVƒF[ƒ_‚Ìg—pI—¹
+    // ã‚·ã‚§ãƒ¼ãƒ€ã®ä½¿ç”¨çµ‚äº†
     virtual void unuse(void) const;
   };
 }

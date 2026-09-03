@@ -1,12 +1,12 @@
 #version 120
 
-// �ȑO�̃X�N���[����̒��_�ʒu
+// 以前のスクリーン上の頂点位置
 attribute vec4 p0;
 
-// ���݂̃X�N���[����̒��_�ʒu
+// 現在のスクリーン上の頂点位置
 attribute vec4 p1;
 
-// �ȑO�̒��_�ʒu
+// 以前の頂点位置
 varying vec4 q0;
 
 void main(void)

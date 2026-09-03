@@ -1,4 +1,4 @@
-#include <cmath>
+ï»¿#include <cmath>
 #include <cstdlib>
 #include <cstring>
 
@@ -6,19 +6,19 @@
 using namespace gg;
 
 /*
-** ƒgƒ‰ƒbƒNƒ{[ƒ‹ˆ—
+** ãƒˆãƒ©ãƒƒã‚¯ãƒœãƒ¼ãƒ«å‡¦ç†
 */
 static GgTrackball tb;
 
 /*
-** •ÏŠ·s—ñ
+** å¤‰æ›è¡Œåˆ—
 */
-static GgMatrix mv;   // ‹–ì•ÏŠ·s—ñ
-static GgMatrix mp;   // “Š‰e•ÏŠ·s—ñ
-static GgMatrix mt;   // •½sˆÚ“®
+static GgMatrix mv;   // è¦–é‡å¤‰æ›è¡Œåˆ—
+static GgMatrix mp;   // æŠ•å½±å¤‰æ›è¡Œåˆ—
+static GgMatrix mt;   // å¹³è¡Œç§»å‹•
 
 /*
-** ƒVƒF[ƒ_
+** ã‚·ã‚§ãƒ¼ãƒ€
 */
 #include "GgPass1Shader.h"
 #include "GgPass2Shader.h"
@@ -28,109 +28,109 @@ static GgPass2Shader *pass2 = 0;
 static GgPass3Shader *pass3 = 0;
 
 /*
-** OBJ ƒtƒ@ƒCƒ‹
+** OBJ ãƒ•ã‚¡ã‚¤ãƒ«
 */
 static GgTriangles *model = 0;
 
 /*
-** ‰æ–Ê‚¢‚Á‚Ï‚¢‚Ì‹éŒ`
+** ç”»é¢ã„ã£ã±ã„ã®çŸ©å½¢
 */
 static GgTriangles *rect = 0;
 
 /*
-** ƒeƒNƒXƒ`ƒƒ
+** ãƒ†ã‚¯ã‚¹ãƒãƒ£
 */
 static GgTexture *texture0 = 0;
 static GgTexture *texture1 = 0;
 
 /*
-** ƒtƒŒ[ƒ€ƒoƒbƒtƒ@ƒIƒuƒWƒFƒNƒg
+** ãƒ•ãƒ¬ãƒ¼ãƒ ãƒãƒƒãƒ•ã‚¡ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ
 */
 #define FBOWIDTH 1024
 #define FBOHEIGHT 1024
 static GLuint fb[2];
 
 /*
-** ƒrƒ…[ƒ|[ƒg
+** ãƒ“ãƒ¥ãƒ¼ãƒãƒ¼ãƒˆ
 */
 static int vp[4];
 
 static void display(void)
 {
-  // ƒrƒ…[ƒ|[ƒg‚Ìİ’è
+  // ãƒ“ãƒ¥ãƒ¼ãƒãƒ¼ãƒˆã®è¨­å®š
   glViewport(0, 0, FBOWIDTH, FBOHEIGHT);
   
-  // ƒtƒŒ[ƒ€ƒoƒbƒtƒ@ƒIƒuƒWƒFƒNƒgw’è
+  // ãƒ•ãƒ¬ãƒ¼ãƒ ãƒãƒƒãƒ•ã‚¡ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆæŒ‡å®š
   glBindFramebuffer(GL_FRAMEBUFFER, fb[0]);
   
-  // ‰æ–ÊƒNƒŠƒA
+  // ç”»é¢ã‚¯ãƒªã‚¢
   glClearColor(0.1f, 0.3f, 0.5f, 0.0f);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
   
-  // ƒJƒ‰[ƒoƒbƒtƒ@‚Ö‚ÌƒŒƒ“ƒ_ƒŠƒ“ƒO
+  // ã‚«ãƒ©ãƒ¼ãƒãƒƒãƒ•ã‚¡ã¸ã®ãƒ¬ãƒ³ãƒ€ãƒªãƒ³ã‚°
   glEnable(GL_DEPTH_TEST);
   pass1->loadMatrix(mp, mv * mt * tb.get());
   model->draw();
   
-  // ƒtƒŒ[ƒ€ƒoƒbƒtƒ@ƒIƒuƒWƒFƒNƒgw’è
+  // ãƒ•ãƒ¬ãƒ¼ãƒ ãƒãƒƒãƒ•ã‚¡ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆæŒ‡å®š
   glBindFramebuffer(GL_FRAMEBUFFER, fb[1]);
   
-  // ‰æ–ÊƒNƒŠƒA
+  // ç”»é¢ã‚¯ãƒªã‚¢
   glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
   
-  // ‘¬“xƒoƒbƒtƒ@‚Ö‚ÌƒŒƒ“ƒ_ƒŠƒ“ƒO
+  // é€Ÿåº¦ãƒãƒƒãƒ•ã‚¡ã¸ã®ãƒ¬ãƒ³ãƒ€ãƒªãƒ³ã‚°
   pass2->use(pass1->back(), pass1->front());
   glDrawArrays(GL_TRIANGLES, 0, model->pnum());
   pass2->unuse();
   
-  // ƒoƒbƒtƒ@ƒIƒuƒWƒFƒNƒg‚Ì“ü‚ê‘Ö‚¦
+  // ãƒãƒƒãƒ•ã‚¡ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®å…¥ã‚Œæ›¿ãˆ
   pass1->swapBuffers();
   
-  // ƒtƒŒ[ƒ€ƒoƒbƒtƒ@ƒIƒuƒWƒFƒNƒg‰ğœ
+  // ãƒ•ãƒ¬ãƒ¼ãƒ ãƒãƒƒãƒ•ã‚¡ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆè§£é™¤
   glBindFramebuffer(GL_FRAMEBUFFER, 0);
   
-  // ƒJƒ‰[ƒeƒNƒXƒ`ƒƒ‚Ìg—p
+  // ã‚«ãƒ©ãƒ¼ãƒ†ã‚¯ã‚¹ãƒãƒ£ã®ä½¿ç”¨
   texture0->use(0);
   texture1->use(1);
 
-  // ‰æ–Ê‚¢‚Á‚Ï‚¢‚Ì‹éŒ`‚Ì•`‰æ
+  // ç”»é¢ã„ã£ã±ã„ã®çŸ©å½¢ã®æç”»
   glViewport(vp[0], vp[1], vp[2], vp[3]);
   glDisable(GL_DEPTH_TEST);
   rect->draw();
 
-  // ƒJƒ‰[ƒeƒNƒXƒ`ƒƒ‚Ì‰ğ•ú
+  // ã‚«ãƒ©ãƒ¼ãƒ†ã‚¯ã‚¹ãƒãƒ£ã®è§£æ”¾
   texture0->unuse();
   texture1->unuse();
 
-  // ƒ_ƒuƒ‹ƒoƒbƒtƒ@ƒŠƒ“ƒO
+  // ãƒ€ãƒ–ãƒ«ãƒãƒƒãƒ•ã‚¡ãƒªãƒ³ã‚°
   glutSwapBuffers();
 }
 
 static void resize(int w, int h)
 {
-  // ƒEƒBƒ“ƒhƒE‘S‘Ì‚É•\¦
+  // ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦å…¨ä½“ã«è¡¨ç¤º
   glViewport(vp[0] = 0, vp[1] = 0, vp[2] = w, vp[3] = h);
   
-  // “Š‰e•ÏŠ·s—ñ
+  // æŠ•å½±å¤‰æ›è¡Œåˆ—
   mp.loadPerspective(0.6f, (GLfloat)w / (GLfloat)h, 1.0f, 10.0f);
 
-  // ƒgƒ‰ƒbƒNƒ{[ƒ‹‚·‚é”ÍˆÍ
+  // ãƒˆãƒ©ãƒƒã‚¯ãƒœãƒ¼ãƒ«ã™ã‚‹ç¯„å›²
   tb.region(w, h);
   
-  // Pass 3 ƒVƒF[ƒ_‚Ì—”ƒe[ƒuƒ‹‚Ìì¬
+  // Pass 3 ã‚·ã‚§ãƒ¼ãƒ€ã®ä¹±æ•°ãƒ†ãƒ¼ãƒ–ãƒ«ã®ä½œæˆ
   pass3->size(1.0f / (GLfloat)w, 1.0f / (GLfloat)h);
 }
 
 static void idle(void)
 {
-  // ‰æ–Ê‚Ì•`‚«‘Ö‚¦
+  // ç”»é¢ã®æãæ›¿ãˆ
   glutPostRedisplay();
 }
 
 static void pick(GLfloat *pw, GLint x, GLint y, GLfloat z, const GgMatrix &mc)
 {
-  // ƒNƒŠƒbƒsƒ“ƒO‹óŠÔ’†‚ÌÀ•W’l
+  // ã‚¯ãƒªãƒƒãƒ”ãƒ³ã‚°ç©ºé–“ä¸­ã®åº§æ¨™å€¤
   GLfloat pc[] =
   {
     (GLfloat)x * 2.0f / (GLfloat)FBOWIDTH -  1.0f,
@@ -139,14 +139,14 @@ static void pick(GLfloat *pw, GLint x, GLint y, GLfloat z, const GgMatrix &mc)
     1.0f,
   };
 
-  // ƒ[ƒ‹ƒh‹óŠÔ’†‚ÌÀ•W’l
+  // ãƒ¯ãƒ¼ãƒ«ãƒ‰ç©ºé–“ä¸­ã®åº§æ¨™å€¤
   mc.projection(pw, pc);
 }
 
 static GLfloat p0[4], z0;
 static GgMatrix mt0, imc;
 
-// ‰Ÿ‚³‚ê‚Ä‚¢‚éƒ{ƒ^ƒ“
+// æŠ¼ã•ã‚Œã¦ã„ã‚‹ãƒœã‚¿ãƒ³
 static int press = -1;
 
 static void mouse(int button, int state, int x, int y)
@@ -155,44 +155,44 @@ static void mouse(int button, int state, int x, int y)
   
   if (state == GLUT_DOWN)
   {
-    // ƒrƒ…[ƒ|[ƒgã‚ÌƒNƒŠƒbƒNˆÊ’u‚É’¼‚·
+    // ãƒ“ãƒ¥ãƒ¼ãƒãƒ¼ãƒˆä¸Šã®ã‚¯ãƒªãƒƒã‚¯ä½ç½®ã«ç›´ã™
     GLint x0 = x - vp[0];
     GLint y0 = vp[3] - vp[1] - y;
 
-    // ƒtƒŒ[ƒ€ƒoƒbƒtƒ@ƒIƒuƒWƒFƒNƒgã‚ÌƒNƒŠƒbƒNˆÊ’u‚É’¼‚·
+    // ãƒ•ãƒ¬ãƒ¼ãƒ ãƒãƒƒãƒ•ã‚¡ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆä¸Šã®ã‚¯ãƒªãƒƒã‚¯ä½ç½®ã«ç›´ã™
     x0 = (GLint)((GLfloat)x0 * (GLfloat)FBOWIDTH / (GLfloat)vp[2] + 0.5f);
     y0 = (GLint)((GLfloat)y0 * (GLfloat)FBOHEIGHT / (GLfloat)vp[3] + 0.5f);
 
-    // ƒNƒŠƒbƒN‚µ‚½‚Æ‚±‚ë‚Ì[“x’l‚ğ“Ç‚Ş
+    // ã‚¯ãƒªãƒƒã‚¯ã—ãŸã¨ã“ã‚ã®æ·±åº¦å€¤ã‚’èª­ã‚€
     glBindFramebuffer(GL_FRAMEBUFFER, fb[0]);
     glReadPixels(x0, y0, 1, 1, GL_DEPTH_COMPONENT, GL_FLOAT, &z0);
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
-    // ”wŒi‚Å‚È‚¢‚Æ‚«
+    // èƒŒæ™¯ã§ãªã„ã¨ã
     if (z0 < 1.0f)
     {
       switch (press)
       {
       case GLUT_LEFT_BUTTON:
-        // •½sˆÚ“®ŠJn
+        // å¹³è¡Œç§»å‹•é–‹å§‹
         imc.loadInvert(mp * mv);
         pick(p0, x0, y0, z0, imc);
         mt0 = mt;
         break;
       case GLUT_RIGHT_BUTTON:
-        // ƒgƒ‰ƒbƒNƒ{[ƒ‹ŠJn
+        // ãƒˆãƒ©ãƒƒã‚¯ãƒœãƒ¼ãƒ«é–‹å§‹
         tb.start(x, y);
         break;
       default:
         break;
       }
       
-      // ƒAƒjƒ[ƒVƒ‡ƒ“ŠJn
+      // ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³é–‹å§‹
       glutIdleFunc(idle);
     }
     else
     {
-      // ƒNƒŠƒbƒN‚µ‚È‚©‚Á‚½‚±‚Æ‚É‚·‚é
+      // ã‚¯ãƒªãƒƒã‚¯ã—ãªã‹ã£ãŸã“ã¨ã«ã™ã‚‹
       press = -1;
     }
   }
@@ -201,17 +201,17 @@ static void mouse(int button, int state, int x, int y)
     switch (press)
     {
     case GLUT_LEFT_BUTTON:
-      // •½sˆÚ“®I—¹
+      // å¹³è¡Œç§»å‹•çµ‚äº†
       break;
     case GLUT_RIGHT_BUTTON:
-      // ƒgƒ‰ƒbƒNƒ{[ƒ‹I—¹
+      // ãƒˆãƒ©ãƒƒã‚¯ãƒœãƒ¼ãƒ«çµ‚äº†
       tb.stop(x, y);
       break;
     default:
       break;
     }
     
-    // ƒAƒjƒ[ƒVƒ‡ƒ“’â~
+    // ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³åœæ­¢
     glutIdleFunc(0);
   }
 }
@@ -225,21 +225,21 @@ static void motion(int x, int y)
   switch (press)
   {
   case GLUT_LEFT_BUTTON:
-    // ƒrƒ…[ƒ|[ƒgã‚ÌƒNƒŠƒbƒNˆÊ’u‚É’¼‚·
+    // ãƒ“ãƒ¥ãƒ¼ãƒãƒ¼ãƒˆä¸Šã®ã‚¯ãƒªãƒƒã‚¯ä½ç½®ã«ç›´ã™
     x0 = x - vp[0];
     y0 = vp[3] - vp[1] - y;
 
-    // ƒtƒŒ[ƒ€ƒoƒbƒtƒ@ƒIƒuƒWƒFƒNƒgã‚ÌƒNƒŠƒbƒNˆÊ’u‚É’¼‚·
+    // ãƒ•ãƒ¬ãƒ¼ãƒ ãƒãƒƒãƒ•ã‚¡ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆä¸Šã®ã‚¯ãƒªãƒƒã‚¯ä½ç½®ã«ç›´ã™
     x0 = (GLint)((GLfloat)x0 * (GLfloat)FBOWIDTH / (GLfloat)vp[2] + 0.5f);
     y0 = (GLint)((GLfloat)y0 * (GLfloat)FBOHEIGHT / (GLfloat)vp[3] + 0.5f);
 
-    // ƒNƒŠƒbƒNˆÊ’u‚Ì‰œs‚«‚ğ•½sˆÚ“®
+    // ã‚¯ãƒªãƒƒã‚¯ä½ç½®ã®å¥¥è¡Œãã‚’å¹³è¡Œç§»å‹•
     pick(p1, x0, y0, z0, imc);
     mt1.loadTranslate(p1[0] / p1[3] - p0[0] / p0[3], p1[1] / p1[3] - p0[1] / p0[3], 0.0f);
     mt = mt0 * mt1;
     break;
   case GLUT_RIGHT_BUTTON:
-    // ƒgƒ‰ƒbƒNƒ{[ƒ‹‰ñ“]
+    // ãƒˆãƒ©ãƒƒã‚¯ãƒœãƒ¼ãƒ«å›è»¢
     tb.motion(x, y);
     break;
   default:
@@ -251,7 +251,7 @@ static void keyboard(unsigned char key, int kx, int ky)
 {
   switch (key)
   {
-    // ESC ‚© q ‚© Q ‚ğƒ^ƒCƒv‚µ‚½‚çI—¹
+    // ESC ã‹ q ã‹ Q ã‚’ã‚¿ã‚¤ãƒ—ã—ãŸã‚‰çµ‚äº†
     case 'Q':
     case 'q':
     case '\033':
@@ -269,52 +269,52 @@ static void leave(void)
 
 static void init(void)
 {
-  // ƒQ[ƒ€ƒOƒ‰ƒtƒBƒbƒNƒX“Á˜_‚Ì“s‡‚É‚à‚Æ‚Ã‚­‰Šú‰»
+  // ã‚²ãƒ¼ãƒ ã‚°ãƒ©ãƒ•ã‚£ãƒƒã‚¯ã‚¹ç‰¹è«–ã®éƒ½åˆã«ã‚‚ã¨ã¥ãåˆæœŸåŒ–
   ggInit();
   
-  // Pass 1 ƒVƒF[ƒ_ƒvƒƒOƒ‰ƒ€‚Ì“Ç‚İ‚İ
+  // Pass 1 ã‚·ã‚§ãƒ¼ãƒ€ãƒ—ãƒ­ã‚°ãƒ©ãƒ ã®èª­ã¿è¾¼ã¿
   pass1 = new GgPass1Shader("pass1.vert", "pass1.frag");
 
-  // ŒõŒ¹
+  // å…‰æº
   pass1->setLightPosition(3.0f, 4.0f, 5.0f);
   pass1->setLightAmbient(0.2f, 0.2f, 0.2f);
   pass1->setLightDiffuse(1.0f, 1.0f, 1.0f);
   pass1->setLightSpecular(1.0f, 1.0f, 1.0f);
 
-  // Ş¿
+  // æè³ª
   pass1->setMaterialAmbient(0.8f, 0.6f, 0.6f);
   pass1->setMaterialDiffuse(0.8f, 0.6f, 0.6f);
   pass1->setMaterialSpecular(0.2f, 0.2f, 0.2f);
   pass1->setMaterialShininess(50.0f);
   
-  // OBJ ƒtƒ@ƒCƒ‹‚Ì“Ç‚İ‚İ
+  // OBJ ãƒ•ã‚¡ã‚¤ãƒ«ã®èª­ã¿è¾¼ã¿
   model = ggArraysObj("model.dat");
   model->attachShader(pass1);
   
-  // transform feedback buffer ‚ğŠm•Û‚µ‚Ä‰Šú’l‚ğİ’è‚·‚é
+  // transform feedback buffer ã‚’ç¢ºä¿ã—ã¦åˆæœŸå€¤ã‚’è¨­å®šã™ã‚‹
   pass1->createBuffer(model->pnum());
     
-  // Pass 2 ƒVƒF[ƒ_ƒvƒƒOƒ‰ƒ€‚Ì“Ç‚İ‚İ
+  // Pass 2 ã‚·ã‚§ãƒ¼ãƒ€ãƒ—ãƒ­ã‚°ãƒ©ãƒ ã®èª­ã¿è¾¼ã¿
   pass2 = new GgPass2Shader("pass2.vert", "pass2.frag", "pass2.geom", GL_TRIANGLES, GL_TRIANGLE_STRIP, 80);
 
-  // Pass 3 ƒVƒF[ƒ_ƒvƒƒOƒ‰ƒ€‚Ì“Ç‚İ‚İ
+  // Pass 3 ã‚·ã‚§ãƒ¼ãƒ€ãƒ—ãƒ­ã‚°ãƒ©ãƒ ã®èª­ã¿è¾¼ã¿
   pass3 = new GgPass3Shader("pass3.vert", "pass3.frag");
 
-  // ‰æ–Ê‚¢‚Á‚Ï‚¢‚Ìƒ|ƒŠƒSƒ“‚Ì¶¬
+  // ç”»é¢ã„ã£ã±ã„ã®ãƒãƒªã‚´ãƒ³ã®ç”Ÿæˆ
   rect = ggRectangle(2.0f, 2.0f);
   rect->attachShader(pass3);
   
-  // ‹–ì•ÏŠ·s—ñ
+  // è¦–é‡å¤‰æ›è¡Œåˆ—
   mv.loadLookat(0.0f, 0.0f, 3.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f);
   
-  // •½sˆÚ“®
+  // å¹³è¡Œç§»å‹•
   mt.loadIdentity();
   
-  // ƒeƒNƒXƒ`ƒƒ
+  // ãƒ†ã‚¯ã‚¹ãƒãƒ£
   texture0 = new GgTexture(FBOWIDTH, FBOHEIGHT, GL_RGBA);
   texture1 = new GgTexture(FBOWIDTH, FBOHEIGHT, GL_RGBA32F);
 
-  // ƒŒƒ“ƒ_[ƒoƒbƒtƒ@
+  // ãƒ¬ãƒ³ãƒ€ãƒ¼ãƒãƒƒãƒ•ã‚¡
   GLuint rb[2];
   glGenRenderbuffers(2, rb);
   glBindRenderbuffer(GL_RENDERBUFFER, rb[0]);
@@ -323,7 +323,7 @@ static void init(void)
   glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, FBOWIDTH, FBOHEIGHT);
   glBindRenderbuffer(GL_RENDERBUFFER, 0);
 
-  // ƒtƒŒ[ƒ€ƒoƒbƒtƒ@ƒIƒuƒWƒFƒNƒg
+  // ãƒ•ãƒ¬ãƒ¼ãƒ ãƒãƒƒãƒ•ã‚¡ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ
   glGenFramebuffers(2, fb);
   glBindFramebuffer(GL_FRAMEBUFFER, fb[0]);
   glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture0->get(), 0);
@@ -333,10 +333,10 @@ static void init(void)
   glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, rb[1]);
   glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
-  // ‰Šúİ’è
+  // åˆæœŸè¨­å®š
   glEnable(GL_CULL_FACE);
   
-  // Œãn––
+  // å¾Œå§‹æœ«
   atexit(leave);
 }
 

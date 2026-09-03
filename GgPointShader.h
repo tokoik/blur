@@ -1,8 +1,8 @@
-#ifndef __GG_POINTSHADER_H__
+ï»¿#ifndef __GG_POINTSHADER_H__
 #define __GG_POINTSHADER_H__
 
 /*
-** ƒ|ƒCƒ“ƒg
+** ãƒã‚¤ãƒ³ãƒˆ
 */
 #include "gg.h"
 
@@ -12,35 +12,35 @@ namespace gg
   class GgPointShader
     : public GgShader
   {
-    // •ÏŠ·
+    // å¤‰æ›
     struct
     {
-      GLfloat c[16];    // ƒ‚ƒfƒ‹ƒrƒ…[E“Š‰e•ÏŠ·s—ñ
+      GLfloat c[16];    // ãƒ¢ãƒ‡ãƒ«ãƒ“ãƒ¥ãƒ¼ãƒ»æŠ•å½±å¤‰æ›è¡Œåˆ—
       void loadModelViewProjectionMatrix(const GgMatrix &m)
       {
         for (int i = 0; i < 16; ++i) c[i] = m.get()[i];
       }
-      GLfloat w[16];    // ƒ‚ƒfƒ‹ƒrƒ…[•ÏŠ·s—ñ
+      GLfloat w[16];    // ãƒ¢ãƒ‡ãƒ«ãƒ“ãƒ¥ãƒ¼å¤‰æ›è¡Œåˆ—
       void loadModelViewMatrix(const GgMatrix &m)
       {
         for (int i = 0; i < 16; ++i) w[i] = m.get()[i];
       }
     } m;
 
-    // êŠ
+    // å ´æ‰€
     struct
     {
-      GLint pv;         // ˆÊ’u‚Ì attribute •Ï”‚ÌêŠ
-      GLint mc;         // ƒ‚ƒfƒ‹ƒrƒ…[E“Š‰e•ÏŠ·s—ñ‚Ì uniform •Ï”‚ÌêŠ
-      GLint mw;         // ƒ‚ƒfƒ‹ƒrƒ…[•ÏŠ·s—ñ‚Ì uniform •Ï”‚ÌêŠ
+      GLint pv;         // ä½ç½®ã® attribute å¤‰æ•°ã®å ´æ‰€
+      GLint mc;         // ãƒ¢ãƒ‡ãƒ«ãƒ“ãƒ¥ãƒ¼ãƒ»æŠ•å½±å¤‰æ›è¡Œåˆ—ã® uniform å¤‰æ•°ã®å ´æ‰€
+      GLint mw;         // ãƒ¢ãƒ‡ãƒ«ãƒ“ãƒ¥ãƒ¼å¤‰æ›è¡Œåˆ—ã® uniform å¤‰æ•°ã®å ´æ‰€
     } loc;
 
   public:
 
-    // ƒfƒXƒgƒ‰ƒNƒ^
+    // ãƒ‡ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
     virtual ~GgPointShader(void) {}
 
-    // ƒRƒ“ƒXƒgƒ‰ƒNƒ^
+    // ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
     GgPointShader(void) {}
     GgPointShader(const char *vert, const char *frag = 0,
       const char *geom = 0, GLenum input = GL_POINTS, GLenum output = GL_TRIANGLE_STRIP, GLint vertices = 0,
@@ -48,7 +48,7 @@ namespace gg
     GgPointShader(const GgPointShader &o)
       : GgShader(o), m(o.m), loc(o.loc) {}
 
-    // ‘ã“ü
+    // ä»£å…¥
     GgPointShader &operator=(const GgPointShader &o)
     {
       if (&o != this)
@@ -60,13 +60,13 @@ namespace gg
       return *this;
     }
 
-    // ƒVƒF[ƒ_‚Ìg—pŠJn
+    // ã‚·ã‚§ãƒ¼ãƒ€ã®ä½¿ç”¨é–‹å§‹
     virtual void use(GLuint vert, ...) const;
 
-    // ƒVƒF[ƒ_‚Ìg—pI—¹
+    // ã‚·ã‚§ãƒ¼ãƒ€ã®ä½¿ç”¨çµ‚äº†
     virtual void unuse(void) const;
 
-    // •ÏŠ·
+    // å¤‰æ›
     virtual void loadMatrix(const GgMatrix &mp, const GgMatrix &mw);
     virtual void loadMatrix(const GLfloat *mp, const GLfloat *mw);
   };

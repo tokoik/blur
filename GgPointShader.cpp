@@ -1,5 +1,5 @@
-/*
-** “_‚ğ‹…‚Æ‚µ‚Ä•\¦‚·‚é
+ï»¿/*
+** ç‚¹ã‚’çƒã¨ã—ã¦è¡¨ç¤ºã™ã‚‹
 */
 #include "GgPointShader.h"
 
@@ -8,42 +8,42 @@ gg::GgPointShader::GgPointShader(const char *vert, const char *frag,
   GLint nvarying, const char **varyings)
   : GgShader(vert, frag, geom, input, output, vertices, nvarying, varyings)
 {
-  // ƒvƒƒOƒ‰ƒ€–¼
+  // ãƒ—ãƒ­ã‚°ãƒ©ãƒ å
   GLuint program = get();
 
-  // ˆÊ’u‚Ì attribute •Ï”‚ÌêŠ
+  // ä½ç½®ã® attribute å¤‰æ•°ã®å ´æ‰€
   loc.pv = glGetAttribLocation(program, "pv");
 
-  // •ÏŠ·s—ñ‚Ì uniform •Ï”‚ÌêŠ
+  // å¤‰æ›è¡Œåˆ—ã® uniform å¤‰æ•°ã®å ´æ‰€
   loc.mc = glGetUniformLocation(program, "mc");
   loc.mw = glGetUniformLocation(program, "mw");
 }
 
 void gg::GgPointShader::use(GLuint vert, ...) const
 {
-  // Šî’êƒNƒ‰ƒX‚ÌƒVƒF[ƒ_‚Ìİ’è‚ğŒÄ‚Ño‚·
+  // åŸºåº•ã‚¯ãƒ©ã‚¹ã®ã‚·ã‚§ãƒ¼ãƒ€ã®è¨­å®šã‚’å‘¼ã³å‡ºã™
   GgShader::use(0);
 
-  // •ÏŠ·
+  // å¤‰æ›
   glUniformMatrix4fv(loc.mc, 1, GL_FALSE, m.c);
   glUniformMatrix4fv(loc.mw, 1, GL_FALSE, m.w);
 
-  // ƒoƒbƒtƒ@ƒIƒuƒWƒFƒNƒg vert ‚ğ’¸“_‘®«‚Ég—p‚·‚é
+  // ãƒãƒƒãƒ•ã‚¡ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ vert ã‚’é ‚ç‚¹å±æ€§ã«ä½¿ç”¨ã™ã‚‹
   glBindBuffer(GL_ARRAY_BUFFER, vert);
 
-  // attribute •Ï” pv ‚ğƒoƒbƒtƒ@ƒIƒuƒWƒFƒNƒg‚©‚ç“¾‚é‚±‚Æ‚ğ—LŒø‚É‚·‚é
+  // attribute å¤‰æ•° pv ã‚’ãƒãƒƒãƒ•ã‚¡ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‹ã‚‰å¾—ã‚‹ã“ã¨ã‚’æœ‰åŠ¹ã«ã™ã‚‹
   glEnableVertexAttribArray(loc.pv);
 
-  // attribute •Ï” pv ‚Æƒoƒbƒtƒ@ƒIƒuƒWƒFƒNƒg‚ğŒ‹‚Ñ‚Â‚¯‚é
+  // attribute å¤‰æ•° pv ã¨ãƒãƒƒãƒ•ã‚¡ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’çµã³ã¤ã‘ã‚‹
   glVertexAttribPointer(loc.pv, 3, GL_FLOAT, GL_FALSE, 0, 0);
 }
 
 void gg::GgPointShader::unuse(void) const
 {
-  // attribute •Ï” pv ‚ğƒoƒbƒtƒ@ƒIƒuƒWƒFƒNƒg‚©‚ç“¾‚é‚±‚Æ‚ğ–³Œø‚É‚·‚é
+  // attribute å¤‰æ•° pv ã‚’ãƒãƒƒãƒ•ã‚¡ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‹ã‚‰å¾—ã‚‹ã“ã¨ã‚’ç„¡åŠ¹ã«ã™ã‚‹
   glDisableVertexAttribArray(loc.pv);
 
-  // Šî’êƒNƒ‰ƒX‚ÌƒVƒF[ƒ_‚Ìİ’è‚ğŒÄ‚Ño‚·
+  // åŸºåº•ã‚¯ãƒ©ã‚¹ã®ã‚·ã‚§ãƒ¼ãƒ€ã®è¨­å®šã‚’å‘¼ã³å‡ºã™
   GgShader::unuse();
 }
 

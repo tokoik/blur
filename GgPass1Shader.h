@@ -1,8 +1,8 @@
-#ifndef __GG_Pass1Shader_H__
+ï»¿#ifndef __GG_Pass1Shader_H__
 #define __GG_Pass1Shader_H__
 
 /*
-** ƒ‚[ƒVƒ‡ƒ“ƒuƒ‰[ (Pass 1)
+** ãƒ¢ãƒ¼ã‚·ãƒ§ãƒ³ãƒ–ãƒ©ãƒ¼ (Pass 1)
 */
 #include "GgSimpleShader.h"
 
@@ -11,37 +11,37 @@ namespace gg
   class GgPass1Shader
     : public GgSimpleShader
   {
-    // feedback buffer ‚Ì varying •Ï”–¼
+    // feedback buffer ã® varying å¤‰æ•°å
     static const char *varyings[];
     
-    // ƒoƒbƒtƒ@ƒIƒuƒWƒFƒNƒg
+    // ãƒãƒƒãƒ•ã‚¡ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ
     struct
     {
-      // feedback buffer ‚Ég‚¤ƒoƒbƒtƒ@ƒIƒuƒWƒFƒNƒg
+      // feedback buffer ã«ä½¿ã†ãƒãƒƒãƒ•ã‚¡ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ
       GgBuffer<GLfloat[4]> fb[2];
 
-      // feedback buffer ‚Ì‘I‘ğ
+      // feedback buffer ã®é¸æŠ
       unsigned int select;
     } b;
     
   public:
     
-    // ƒfƒXƒgƒ‰ƒNƒ^
+    // ãƒ‡ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
     virtual ~GgPass1Shader(void) {}
     
-    // ƒRƒ“ƒXƒgƒ‰ƒNƒ^
+    // ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
     GgPass1Shader(void) {}
     GgPass1Shader(const char *vert, const char *frag = 0,
       const char *geom = 0, GLenum input = GL_TRIANGLES, GLenum output = GL_TRIANGLE_STRIP, GLint vertices = 0)
       : GgSimpleShader(vert, frag, geom, input, output, vertices, 1, varyings)
     {
-      // Å‰‚Ég—p‚·‚éƒoƒbƒtƒ@
+      // æœ€åˆã«ä½¿ç”¨ã™ã‚‹ãƒãƒƒãƒ•ã‚¡
       b.select = 0;
     }
     GgPass1Shader(const GgPass1Shader &o)
       : GgSimpleShader(o), b(o.b) {}
     
-    // ‘ã“ü
+    // ä»£å…¥
     GgPass1Shader &operator=(const GgPass1Shader &o)
     {
       if (&o != this)
@@ -52,34 +52,34 @@ namespace gg
       return *this;
     }
 
-    // ƒVƒF[ƒ_‚Ìg—pŠJn
+    // ã‚·ã‚§ãƒ¼ãƒ€ã®ä½¿ç”¨é–‹å§‹
     virtual void use(GLuint vert, ...) const;
     
-    // ƒVƒF[ƒ_‚Ìg—pI—¹
+    // ã‚·ã‚§ãƒ¼ãƒ€ã®ä½¿ç”¨çµ‚äº†
     virtual void unuse(void) const;
     
-    // ƒoƒbƒtƒ@ƒIƒuƒWƒFƒNƒgŠm•Û
+    // ãƒãƒƒãƒ•ã‚¡ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆç¢ºä¿
     void createBuffer(GLuint num);
     
-    // ƒtƒB[ƒhƒoƒbƒNƒoƒbƒtƒ@ƒIƒuƒWƒFƒNƒg‚Ì‘I‘ğ
+    // ãƒ•ã‚£ãƒ¼ãƒ‰ãƒãƒƒã‚¯ãƒãƒƒãƒ•ã‚¡ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®é¸æŠ
     void selectBuffer(unsigned int frame)
     {
       b.select = frame & 1;
     }
     
-    // ƒtƒB[ƒhƒoƒbƒNƒoƒbƒtƒ@ƒIƒuƒWƒFƒNƒg‚Ì‘I‘ğ
+    // ãƒ•ã‚£ãƒ¼ãƒ‰ãƒãƒƒã‚¯ãƒãƒƒãƒ•ã‚¡ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®é¸æŠ
     void swapBuffers(void)
     {
       b.select = 1 - b.select;
     }
 
-    // ƒtƒƒ“ƒgƒoƒbƒtƒ@‚Ìƒoƒbƒtƒ@ƒIƒuƒWƒFƒNƒg
+    // ãƒ•ãƒ­ãƒ³ãƒˆãƒãƒƒãƒ•ã‚¡ã®ãƒãƒƒãƒ•ã‚¡ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ
     GLuint front(void)
     {
       return b.fb[b.select].buf();
     }
 
-    // ƒoƒbƒNƒoƒbƒtƒ@‚Ìƒoƒbƒtƒ@ƒIƒuƒWƒFƒNƒg
+    // ãƒãƒƒã‚¯ãƒãƒƒãƒ•ã‚¡ã®ãƒãƒƒãƒ•ã‚¡ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ
     GLuint back(void)
     {
       return b.fb[1 - b.select].buf();

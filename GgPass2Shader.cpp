@@ -1,5 +1,5 @@
-/*
-** ƒ‚[ƒVƒ‡ƒ“ƒuƒ‰[ (Pass 2)
+ï»¿/*
+** ãƒ¢ãƒ¼ã‚·ãƒ§ãƒ³ãƒ–ãƒ©ãƒ¼ (Pass 2)
 */
 #include <cstdarg>
 
@@ -9,13 +9,13 @@ gg::GgPass2Shader::GgPass2Shader(const char *vert, const char *frag,
   const char *geom, GLenum input, GLenum output, GLint vertices)
   : GgShader(vert, frag, geom, input, output, vertices)
 {
-  // ƒvƒƒOƒ‰ƒ€–¼
+  // ãƒ—ãƒ­ã‚°ãƒ©ãƒ å
   GLuint program = get();
 
-  // ˆÈ‘O‚Ì’¸“_‚ÌƒXƒNƒŠ[ƒ“ã‚ÌˆÊ’u p1 ‚Ì attribute •Ï”‚ÌêŠ
+  // ä»¥å‰ã®é ‚ç‚¹ã®ã‚¹ã‚¯ãƒªãƒ¼ãƒ³ä¸Šã®ä½ç½® p1 ã® attribute å¤‰æ•°ã®å ´æ‰€
   loc.p0 = glGetAttribLocation(program, "p0");
 
-  // Œ»İ‚Ì’¸“_‚ÌƒXƒNƒŠ[ƒ“ã‚ÌˆÊ’u p1 ‚Ì attribute •Ï”‚ÌêŠ
+  // ç¾åœ¨ã®é ‚ç‚¹ã®ã‚¹ã‚¯ãƒªãƒ¼ãƒ³ä¸Šã®ä½ç½® p1 ã® attribute å¤‰æ•°ã®å ´æ‰€
   loc.p1 = glGetAttribLocation(program, "p1");
 }
 
@@ -26,36 +26,36 @@ void gg::GgPass2Shader::use(GLuint vert, ...) const
   const GLuint p1 = va_arg(list, GLuint);
   va_end(list);
 
-  // Šî’êƒNƒ‰ƒX‚ÌƒVƒF[ƒ_‚Ìİ’è‚ğŒÄ‚Ño‚·
+  // åŸºåº•ã‚¯ãƒ©ã‚¹ã®ã‚·ã‚§ãƒ¼ãƒ€ã®è¨­å®šã‚’å‘¼ã³å‡ºã™
   GgShader::use(0);
 
-  // ’¸“_‘®«‚Éƒoƒbƒtƒ@ƒIƒuƒWƒFƒNƒg vert ‚ğg—p‚·‚é
+  // é ‚ç‚¹å±æ€§ã«ãƒãƒƒãƒ•ã‚¡ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ vert ã‚’ä½¿ç”¨ã™ã‚‹
   glBindBuffer(GL_ARRAY_BUFFER, vert);
 
-  // attribute •Ï” p0 ‚ğƒoƒbƒtƒ@ƒIƒuƒWƒFƒNƒg‚©‚ç“¾‚é‚±‚Æ‚ğ—LŒø‚É‚·‚é
+  // attribute å¤‰æ•° p0 ã‚’ãƒãƒƒãƒ•ã‚¡ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‹ã‚‰å¾—ã‚‹ã“ã¨ã‚’æœ‰åŠ¹ã«ã™ã‚‹
   glEnableVertexAttribArray(loc.p0);
 
-  // attribute •Ï” p0 ‚Æƒoƒbƒtƒ@ƒIƒuƒWƒFƒNƒg‚ğŒ‹‚Ñ‚Â‚¯‚é
+  // attribute å¤‰æ•° p0 ã¨ãƒãƒƒãƒ•ã‚¡ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’çµã³ã¤ã‘ã‚‹
   glVertexAttribPointer(loc.p0, 4, GL_FLOAT, GL_FALSE, 0, 0);
 
-  // ’¸“_‘®«‚Éƒoƒbƒtƒ@ƒIƒuƒWƒFƒNƒg p1 ‚ğg—p‚·‚é
+  // é ‚ç‚¹å±æ€§ã«ãƒãƒƒãƒ•ã‚¡ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ p1 ã‚’ä½¿ç”¨ã™ã‚‹
   glBindBuffer(GL_ARRAY_BUFFER, p1);
 
-  // attribute •Ï” p1 ‚ğƒoƒbƒtƒ@ƒIƒuƒWƒFƒNƒg‚©‚ç“¾‚é‚±‚Æ‚ğ—LŒø‚É‚·‚é
+  // attribute å¤‰æ•° p1 ã‚’ãƒãƒƒãƒ•ã‚¡ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‹ã‚‰å¾—ã‚‹ã“ã¨ã‚’æœ‰åŠ¹ã«ã™ã‚‹
   glEnableVertexAttribArray(loc.p1);
 
-  // attribute •Ï” p1 ‚Æƒoƒbƒtƒ@ƒIƒuƒWƒFƒNƒg‚ğŒ‹‚Ñ‚Â‚¯‚é
+  // attribute å¤‰æ•° p1 ã¨ãƒãƒƒãƒ•ã‚¡ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’çµã³ã¤ã‘ã‚‹
   glVertexAttribPointer(loc.p1, 4, GL_FLOAT, GL_FALSE, 0, 0);
 }
 
 void gg::GgPass2Shader::unuse(void) const
 {
-  // attribute •Ï” p0 ‚ğƒoƒbƒtƒ@ƒIƒuƒWƒFƒNƒg‚©‚ç“¾‚é‚±‚Æ‚ğ–³Œø‚É‚·‚é
+  // attribute å¤‰æ•° p0 ã‚’ãƒãƒƒãƒ•ã‚¡ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‹ã‚‰å¾—ã‚‹ã“ã¨ã‚’ç„¡åŠ¹ã«ã™ã‚‹
   glDisableVertexAttribArray(loc.p0);
 
-  // attribute •Ï” p1 ‚ğƒoƒbƒtƒ@ƒIƒuƒWƒFƒNƒg‚©‚ç“¾‚é‚±‚Æ‚ğ–³Œø‚É‚·‚é
+  // attribute å¤‰æ•° p1 ã‚’ãƒãƒƒãƒ•ã‚¡ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‹ã‚‰å¾—ã‚‹ã“ã¨ã‚’ç„¡åŠ¹ã«ã™ã‚‹
   glDisableVertexAttribArray(loc.p1);
 
-  // Šî’êƒNƒ‰ƒX‚ÌƒVƒF[ƒ_‚Ìİ’è‚ğŒÄ‚Ño‚·
+  // åŸºåº•ã‚¯ãƒ©ã‚¹ã®ã‚·ã‚§ãƒ¼ãƒ€ã®è¨­å®šã‚’å‘¼ã³å‡ºã™
   GgShader::unuse();
 }

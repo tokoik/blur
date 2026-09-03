@@ -1,27 +1,27 @@
 #version 120
 
-// ˜IŒõŠÔ”ä
+// éœ²å…‰æ™‚é–“æ¯”
 const float exp_rate = 0.8;
 
-// ˜IŒõ’x‰„
+// éœ²å…‰é…å»¶
 const float exp_delay = 0.3;
 
-// ƒTƒ“ƒvƒŠƒ“ƒO”
+// ã‚µãƒ³ãƒ—ãƒªãƒ³ã‚°æ•°
 const int samples = 16;
 
-// —”
+// ä¹±æ•°
 uniform vec2 rn[16];
 
-// Fƒoƒbƒtƒ@
+// è‰²ãƒãƒƒãƒ•ã‚¡
 uniform sampler2D texture0;
 
-// ‘¬“xƒoƒbƒtƒ@
+// é€Ÿåº¦ãƒãƒƒãƒ•ã‚¡
 uniform sampler2D texture1;
 
-// ƒXƒNƒŠ[ƒ“ã‚ÌˆÊ’u
+// ã‚¹ã‚¯ãƒªãƒ¼ãƒ³ä¸Šã®ä½ç½®
 varying vec2 t;
 
-// v •ûŒü‚Ì n ‰æ‘f‚ÌF‚Ì•½‹Ï‚ğ‹‚ß‚é
+// v æ–¹å‘ã® n ç”»ç´ ã®è‰²ã®å¹³å‡ã‚’æ±‚ã‚ã‚‹
 vec4 average(in vec2 v, in int n)
 {
   vec4 c = vec4(0.0);
@@ -40,12 +40,12 @@ void main(void)
 
   if (v.a != 0.0)
   {
-    // ƒtƒ‰ƒOƒƒ“ƒg‚ªƒIƒuƒWƒFƒNƒgã‚È‚ç‚»‚±‚ğ‚Ú‚©‚·
+    // ãƒ•ãƒ©ã‚°ãƒ¡ãƒ³ãƒˆãŒã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆä¸Šãªã‚‰ãã“ã‚’ã¼ã‹ã™
     gl_FragColor = average(v.xy, samples);
   }
   else
   {
-    // ƒtƒ‰ƒOƒƒ“ƒg‚ªƒIƒuƒWƒFƒNƒgã‚Å‚È‚¯‚ê‚Î”wŒiF‚Æ‚·‚é
+    // ãƒ•ãƒ©ã‚°ãƒ¡ãƒ³ãƒˆãŒã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆä¸Šã§ãªã‘ã‚Œã°èƒŒæ™¯è‰²ã¨ã™ã‚‹
     gl_FragColor = texture2D(texture0, t);
   }
 }

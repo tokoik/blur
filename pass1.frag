@@ -1,12 +1,12 @@
 #version 120
 
-// ”½ËŒõ‹­“x
-varying vec4 iamb;	// ŠÂ‹«Œõ‚Ì”½ËŒõ
-varying vec4 idiff;	// ŠgU”½ËŒõ
-varying vec4 ispec;	// ‹¾–Ê”½ËŒõ
+// åå°„å…‰å¼·åº¦
+varying vec4 iamb;	// ç’°å¢ƒå…‰ã®åå°„å…‰
+varying vec4 idiff;	// æ‹¡æ•£åå°„å…‰
+varying vec4 ispec;	// é¡é¢åå°„å…‰
 
 void main(void)
 {
-  // Fƒoƒbƒtƒ@‚Ö‚Ì‘‚«‚İ
+  // è‰²ãƒãƒƒãƒ•ã‚¡ã¸ã®æ›¸ãè¾¼ã¿
   gl_FragColor = iamb + idiff + ispec;
 }

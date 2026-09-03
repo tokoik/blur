@@ -1,5 +1,5 @@
-/*
-** ƒ‚[ƒVƒ‡ƒ“ƒuƒ‰[ (Pass 1)
+ï»¿/*
+** ãƒ¢ãƒ¼ã‚·ãƒ§ãƒ³ãƒ–ãƒ©ãƒ¼ (Pass 1)
 */
 #include <cstdarg>
 
@@ -14,28 +14,28 @@ void gg::GgPass1Shader::use(GLuint vert, ...) const
   const GLuint norm = va_arg(list, GLuint);
   va_end(list);
   
-  // Šî’êƒNƒ‰ƒX‚ÌƒVƒF[ƒ_‚Ìİ’è‚ğŒÄ‚Ño‚·
+  // åŸºåº•ã‚¯ãƒ©ã‚¹ã®ã‚·ã‚§ãƒ¼ãƒ€ã®è¨­å®šã‚’å‘¼ã³å‡ºã™
   GgSimpleShader::use(vert, norm);
   
-  // ƒtƒB[ƒhƒoƒbƒN‚Ìƒ^[ƒQƒbƒg‚Æ‚È‚éƒoƒbƒtƒ@ƒIƒuƒWƒFƒNƒg‚ğ‘I‘ğ‚·‚é
+  // ãƒ•ã‚£ãƒ¼ãƒ‰ãƒãƒƒã‚¯ã®ã‚¿ãƒ¼ã‚²ãƒƒãƒˆã¨ãªã‚‹ãƒãƒƒãƒ•ã‚¡ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’é¸æŠã™ã‚‹
   glBindBufferBase(GL_TRANSFORM_FEEDBACK_BUFFER, 0, b.fb[b.select].buf());
   
-  // Transform Feedback ŠJn
+  // Transform Feedback é–‹å§‹
   glBeginTransformFeedback(GL_TRIANGLES);
 }
 
 void gg::GgPass1Shader::unuse(void) const
 {
-  // Transform Feedback I—¹
+  // Transform Feedback çµ‚äº†
   glEndTransformFeedback();
   
-  // Šî’êƒNƒ‰ƒX‚ÌƒVƒF[ƒ_‚Ìİ’è‚ğŒÄ‚Ño‚·
+  // åŸºåº•ã‚¯ãƒ©ã‚¹ã®ã‚·ã‚§ãƒ¼ãƒ€ã®è¨­å®šã‚’å‘¼ã³å‡ºã™
   GgSimpleShader::unuse();
 }
 
 void gg::GgPass1Shader::createBuffer(GLuint num)
 {
-  // ƒtƒB[ƒhƒoƒbƒNƒoƒbƒtƒ@—p‚Ì’¸“_ƒoƒbƒtƒ@ƒIƒuƒWƒFƒNƒg‚Ìƒƒ‚ƒŠ‚ÌŠm•Û
+  // ãƒ•ã‚£ãƒ¼ãƒ‰ãƒãƒƒã‚¯ãƒãƒƒãƒ•ã‚¡ç”¨ã®é ‚ç‚¹ãƒãƒƒãƒ•ã‚¡ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®ãƒ¡ãƒ¢ãƒªã®ç¢ºä¿
   b.fb[b.select].load(GL_ARRAY_BUFFER, num, 0, GL_DYNAMIC_COPY);
   b.fb[1 - b.select].load(GL_ARRAY_BUFFER, num, 0, GL_DYNAMIC_COPY);
 }

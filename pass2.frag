@@ -1,6 +1,6 @@
 #version 120
 
-// フラグメントの速度
+// 繝輔Λ繧ｰ繝｡繝ｳ繝医�ｮ騾溷ｺｦ
 varying vec2 vel;
 
 void main(void)

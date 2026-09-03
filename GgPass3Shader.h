@@ -1,8 +1,8 @@
-#ifndef __GG_Pass3Shader_H__
+ï»¿#ifndef __GG_Pass3Shader_H__
 #define __GG_Pass3Shader_H__
 
 /*
-** ƒ‚[ƒVƒ‡ƒ“ƒuƒ‰[ (Pass 3)
+** ãƒ¢ãƒ¼ã‚·ãƒ§ãƒ³ãƒ–ãƒ©ãƒ¼ (Pass 3)
 */
 #include "GgPointShader.h"
 
@@ -11,27 +11,27 @@ namespace gg
   class GgPass3Shader
     : public GgPointShader
   {
-    // —”
+    // ä¹±æ•°
     struct RnTable
     {
-      static const int samples = 16;  // —”‚Ì”
-      GLfloat rn[samples * 2];        // —”ƒe[ƒuƒ‹ (vec2)
+      static const int samples = 16;  // ä¹±æ•°ã®æ•°
+      GLfloat rn[samples * 2];        // ä¹±æ•°ãƒ†ãƒ¼ãƒ–ãƒ« (vec2)
     } random;
 
-    // êŠ
+    // å ´æ‰€
     struct
     {
-      GLint texture0;   // texture0 ‚ÌƒTƒ“ƒvƒ‰‚Ì uniform •Ï”‚ÌêŠ
-      GLint texture1;   // texture1 ‚ÌƒTƒ“ƒvƒ‰‚Ì uniform •Ï”‚ÌêŠ
-      GLint rn;         // —”ƒe[ƒuƒ‹‚Ì uniform •Ï”‚ÌêŠ
+      GLint texture0;   // texture0 ã®ã‚µãƒ³ãƒ—ãƒ©ã® uniform å¤‰æ•°ã®å ´æ‰€
+      GLint texture1;   // texture1 ã®ã‚µãƒ³ãƒ—ãƒ©ã® uniform å¤‰æ•°ã®å ´æ‰€
+      GLint rn;         // ä¹±æ•°ãƒ†ãƒ¼ãƒ–ãƒ«ã® uniform å¤‰æ•°ã®å ´æ‰€
     } loc;
 
   public:
     
-    // ƒfƒXƒgƒ‰ƒNƒ^
+    // ãƒ‡ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
     virtual ~GgPass3Shader(void) {}
 
-    // ƒRƒ“ƒXƒgƒ‰ƒNƒ^
+    // ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
     GgPass3Shader(void) {}
     GgPass3Shader(const char *vert, const char *frag = 0,
       const char *geom = 0, GLenum input = GL_TRIANGLES, GLenum output = GL_TRIANGLE_STRIP, GLint vertices = 0,
@@ -39,7 +39,7 @@ namespace gg
     GgPass3Shader(const GgPass3Shader &o)
       : GgPointShader(o), random(o.random), loc(o.loc) {}
 
-    // ‘ã“ü
+    // ä»£å…¥
     GgPass3Shader &operator=(const GgPass3Shader &o)
     {
       if (&o != this)
@@ -50,13 +50,13 @@ namespace gg
       return *this;
     }
 
-    // ƒtƒBƒ‹ƒ^ƒTƒCƒY
+    // ãƒ•ã‚£ãƒ«ã‚¿ã‚µã‚¤ã‚º
     void size(GLfloat x, GLfloat y);
 
-    // ƒVƒF[ƒ_‚Ìg—pŠJn
+    // ã‚·ã‚§ãƒ¼ãƒ€ã®ä½¿ç”¨é–‹å§‹
     virtual void use(GLuint vert, ...) const;
     
-    // ƒVƒF[ƒ_‚Ìg—pI—¹
+    // ã‚·ã‚§ãƒ¼ãƒ€ã®ä½¿ç”¨çµ‚äº†
     virtual void unuse(void) const;
   };
 };

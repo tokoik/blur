@@ -1,8 +1,8 @@
-#ifndef __GG_SIMPLESHADER_H__
+ï»¿#ifndef __GG_SIMPLESHADER_H__
 #define __GG_SIMPLESHADER_H__
 
 /*
-** ’Pƒ‚È‰A‰e•t‚¯
+** å˜ç´”ãªé™°å½±ä»˜ã‘
 */
 #include "GgPointShader.h"
 
@@ -11,55 +11,55 @@ namespace gg
   class GgSimpleShader
     : public GgPointShader
   {
-    // ŒõŒ¹
+    // å…‰æº
     struct
     {
-      GLfloat pos[4];   // ŒõŒ¹ˆÊ’u
-      GLfloat amb[4];   // ŒõŒ¹‹­“x‚ÌŠÂ‹«Œõ¬•ª
-      GLfloat diff[4];  // ŒõŒ¹‹­“x‚ÌŠgU”½ËŒõ¬•ª
-      GLfloat spec[4];  // ŒõŒ¹‹­“x‚Ì‹¾–Ê”½ËŒõ¬•ª
+      GLfloat pos[4];   // å…‰æºä½ç½®
+      GLfloat amb[4];   // å…‰æºå¼·åº¦ã®ç’°å¢ƒå…‰æˆåˆ†
+      GLfloat diff[4];  // å…‰æºå¼·åº¦ã®æ‹¡æ•£åå°„å…‰æˆåˆ†
+      GLfloat spec[4];  // å…‰æºå¼·åº¦ã®é¡é¢åå°„å…‰æˆåˆ†
     } l;
 
-    // Ş¿
+    // æè³ª
     struct
     {
-      GLfloat amb[4];   // ŠÂ‹«Œõ‚Ì”½ËŒW”
-      GLfloat diff[4];  // ŠgU”½ËŒW”
-      GLfloat spec[4];  // ‹¾–Ê”½ËŒW”
-      GLfloat shi;      // ‹P‚«ŒW”
+      GLfloat amb[4];   // ç’°å¢ƒå…‰ã®åå°„ä¿‚æ•°
+      GLfloat diff[4];  // æ‹¡æ•£åå°„ä¿‚æ•°
+      GLfloat spec[4];  // é¡é¢åå°„ä¿‚æ•°
+      GLfloat shi;      // è¼ãä¿‚æ•°
     } k;
 
-    // •ÏŠ·
+    // å¤‰æ›
     struct
     {
-      GLfloat g[16];    // ƒ‚ƒfƒ‹ƒrƒ…[•ÏŠ·‚Ì–@ü•ÏŠ·s—ñ
+      GLfloat g[16];    // ãƒ¢ãƒ‡ãƒ«ãƒ“ãƒ¥ãƒ¼å¤‰æ›ã®æ³•ç·šå¤‰æ›è¡Œåˆ—
       void loadNormalMatrix(const GgMatrix &m)
       {
         for (int i = 0; i < 16; ++i) g[i] = m.get()[i];
       }
     } m;
 
-    // êŠ
+    // å ´æ‰€
     struct
     {
-      GLint nv;         // –@ü‚Ì attribute •Ï”‚ÌêŠ
-      GLint lpos;       // ŒõŒ¹ˆÊ’u‚Ì uniform •Ï”‚ÌêŠ
-      GLint lamb;       // ŒõŒ¹‹­“x‚ÌŠÂ‹«Œõ¬•ª‚Ì uniform •Ï”‚ÌêŠ
-      GLint ldiff;      // ŒõŒ¹‹­“x‚ÌŠgU”½ËŒõ¬•ª‚Ì uniform •Ï”‚ÌêŠ
-      GLint lspec;      // ŒõŒ¹‹­“x‚Ì‹¾–Ê”½ËŒõ¬•ª‚Ì uniform •Ï”‚ÌêŠ
-      GLint kamb;       // ŠÂ‹«Œõ‚Ì”½ËŒW”‚Ì uniform •Ï”‚ÌêŠ
-      GLint kdiff;      // ŠgU”½ËŒW”‚Ì uniform •Ï”‚ÌêŠ
-      GLint kspec;      // ‹¾–Ê”½ËŒW”‚Ì uniform •Ï”‚ÌêŠ
-      GLint kshi;       // ‹P‚«ŒW”‚Ì uniform •Ï”‚ÌêŠ
-      GLint mg;         // ƒ‚ƒfƒ‹ƒrƒ…[•ÏŠ·‚Ì–@ü•ÏŠ·s—ñ‚Ì uniform •Ï”‚ÌêŠ
+      GLint nv;         // æ³•ç·šã® attribute å¤‰æ•°ã®å ´æ‰€
+      GLint lpos;       // å…‰æºä½ç½®ã® uniform å¤‰æ•°ã®å ´æ‰€
+      GLint lamb;       // å…‰æºå¼·åº¦ã®ç’°å¢ƒå…‰æˆåˆ†ã® uniform å¤‰æ•°ã®å ´æ‰€
+      GLint ldiff;      // å…‰æºå¼·åº¦ã®æ‹¡æ•£åå°„å…‰æˆåˆ†ã® uniform å¤‰æ•°ã®å ´æ‰€
+      GLint lspec;      // å…‰æºå¼·åº¦ã®é¡é¢åå°„å…‰æˆåˆ†ã® uniform å¤‰æ•°ã®å ´æ‰€
+      GLint kamb;       // ç’°å¢ƒå…‰ã®åå°„ä¿‚æ•°ã® uniform å¤‰æ•°ã®å ´æ‰€
+      GLint kdiff;      // æ‹¡æ•£åå°„ä¿‚æ•°ã® uniform å¤‰æ•°ã®å ´æ‰€
+      GLint kspec;      // é¡é¢åå°„ä¿‚æ•°ã® uniform å¤‰æ•°ã®å ´æ‰€
+      GLint kshi;       // è¼ãä¿‚æ•°ã® uniform å¤‰æ•°ã®å ´æ‰€
+      GLint mg;         // ãƒ¢ãƒ‡ãƒ«ãƒ“ãƒ¥ãƒ¼å¤‰æ›ã®æ³•ç·šå¤‰æ›è¡Œåˆ—ã® uniform å¤‰æ•°ã®å ´æ‰€
     } loc;
 
   public:
 
-    // ƒfƒXƒgƒ‰ƒNƒ^
+    // ãƒ‡ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
     virtual ~GgSimpleShader(void) {}
 
-    // ƒRƒ“ƒXƒgƒ‰ƒNƒ^
+    // ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
     GgSimpleShader(void) {}
     GgSimpleShader(const char *vert, const char *frag = 0,
       const char *geom = 0, GLenum input = GL_TRIANGLES, GLenum output = GL_TRIANGLE_STRIP, GLint vertices = 0,
@@ -67,7 +67,7 @@ namespace gg
     GgSimpleShader(const GgSimpleShader &o)
       : GgPointShader(o), l(o.l), k(o.k), m(o.m), loc(o.loc) {}
 
-    // ‘ã“ü
+    // ä»£å…¥
     GgSimpleShader &operator=(const GgSimpleShader &o)
     {
       if (&o != this)
@@ -81,13 +81,13 @@ namespace gg
       return *this;
     }
 
-    // ƒVƒF[ƒ_‚Ìg—pŠJn
+    // ã‚·ã‚§ãƒ¼ãƒ€ã®ä½¿ç”¨é–‹å§‹
     virtual void use(GLuint vert, ...) const;
 
-    // ƒVƒF[ƒ_‚Ìg—pI—¹
+    // ã‚·ã‚§ãƒ¼ãƒ€ã®ä½¿ç”¨çµ‚äº†
     virtual void unuse(void) const;
 
-    // ŒõŒ¹
+    // å…‰æº
     void setLightPosition(GLfloat x, GLfloat y, GLfloat z, GLfloat w = 1.0f)
     {
       l.pos[0] = x;
@@ -133,7 +133,7 @@ namespace gg
       setLightSpecular(spec[0], spec[1], spec[2], spec[3]);
     }
 
-    // Ş¿
+    // æè³ª
     void setMaterialAmbient(GLfloat r, GLfloat g, GLfloat b, GLfloat a = 1.0f)
     {
       k.amb[0] = r;
@@ -172,7 +172,7 @@ namespace gg
       k.shi = shi;
     }
 
-    // •ÏŠ·
+    // å¤‰æ›
     virtual void loadMatrix(const GgMatrix &mp, const GgMatrix &mw);
     virtual void loadMatrix(const GLfloat *mp, const GLfloat *mw);
   };

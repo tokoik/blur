@@ -1,5 +1,5 @@
-/*
-** ƒ‚[ƒVƒ‡ƒ“ƒuƒ‰[ (Pass 3)
+ï»¿/*
+** ãƒ¢ãƒ¼ã‚·ãƒ§ãƒ³ãƒ–ãƒ©ãƒ¼ (Pass 3)
 */
 #include <cstdlib>
 #include <cstdarg>
@@ -12,20 +12,20 @@ gg::GgPass3Shader::GgPass3Shader(const char *vert, const char *frag,
   GLint nvarying, const char **varyings)
   : GgPointShader(vert, frag, geom, input, output, vertices, nvarying, varyings)
 {
-  // ƒvƒƒOƒ‰ƒ€–¼
+  // ãƒ—ãƒ­ã‚°ãƒ©ãƒ å
   GLuint program = get();
 
-  // ƒTƒ“ƒvƒ‰‚Ì uniform •Ï”‚ÌêŠ
+  // ã‚µãƒ³ãƒ—ãƒ©ã® uniform å¤‰æ•°ã®å ´æ‰€
   loc.texture0 = glGetUniformLocation(program, "texture0");
   loc.texture1 = glGetUniformLocation(program, "texture1");
   
-  // —”‚Ì uniform •Ï”‚ÌêŠ
+  // ä¹±æ•°ã® uniform å¤‰æ•°ã®å ´æ‰€
   loc.rn = glGetUniformLocation(program, "rn");
 }
 
 void gg::GgPass3Shader::size(GLfloat x, GLfloat y)
 {
-  // —”‚Ì”­¶
+  // ä¹±æ•°ã®ç™ºç”Ÿ
   for (unsigned int i = 0; i < random.samples * 2; i += 2)
   {
     GLfloat r = sqrt(2.0f * (float)rand() / ((float)RAND_MAX + 1.0f));
@@ -37,19 +37,19 @@ void gg::GgPass3Shader::size(GLfloat x, GLfloat y)
 
 void gg::GgPass3Shader::use(GLuint vert, ...) const
 {
-  // Šî’êƒNƒ‰ƒX‚ÌƒVƒF[ƒ_‚Ìİ’è‚ğŒÄ‚Ño‚·
+  // åŸºåº•ã‚¯ãƒ©ã‚¹ã®ã‚·ã‚§ãƒ¼ãƒ€ã®è¨­å®šã‚’å‘¼ã³å‡ºã™
   GgPointShader::use(vert);
 
-  // ƒTƒ“ƒvƒ‰
+  // ã‚µãƒ³ãƒ—ãƒ©
   glUniform1i(loc.texture0, 0);
   glUniform1i(loc.texture1, 1);
   
-  // —”
+  // ä¹±æ•°
   glUniform2fv(loc.rn, random.samples, random.rn);
 }
 
 void gg::GgPass3Shader::unuse(void) const
 {
-  // Šî’êƒNƒ‰ƒX‚ÌƒVƒF[ƒ_‚Ìİ’è‚ğŒÄ‚Ño‚·
+  // åŸºåº•ã‚¯ãƒ©ã‚¹ã®ã‚·ã‚§ãƒ¼ãƒ€ã®è¨­å®šã‚’å‘¼ã³å‡ºã™
   GgPointShader::unuse();
 }
